@@ -1,0 +1,56 @@
+---
+title: First Step
+description: GamanJS is a modular and efficient backend framework designed for simplicity and performance. Follow the steps below to quickly get started with your first GamanJS project.
+---
+
+### Language
+
+GamanJS is specifically designed to work with modern`TypeScript` using the ECMAScript Module (ESM) system. This means all modules must be written using `import` and `export` syntax—CommonJS (`require`, `module.exports`) is not supported. If you're building a project with GamanJS, make sure your environment and codebase are fully ESM-compatible.
+
+### Prerequisites
+
+Please make sure that `Node.js` (version >= 18.x) is installed on your operating system.
+
+---
+
+## Installation
+
+import { Steps } from "@astrojs/starlight/components";
+import { PackageManagers } from "starlight-package-managers";
+
+<Steps>
+    1. GamanJS is a framework for backend applications, You can create it using your favorite package manager:
+        <PackageManagers pkg="gaman@latest" pkgManagers={["npm", "pnpm", "yarn", "bun"]} type="create"/>
+    2. generate your `GAMAN_KEY`, usually this will be created automatically
+        <PackageManagers pkgManagers={["npm", "pnpm", "yarn", "bun"]} type="exec" args="gaman key:generate"/>
+    4. Start the development server 
+        <PackageManagers pkgManagers={["npm", "pnpm", "yarn", "bun"]} type="run" args="dev"/>
+
+</Steps>
+
+## Project Structure
+
+import { FileTree } from "@astrojs/starlight/components";
+
+After creating a new project, your file structure will look like this:
+
+<FileTree>
+- src
+  - module
+    - ...
+  - index.d.ts
+  - index.ts
+  - main.block.ts
+  - main.routes.ts
+  - main.service.ts
+- package.json
+- tsconfig.json
+</FileTree>
+
+
+| File             | description                                             |
+| ---------------- | ------------------------------------------------------- |
+| main.ts          | App entry point. Runs and loads all modules.            |
+| main.block.ts    | Module for registers routes, services, and middleware.. |
+| main.routes.ts   | Defines HTTP routes handler                             |
+| main.services.ts | Contains the business logic.                            |

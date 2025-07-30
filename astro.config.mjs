@@ -1,26 +1,105 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
+import starlightThemeObsidian from "starlight-theme-obsidian";
+import sitemap from "@astrojs/sitemap";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
-			],
-		}),
-	],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  server: {
+    port: 3521,
+    host: "0.0.0.0"
+  },
+
+  integrations: [
+    starlight({
+      plugins: [
+        starlightThemeObsidian({
+          debug: false,
+        }),
+      ],
+      title: "Gaman.JS",
+      favicon: "/img/gaman-big.png",
+      customCss: ["./src/styles/custom.css"],
+      disable404Route: true,
+      
+      social: [
+        {
+          icon: "github",
+          label: "Github",
+          href: "https://github.com/7TogkID/gaman",
+        },
+      ],
+      sidebar: [
+        {
+          link: "/",
+          slug: "index",
+        },
+        {
+          label: "Overview",
+          items: [
+            {
+              link: "/overview/first-steps",
+              slug: "overview/first-steps",
+            },
+            {
+              link: "/overview/module",
+              slug: "overview/module",
+            },
+          ],
+          
+        },
+        {
+          label: "Module",
+          items: [
+            {
+              link: "/module/block",
+              slug: "module/block",
+              badge: {
+                text: "NEW",
+                variant: 'success'
+              }
+            },
+            {
+              link: "/module/service",
+              slug: "module/service",
+              badge: {
+                text: "NEW",
+                variant: 'success'
+              }
+            },
+            {
+              link: "/module/routes",
+              slug: "module/routes",
+              badge: {
+                text: "NEW",
+                variant: 'success'
+              } 
+            },
+          ],
+        },
+        {
+          label: "Guides",
+          autogenerate: { directory: "guides" },
+        },
+        {
+          label: "Helpers",
+          autogenerate: { directory: "helpers" },
+        },
+        {
+          label: "Packages",
+          autogenerate: { directory: "packages" },
+        },
+        {
+          label: "API",
+          autogenerate: { directory: "api" },
+        },
+      ],
+    }),
+    sitemap(),
+  ],
 });
