@@ -9,7 +9,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   vite: {
     server: {
-      allowedHosts: true
+      allowedHosts: ['gaman.7togk.id']
     },
     plugins: [tailwindcss()],
   },
