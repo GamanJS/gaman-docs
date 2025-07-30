@@ -10,6 +10,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  site: 'https://gaman.7togk.id',
   server: {
     port: 3521,
     host: "0.0.0.0"
@@ -17,6 +18,7 @@ export default defineConfig({
 
   integrations: [
     starlight({
+      
       plugins: [
         starlightThemeObsidian({
           debug: false,
