@@ -15,7 +15,7 @@ Routes are defined using the `defineRoutes()` helper function, which accepts a f
 
 Routes are defined in `*.routes.ts` files and typically look like this:
 
-```diff lang="ts"
+```ts
 // main.routes.ts
 interface Deps {
   blogService: ReturnType<typeof blogService>;
@@ -33,13 +33,13 @@ export default defineRoutes(({ blogService }: Deps) => ({
 
   "/blogs/:id": {
     GET: async ({ params }) => {
-+      return await blogService.findOne(params.id);
+      return await blogService.findOne(params.id);
     },
     PUT: async ({ params, body }) => {
-+      return await blogService.update(params.id, body);
+      return await blogService.update(params.id, body);
     },
     DELETE: async ({ params }) => {
-+      return await blogService.delete(params.id);
+      return await blogService.delete(params.id);
     },
   },
 }));
