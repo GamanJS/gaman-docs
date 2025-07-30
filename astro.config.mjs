@@ -5,6 +5,8 @@ import starlightThemeObsidian from "starlight-theme-obsidian";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
+import node from "@astrojs/node";
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -13,7 +15,9 @@ export default defineConfig({
     },
     plugins: [tailwindcss()],
   },
+
   site: 'https://gaman.7togk.id',
+
   server: {
     port: 3521,
     host: "0.0.0.0"
@@ -107,4 +111,8 @@ export default defineConfig({
     }),
     sitemap(),
   ],
+
+  adapter: node({
+    mode: "standalone",
+  }),
 });
