@@ -72,10 +72,8 @@ The `Deps` provided to a service are injected automatically from the `defineBloc
 ```ts
 // main.block.ts
 export default defineBlock({
-  dependencies: {
+  bindings: {
     prisma: new PrismaClient(),
-  },
-  services: {
     userService,
     blogService,
   },
@@ -84,7 +82,6 @@ export default defineBlock({
 
 In this block:
 
-- `prisma` is defined in `dependencies`
-- `userService` and `blogService` are defined in `services`
+- `prisma`, `userService` and `blogService` are defined in `services`
 
 Both will be injected into each service's `Deps` object automatically. This makes service logic clean and declarative, avoiding manual wiring and reducing boilerplate.

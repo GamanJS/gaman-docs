@@ -59,6 +59,26 @@ export default defineConfig({
               link: "/overview/module",
               slug: "overview/module",
             },
+            {
+              link: "/overview/context",
+              slug: "overview/context",
+            },
+            {
+              link: "/overview/routing",
+              slug: "overview/routing",
+              badge: {
+                text: "NEW",
+                variant: 'success'
+              }
+            },
+            {
+              link: "/overview/middleware",
+              slug: "overview/middleware",
+            },
+            {
+              link: "/overview/response",
+              slug: "overview/response",
+            },
           ],
           
         },
@@ -92,12 +112,12 @@ export default defineConfig({
           ],
         },
         {
-          label: "Guides",
-          autogenerate: { directory: "guides" },
+          label: "Essentials",
+          autogenerate: { directory: "essentials" },
         },
         {
-          label: "Helpers",
-          autogenerate: { directory: "helpers" },
+          label: "Security",
+          autogenerate: { directory: "security" },
         },
         {
           label: "Packages",

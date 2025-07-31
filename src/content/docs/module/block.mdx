@@ -18,8 +18,10 @@ Blocks serve as the foundation for modular architecture in GamanJS. Each block c
 - Services
 - Routes
 - Middlewares
+- Integrations
 - Nested blocks (submodules)
 - Custom error handlers
+- Custom `404` handlers
 
 ## Structure
 
@@ -28,14 +30,12 @@ A block is defined using the `defineBlock()` function and typically exported fro
 ### Key Properties
 
 - `path?`: The base path prefix for all routes in this block.
-- `includes?`: Middleware functions to apply within the block.
-- `blocks?`: Nested blocks to support hierarchical composition.
+- `includes?`: An array of elements (middleware, child blocks, or integrations) to be applied and composed within the current block. Useful for grouping reusable logic, nested modules, or third-party extensions into a single composable unit.
+- `bindings?`: Injected values such as services or external dependencies (e.g., database client, logger). 
+- `routes?`: Route factories associated with this block.
 - `priority?`: Determines the execution order of blocks.
 - `error?`: Custom error handler for exceptions thrown inside the block.
 - `404?`: Handler for undefined routes in this block.
-- `services?`: Service factory functions to be used inside this block.
-- `depedencies?`: External dependencies (e.g., Prisma, Logger).
-- `routes?`: Route factories associated with this block.
 
 ## Usage Example
 
@@ -43,7 +43,7 @@ A block is defined using the `defineBlock()` function and typically exported fro
 // example.block.ts
 export default defineBlock({
   path: "/user",
-  services: {
+  bindings: {
     userService,
   },
   routes: [userRoutes],
@@ -56,7 +56,7 @@ After that, you can add your block to `main.block.ts`
 // main.block.ts
 export default defineBlock({
   path: "/",
-  blocks: [userBlock],
+  includes: [userBlock],
 });
 ```
 

@@ -6,7 +6,16 @@ description: "GamanJS uses a modular structure to organize application features 
 GamanJS uses a modular structure to organize application features cleanly and scalably. Each module consists of **three primary files**
 ![GamanJS Module](/img/workflow/module.png)
 
-<video src="/video/ngoding.mp4" autoplay loop playisinline></video>
+import { Aside } from "@astrojs/starlight/components";
+import { PackageManagers } from "starlight-package-managers";
+
+<Aside type="tip">
+  you can use the CLI's Module maker:
+
+  This will create 3 files, Block, Routes and Service
+
+  <PackageManagers pkgManagers={["npm", "pnpm", "yarn", "bun"]} type="exec" args="gaman make:module <name>"/>
+</Aside>
 
 ## Block
 
@@ -19,11 +28,9 @@ Read more about block modules at the following link, [Explore Block Module furth
 export default defineBlock({
   path: "/user",
   routes: [userRoutes],
-  services: {
-    appService: userService,
-  },
-  dependencies: {
+  bindings: {
     database: new PrismaClient(),
+    appService: userService,
   },
 });
 ```
