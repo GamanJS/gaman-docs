@@ -1,0 +1,34 @@
+---
+title: Logging
+---
+
+**Logger Gaman** adalah utilitas bawaan GamanJS yang mempermudah proses logging di dalam proyek kamu. Dengan logger ini, kamu tidak perlu mengimpor modul tambahan karena fungsi ini sudah tersedia secara **global**.
+
+Kenapa pakai **Logger Gaman**?  
+Jawabannya simpel: biar console kamu lebih keren 😎 (dan sedikit rapi juga). Tidak ada alasan khusus selain itu, hehe.
+
+---
+
+## Logger API
+
+GamanJS menyediakan fungsi global bernama **`Log`** dengan berbagai level log. Berikut daftar level yang tersedia:
+
+- `Log.log(message: any)`
+- `Log.info(message: any)`
+- `Log.debug(message: any)`
+- `Log.warn(message: any)`
+- `Log.error(message: any)`
+
+### Catatan:
+- `Log.info` memiliki fungsi yang sama dengan `Log.log`, hanya berbeda label agar lebih semantik.
+
+---
+
+## Contoh Penggunaan
+
+```ts
+Log.log("Ini log biasa");
+Log.info("Ini informasi");
+Log.debug("Debugging info");
+Log.warn("Ini peringatan");
+Log.error("Terjadi kesalahan");

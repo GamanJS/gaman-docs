@@ -1,0 +1,50 @@
+---
+title: Cookies
+---
+
+**Cookies Gaman** disini penggunaannya cukup simple, cukup pakai `ctx.cookies` saja kamu sudah bisa management cookies :)
+
+## Basic
+
+### `ctx.cookies.set(key, value, options)`
+berikut adalah contoh sederhana membuat cookies
+
+```ts
+(ctx) => {
+  ctx.cookies.set('session', 'abogoboga', {
+    secure: true
+    expires: 60 * 60 * 24 * 30 // 30 hari
+  })
+}
+```
+
+### `ctx.cookies.get(key)`
+berikut adalah contoh sederhana mengambil nilai cookies
+```ts
+(ctx) => {
+  const session = ctx.cookies.get('session')
+
+  session.value // string value;
+  session.json() // json value
+  session.number() // number value
+  session.boolean() // boolean value
+}
+```
+
+### `ctx.cookies.has(key)`
+berikut adalah contoh sederhana untuk mengecek apakah cookie ada atau tidak
+```ts
+(ctx) => {
+  if(ctx.cookies.has('session')){
+    // TODO
+  }
+}
+```
+
+### `ctx.cookies.delete(key)`
+berikut adalah contoh sederhana untuk menghapus cookie yang sudah ada
+```ts
+(ctx) => {
+  ctx.cookies.delete('session')
+}
+```

@@ -1,0 +1,53 @@
+---
+title: CLI
+---
+
+Gaman Command Line Interface disini memiliki beberapa command seperti berikut
+
+## Common
+
+### `gaman dev`
+`gaman dev` alias `npm run dev` itu berguna untuk menjalankan app gaman dengan mode development
+
+Contoh:
+```bash
+# node
+npx gaman dev
+
+# atau
+npm run dev
+```
+
+### `gaman build`
+`gaman build` alias `npm run build` itu berguna untuk membangun proyek yang sudah kamu buat ke mode production, setelah di build, hasilnya secara default akan berada di folder `dist/**`
+
+Contoh:
+```bash
+# node
+npx gaman build
+
+# atau
+npm run build
+```
+
+### `gaman start`
+`gaman start` alias `npm start` itu berguna untuk menjalankan app dengan mode production yang sudah kamu build tadi, jadi sebelum `gaman start` kamu harus build dulu.
+
+Contoh:
+```bash
+# node
+npx gaman start
+
+# atau
+npm start
+```
+
+disini saya kasih bonus jika kamu ingin deploy pakai `pm2` kamu bisa pakai command berikut
+```bash
+pm2 start --name your-project-name "npm start"
+```
+atau kamu bisa langsung ke entry point nya gamanjs yaitu `dist/index.js`
+Contoh:
+```bash
+pm2 start --name your-project-name "dist/index.js"
+```

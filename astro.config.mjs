@@ -1,131 +1,97 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import starlightThemeObsidian from "starlight-theme-obsidian";
-import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
 import node from "@astrojs/node";
+
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
   vite: {
     server: {
-      allowedHosts: ['gaman.7togk.id']
+      allowedHosts: ["gaman.7togk.id"],
     },
     plugins: [tailwindcss()],
   },
 
-  site: 'https://gaman.7togk.id',
+  site: "https://gaman.7togk.id",
 
   server: {
     port: 3521,
-    host: "0.0.0.0"
+    host: "0.0.0.0",
   },
 
   integrations: [
     starlight({
-      
-      plugins: [
-        starlightThemeObsidian({
-          debug: false,
-        }),
-      ],
-      title: "Gaman.JS",
+      title: "Gaman Docs",
       favicon: "/img/gaman-big.png",
-      customCss: ["./src/styles/custom.css"],
-      disable404Route: true,
-      
+      locales: {
+        root: {
+          lang: "id",
+          label: "Indonesia",
+        },
+      },
       social: [
         {
           icon: "github",
           label: "Github",
           href: "https://github.com/7TogkID/gaman",
         },
+        {
+          icon: "comment",
+          label: "WhatsApp",
+          href: "https://whatsapp.com/channel/0029VbB0keR7z4kgczdSZ33s",
+        },
       ],
+      logo: {
+        src: "/public/img/gaman-big.png",
+      },
+      customCss: ["./src/styles/custom.css"],
       sidebar: [
         {
-          link: "/",
-          slug: "index",
+          link: "/docs",
+          slug: "docs",
         },
         {
-          label: "Overview",
+          label: "Ringkasan",
           items: [
             {
-              link: "/overview/first-steps",
-              slug: "overview/first-steps",
+              link: "/docs/overview/first-steps",
+              slug: "docs/overview/first-steps",
             },
             {
-              link: "/overview/module",
-              slug: "overview/module",
+              link: "/docs/overview/routing",
+              slug: "docs/overview/routing",
             },
             {
-              link: "/overview/context",
-              slug: "overview/context",
+              link: "/docs/overview/controllers",
+              slug: "docs/overview/controllers",
             },
             {
-              link: "/overview/routing",
-              slug: "overview/routing",
-              badge: {
-                text: "NEW",
-                variant: 'success'
-              }
+              link: "/docs/overview/middlewares",
+              slug: "docs/overview/middlewares",
             },
             {
-              link: "/overview/middleware",
-              slug: "overview/middleware",
+              link: "/docs/overview/context",
+              slug: "docs/overview/context",
             },
             {
-              link: "/overview/response",
-              slug: "overview/response",
-            },
-          ],
-          
-        },
-        {
-          label: "Module",
-          items: [
-            {
-              link: "/module/block",
-              slug: "module/block",
-              badge: {
-                text: "NEW",
-                variant: 'success'
-              }
+              link: "/docs/overview/responses",
+              slug: "docs/overview/responses",
             },
             {
-              link: "/module/service",
-              slug: "module/service",
-              badge: {
-                text: "NEW",
-                variant: 'success'
-              }
-            },
-            {
-              link: "/module/routes",
-              slug: "module/routes",
-              badge: {
-                text: "NEW",
-                variant: 'success'
-              } 
+              link: "/docs/overview/cli",
+              slug: "docs/overview/cli",
             },
           ],
         },
         {
-          label: "Essentials",
-          autogenerate: { directory: "essentials" },
-        },
-        {
-          label: "Security",
-          autogenerate: { directory: "security" },
-        },
-        {
-          label: "Packages",
-          autogenerate: { directory: "packages" },
-        },
-        {
-          label: "API",
-          autogenerate: { directory: "api" },
+          label: "Teknis",
+          autogenerate: {
+            directory: "docs/teknis",
+          },
         },
       ],
     }),
