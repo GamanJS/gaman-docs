@@ -2,7 +2,7 @@
 title: Interceptors
 ---
 
-Normalnya **Interceptor** disini berada di folder `interceptors/**`, jika kamu pakai `autoComposeInterceptor` itu otomatis akan keregister oleh sistem.
+Normalnya **Interceptor** disini berada di folder `src/interceptors/**`, jika kamu pakai `autoComposeInterceptor` itu otomatis akan keregister oleh sistem.
 
 ![workflow interceptor](/img/workflow/interceptor.png)
 
@@ -51,7 +51,7 @@ export default composeRoutes((route) => {
 ```
 
 ### `autoComposeInterceptor()`
-nah `autoComposeInterceptor` disini akan otomatis di register ke data sistem, dengan persyaratan harus berada di folder `interceptors/**`.
+nah `autoComposeInterceptor` disini akan otomatis di register ke data sistem, dengan persyaratan harus berada di folder `src/interceptors/**`.
 
 Contoh:
 ```ts
