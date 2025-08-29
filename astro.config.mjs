@@ -74,16 +74,24 @@ export default defineConfig({
               slug: "docs/overview/middlewares",
             },
             {
-              link: "/docs/overview/context",
-              slug: "docs/overview/context",
+              link: "/docs/overview/interceptors",
+              slug: "docs/overview/interceptors",
+              badge: {
+                text: 'Baru',
+                variant: 'success'
+              }
+            },
+            {
+              link: "/docs/overview/exceptions",
+              slug: "docs/overview/exceptions",
+              badge: {
+                text: 'Baru',
+                variant: 'success'
+              }
             },
             {
               link: "/docs/overview/responses",
               slug: "docs/overview/responses",
-            },
-            {
-              link: "/docs/overview/cli",
-              slug: "docs/overview/cli",
             },
           ],
         },
@@ -92,6 +100,11 @@ export default defineConfig({
           autogenerate: {
             directory: "docs/teknis",
           },
+        },
+        {
+          label: "CLI",
+          link: "/docs/cli",
+          slug: "docs/cli",
         },
       ],
     }),

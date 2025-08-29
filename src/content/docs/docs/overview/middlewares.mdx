@@ -3,8 +3,12 @@ title: Middlewares
 description: Middleware in GamanJS provides a powerful way to process requests before they reach the route handler. Middleware can be defined globally for all routes in a Block or scoped to specific paths and HTTP methods. Middleware functions are designed to continue to the next handler when they do not return a response.
 ---
 
+
 Normalnya **Middleware Gaman** itu terletak di folder `src/middlewares/**` jadi semisal anda memakai `autoComposeMiddleware((ctx, next) => next())` itu akan otomatis di register oleh sistem.
-contoh jelasnya sebagai berikut
+
+![workflow middleware](/img/workflow/middleware.png)
+
+Middleware disini berperan sebagai guard sistem request, middleware akan di jalankan pertama kali saat request masuk, jadi sebelum `interceptor` lalu `handler`, `middleware` akan di jalankan terlebih dahulu.
 
 ## Middleware definition
 
