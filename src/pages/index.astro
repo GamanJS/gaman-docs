@@ -1,4 +1,5 @@
 ---
+import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 import { features } from "../utils/content";
 ---
@@ -63,7 +64,7 @@ import { features } from "../utils/content";
         <!-- Image -->
         <div class="hidden md:flex justify-center">
           <img
-            src="/img/gaman-new.png"
+            src="/img/gaman.png"
             alt="GamanJS"
             class="max-w-md md:max-w-lg drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]"
           />
@@ -127,4 +128,6 @@ import { features } from "../utils/content";
     </section>
   </body>
   <!-- END: Key Features -->
+
+  <Footer />
 </html>

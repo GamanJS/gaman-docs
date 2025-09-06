@@ -77,17 +77,17 @@ export default defineConfig({
               link: "/docs/overview/interceptors",
               slug: "docs/overview/interceptors",
               badge: {
-                text: 'Baru',
-                variant: 'success'
-              }
+                text: "Baru",
+                variant: "success",
+              },
             },
             {
               link: "/docs/overview/exceptions",
               slug: "docs/overview/exceptions",
               badge: {
-                text: 'Baru',
-                variant: 'success'
-              }
+                text: "Baru",
+                variant: "success",
+              },
             },
             {
               link: "/docs/overview/responses",

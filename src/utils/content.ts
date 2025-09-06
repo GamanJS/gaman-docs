@@ -35,3 +35,77 @@ export const features = {
     },
   ],
 };
+
+const date = new Date();
+export const footer = {
+  title: `© ${date.getFullYear()} GamanJS. All rights reserved.`,
+  documents: {
+    title: "Documentation",
+    links: [
+      {
+        label: "Getting Started",
+        url: "/docs/overview/first-steps",
+      },
+      {
+        label: "Routing",
+        url: "/docs/overview/routing",
+      },
+      {
+        label: "Controllers",
+        url: "/docs/overview/controllers",
+      },
+      {
+        label: "Middlewares",
+        url: "/docs/overview/middlewares",
+      },
+      {
+        label: "Interceptors",
+        url: "/docs/overview/interceptors",
+      },
+    ],
+  },
+  community: {
+    title: "Community",
+    links: [
+      {
+        label: "Github",
+        url: "#",
+      },
+      {
+        label: "Discord",
+        url: "#",
+      },
+      {
+        label: "Whatsapp",
+        url: "#",
+      },
+    ],
+  },
+  resource: {
+    title: "Resources",
+    links: [
+      {
+        label: "About",
+        url: "#",
+      },
+      {
+        label: "Blog",
+        url: "#",
+      },
+      {
+        label: "Brand Guidelines",
+        url: "#",
+      },
+    ],
+  },
+  links: [
+    {
+      label: "Privacy Policy",
+      href: "/privacy-policy",
+    },
+    {
+      label: "Terms of Service",
+      href: "/terms-of-service",
+    },
+  ],
+};
