@@ -4,6 +4,23 @@ import Code1 from "../icons/code1.astro";
 import Electric from "../icons/electric.astro";
 import Secure from "../icons/secure.astro";
 
+export const navbar = {
+  links: [
+    {
+      label: "Introduction",
+      url: "/docs",
+    },
+    {
+      label: "About",
+      url: "/#",
+    },
+    {
+      label: "Blog",
+      url: "/#",
+    },
+  ],
+};
+
 export const features = {
   description:
     "Everything you need to build reliable, scalable backend applications — all in one framework.",
@@ -69,15 +86,15 @@ export const footer = {
     links: [
       {
         label: "Github",
-        url: "#",
+        url: "https://github.com/7TogkID/gaman",
       },
       {
         label: "Discord",
-        url: "#",
+        url: "https://discord.gg/CQ6fEqBe8f",
       },
       {
         label: "Whatsapp",
-        url: "#",
+        url: "https://whatsapp.com/channel/0029VbB0keR7z4kgczdSZ33s",
       },
     ],
   },

@@ -1,5 +1,6 @@
 ---
 import Footer from "../components/Footer.astro";
+import Navbar from "../components/Navbar.astro";
 import "../styles/global.css";
 import { features } from "../utils/content";
 ---
@@ -13,121 +14,124 @@ import { features } from "../utils/content";
     <link rel="shortcut icon" href="/img/gaman-big.png" type="image/png" />
   </head>
   <body class="bg-stone-950 text-pink-100 overflow-x-hidden">
-    <!-- START: Hero Content -->
-    <section
-      class="w-full h-screen flex items-center justify-center px-6 relative"
-    >
-      <!-- Background Glow -->
-      <div
-        class="absolute -top-10 -left-10 w-72 h-72 bg-pink-500 rounded-full opacity-20 blur-3xl animate-pulse"
-      >
-      </div>
-      <div
-        class="absolute bottom-0 right-0 w-80 h-80 bg-purple-500 rounded-full opacity-20 blur-3xl animate-pulse"
-        style="animation-delay: 2s;"
-      >
-      </div>
-      <div
-        class="container grid grid-cols-1 md:grid-cols-2 gap-10 items-center relative z-10"
-      >
-        <!-- Text -->
-        <div class="text-center md:text-left">
-          <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-            Build <span
-              class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
-              >Sweet Backends</span
-            > Fast
-          </h1>
-          <p class="description mb-8">
-            GamanJS is a modern backend framework built for resilience,
-            scalability, simplicity adn blazing performance for your backend
-            apps.
-          </p>
-          <div
-            class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
-          >
-            <a
-              href="/docs/overview/first-steps/"
-              class="bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-semibold text-white hover:shadow-xl hover:shadow-pink-500/50 transition-transform transform hover:scale-110"
+    <Navbar />
+
+    <main>
+      <!-- START: Hero Content -->
+      <div class="h-screen flex items-center justify-center px-6 relative">
+        <!-- Background Glow -->
+        <div
+          class="absolute -top-10 -left-10 w-72 h-72 bg-pink-500 rounded-full opacity-20 blur-3xl animate-pulse"
+        >
+        </div>
+        <div
+          class="absolute bottom-0 right-0 w-80 h-80 bg-purple-500 rounded-full opacity-20 blur-3xl animate-pulse"
+          style="animation-delay: 2s;"
+        >
+        </div>
+
+        <div
+          class="container grid grid-cols-1 md:grid-cols-2 gap-10 items-center relative z-10"
+        >
+          <!-- Text -->
+          <div class="text-center md:text-left">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+              Build <span
+                class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
+                >Sweet Backends</span
+              > Fast
+            </h1>
+            <p class="description mb-8">
+              GamanJS is a modern backend framework built for resilience,
+              scalability, simplicity adn blazing performance for your backend
+              apps.
+            </p>
+            <div
+              class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center"
             >
-              Get Started
-            </a>
-            <a
-              href="/docs"
-              class="border-2 border-pink-400 px-6 py-3 rounded-full font-semibold text-pink-200 hover:border-purple-400 hover:bg-pink-500/10 transition-all duration-300"
-            >
-              View Docs
-            </a>
+              <a
+                href="/docs/overview/first-steps/"
+                class="bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-semibold text-white hover:shadow-xl hover:shadow-pink-500/50 transition-transform transform hover:scale-110"
+              >
+                Get Started
+              </a>
+              <a
+                href="/docs"
+                class="border-2 border-pink-400 px-6 py-3 rounded-full font-semibold text-pink-200 hover:border-purple-400 hover:bg-pink-500/10 transition-all duration-300"
+              >
+                View Docs
+              </a>
+            </div>
+          </div>
+
+          <!-- Image -->
+          <div class="hidden md:flex justify-center">
+            <img
+              src="/img/gaman.png"
+              alt="GamanJS"
+              class="max-w-md md:max-w-lg drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]"
+            />
           </div>
         </div>
-
-        <!-- Image -->
-        <div class="hidden md:flex justify-center">
-          <img
-            src="/img/gaman.png"
-            alt="GamanJS"
-            class="max-w-md md:max-w-lg drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]"
-          />
-        </div>
       </div>
-    </section>
-    <!-- END: Hero Content -->
+      <!-- END: Hero Content -->
 
-    <!-- START:Key Features -->
-    <section class="relative">
-      <div class="container relative z-10">
-        <h2 class="section-title text-center">
-          Why <span
-            class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
-            >Developers</span
+      <!-- START:Key Features -->
+      <section class="relative">
+        <div class="container relative z-10">
+          <h2 class="section-title text-center">
+            Why <span
+              class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
+              >Developers</span
+            >
+            Choose <span
+              class="from-purple-400 to-pink-400 bg-gradient-to-r bg-clip-text text-transparent"
+              >GamanJS</span
+            >
+          </h2>
+
+          <p class="section-subtitle text-center max-w-lg mx-auto mt-6">
+            {features.description}
+          </p>
+
+          <!-- START: List Features -->
+          <div
+            class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-10"
           >
-          Choose <span
-            class="from-purple-400 to-pink-400 bg-gradient-to-r bg-clip-text text-transparent"
-            >GamanJS</span
-          >
-        </h2>
+            {
+              features.items.map((item) => {
+                const Icon = item.icon;
 
-        <p class="section-subtitle text-center max-w-lg mx-auto mt-6">
-          {features.description}
-        </p>
-
-        <!-- START: List Features -->
-        <div
-          class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-10"
-        >
-          {
-            features.items.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <div class="card gap-4">
-                  <Icon class=" text-purple-400" />
-                  <div>
-                    <h3 class="text-xl md:text-2xl font-semibold mb-4">
-                      {item.title}
-                    </h3>
-                    <p>{item.text}</p>
+                return (
+                  <div class="card gap-4">
+                    <Icon class=" text-purple-400" />
+                    <div>
+                      <h3 class="text-xl md:text-2xl font-semibold mb-4">
+                        {item.title}
+                      </h3>
+                      <p>{item.text}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          }
+                );
+              })
+            }
+          </div>
+          <!-- END: List Features -->
         </div>
-        <!-- END: List Features -->
-      </div>
 
-      <!-- background glow -->
-      <div
-        class="absolute bottom-0 left-0 w-80 h-72 bg-purple-500 opacity-20 blur-3xl animate-pulse"
-      >
-      </div>
-      <!-- <div
+        <!-- background glow -->
+        <div
+          class="absolute bottom-0 left-0 w-80 h-72 bg-purple-500 opacity-20 blur-3xl animate-pulse"
+        >
+        </div>
+        <!-- <div
         class="absolute -bottom-20 right-0 w-[25rem] h-[28rem] bg-pink-500 opacity-20 animate-pulse blur-3xl"
         style="animation-delay: 2s;"
       > -->
-    </section>
+      </section>
+    </main>
+    <!-- END: Key Features -->
   </body>
-  <!-- END: Key Features -->
 
   <Footer />
 </html>
