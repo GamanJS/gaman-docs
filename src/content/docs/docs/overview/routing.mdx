@@ -85,6 +85,43 @@ route.match(['GET', 'POST'], '/', Handler)
 route.all('/', Handler)
 ```
 
+### Parameter
+jika anda ingin membuat path dinamis mungkin `Parameter` ini sangat membantu untuk anda contoh nya seperti `/player/:name`
+
+```ts
+route.delete('/player/:id/delete', (ctx) => {
+  const { id } = ctx.params;
+  // TODO Delete player
+  return Res.json({message: `Player ${id} deleted.`})
+})
+```
+jika saat anda akses url `/player/155/delete` maka `{ id }` itu isinya `155`
+
+:::tip[Paramters?]
+Jika anda ingin tau lebih banyak tentang fungsi **Context Parameter** silakan buka link berikut ["Parameters"](/docs/technical/context/#params)
+:::
+
+### Parameter Opsional
+jika anda ingin membuat parameter opsional itu gampang banget contohnya `/player{/:id}/delete`
+
+```ts
+route.delete('/player{/:id}/delete', (ctx) => {
+  const id = ctx.param('id');
+  if(!id){
+    return Res.json({message: 'Id harus ada!'}, 400)
+  }
+
+  // TODO delete player
+  return Res.json({message: `Player ${id} deleted.`})
+})
+```
+jadi jika anda akses url `/player/delete` maka respon akan `status: 400`.
+Jika anda akses url `/player/155/delete` maka respon akan `status: 200`
+
+:::tip[path-to-regexp]
+Kami memakai library `path-to-regexp` untuk memanipulasi path url nya jadi jika anda ingin banyak informasi tentang path dan experiment lainnya bisa kunjungin repository berikut ["path-to-regexp"](https://github.com/pillarjs/path-to-regexp)
+:::
+
 ## Route Handler
 untuk route handler ada 3 type di gaman ini, kamu bisa memakai salah satunya
 

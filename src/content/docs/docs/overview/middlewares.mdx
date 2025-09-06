@@ -93,9 +93,14 @@ export default composeMiddleware((ctx, next) => {
   return next()
 }, {
   inclues: [
-    '/user/**',       // Semua route yang diawali /user
-    '/setting/*',     // Hanya 1 segmen setelah /setting
-    '/dashboard'      // Hanya persis /dashboard
+    {
+      path: '/user{/*splat}' // artinya path /user dan setelahnya akan kena middleware
+    },
+    {
+      path: '/blog/*splat' // artinya setelah path /blog/ akan middleware kecuali path /blog sendiri
+      method: ['GET', "POST"] // jadi kusus method GET dan POST doang 
+    },
+    "/dashboard" // path /dashboard akan kena middleware
   ]
 })
 ```
@@ -108,26 +113,20 @@ export default composeMiddleware((ctx, next) => {
   return next()
 }, {
   excludes: [
-    '/profile/**',  // Semua route yang diawali /user
-    '/about/*',     // Hanya 1 segmen setelah /setting
-    '/api'          // Hanya persis /dashboard
+    {
+      path: '/profile{/*splat}' // artinya path /profile dan setelahnya tidak akan kena middleware
+    },
+    {
+      path: '/setting/*splat' // artinya setelah path /setting/ tidak akan middleware kecuali path /setting sendiri
+      method: ['GET', "POST"]
+    },
+    "/" // path root tidak akan kena middleware
   ]
 })
 ```
-
-### Wildcard
-`*` (satu bintang) → **hanya satu segmen path**
-Contoh: 
-```bash
-/setting/* → match: /setting/user
-             tidak match: /setting/user/angga
-```
-`**` (dua bintang) → **semua segmen setelahnya**
-```bash
-/user/** → match: /user
-           match: /user/profile
-           match: /user/profile/edit
-```
+:::tip[path-to-regexp]
+Kami memakai library `path-to-regexp` untuk memanipulasi path url nya jadi jika anda ingin banyak informasi tentang path dan experiment lainnya bisa kunjungin repository berikut ["path-to-regexp"](https://github.com/pillarjs/path-to-regexp)
+:::
 
 Config Middleware juga bisa anda setting saat meregister ke dalam route, tetapi hanya `composeMiddleware` tidak dengan `autoComposeMiddleware` karna itu dah otomatis jadi global middleware.
 
@@ -143,7 +142,9 @@ defineBootstrap((app) => {
 // AppRoutes.ts
 composeRoutes((route) => {
   route.get('/', Handler).middleware(AppMiddleware({
-    excludes: ['/api/**']
+    excludes: [{
+      path: '/api/*splat'
+    }]
   }))
 })
 ```

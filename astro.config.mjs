@@ -101,20 +101,20 @@ export default defineConfig({
             directory: "docs/technical",
           },
         },
-        {
-          label: "Security",
+        // {
+        //   label: "Security",
 
-          items: [
-            {
-              link: "/docs/security/cors",
-              slug: "docs/security/cors",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
-            },
-          ],
-        },
+        //   items: [
+        //     {
+        //       link: "/docs/security/cors",
+        //       slug: "docs/security/cors",
+        //       badge: {
+        //         text: "Baru",
+        //         variant: "success",
+        //       },
+        //     },
+        //   ],
+        // },
         {
           label: "CLI",
           link: "/docs/cli",
