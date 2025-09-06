@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev --port 3521",
+    "dev": "astro dev",
     "start": "astro dev --port 3000",
     "build": "astro build",
     "preview": "astro preview",
