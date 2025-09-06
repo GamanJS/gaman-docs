@@ -55,7 +55,7 @@ export default defineConfig({
           slug: "docs",
         },
         {
-          label: "Ringkasan",
+          label: "Overview",
           items: [
             {
               link: "/docs/overview/first-steps",
@@ -77,17 +77,17 @@ export default defineConfig({
               link: "/docs/overview/interceptors",
               slug: "docs/overview/interceptors",
               badge: {
-                text: 'Baru',
-                variant: 'success'
-              }
+                text: "Baru",
+                variant: "success",
+              },
             },
             {
               link: "/docs/overview/exceptions",
               slug: "docs/overview/exceptions",
               badge: {
-                text: 'Baru',
-                variant: 'success'
-              }
+                text: "Baru",
+                variant: "success",
+              },
             },
             {
               link: "/docs/overview/responses",
@@ -96,10 +96,24 @@ export default defineConfig({
           ],
         },
         {
-          label: "Teknis",
+          label: "Technical",
           autogenerate: {
-            directory: "docs/teknis",
+            directory: "docs/technical",
           },
+        },
+        {
+          label: "Security",
+
+          items: [
+            {
+              link: "/docs/security/cors",
+              slug: "docs/security/cors",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+          ],
         },
         {
           label: "CLI",
