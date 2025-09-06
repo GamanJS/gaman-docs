@@ -1,0 +1,89 @@
+---
+import { footer } from "../utils/content";
+---
+
+<footer class="border-t border-gray-600/40 mt-14">
+  <div class="container">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-start py-16">
+      <!-- START:IMAGE -->
+      <div>
+        <div class="flex justify-center">
+          <img
+            src="/img/gaman-logo.png"
+            alt="GamanJS"
+            class="drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]"
+          />
+        </div>
+      </div>
+      <!-- END:IMAGE -->
+
+      <!-- START: DOCUMENTATION -->
+      <div>
+        <h5 class="font-bold">
+          {footer.documents.title}
+        </h5>
+        <div class="flex flex-col gap-2 mt-4">
+          {
+            footer.documents.links.map((item) => (
+              <a
+                class="text-sm text-gray-400 hover:text-pink-400 transition-all"
+                href={item.url}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <!-- END: DOCUMENTATION -->
+
+      <!-- START: COMMUNITY -->
+      <div>
+        <h5 class="font-bold">
+          {footer.community.title}
+        </h5>
+        <div class="flex flex-col gap-2 mt-4">
+          {
+            footer.community.links.map((item) => (
+              <a
+                class="text-sm text-gray-400 hover:text-pink-400 transition-all"
+                href={item.url}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <!-- START: COMMUNITY -->
+
+      <!-- START: RESOURCE -->
+      <div>
+        <h5 class="font-bold">
+          {footer.resource.title}
+        </h5>
+        <div class="flex flex-col gap-2 mt-4">
+          {
+            footer.resource.links.map((item) => (
+              <a
+                class="text-sm text-gray-400 hover:text-pink-400 transition-all"
+                href={item.url}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <!-- START: RESOURCE -->
+    </div>
+  </div>
+  <p class="text-center text-sm text-gray-400 border-t border-gray-600/40 py-6">
+    &copy; {new Date().getFullYear()} GamanJS. Powered by
+
+    <a
+      class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
+      href="https://gaman.7togk.id">7TogkID</a
+    >
+  </p>
+</footer>
