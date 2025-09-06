@@ -86,15 +86,15 @@ export const footer = {
     links: [
       {
         label: "Github",
-        url: "#",
+        url: "https://github.com/7TogkID/gaman",
       },
       {
         label: "Discord",
-        url: "#",
+        url: "https://discord.gg/CQ6fEqBe8f",
       },
       {
         label: "Whatsapp",
-        url: "#",
+        url: "https://whatsapp.com/channel/0029VbB0keR7z4kgczdSZ33s",
       },
     ],
   },
