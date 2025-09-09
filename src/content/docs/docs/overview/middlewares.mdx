@@ -30,10 +30,8 @@ import { AppMiddleware } from "./middlewares/AppMiddleware.ts"
 import { AuthMiddleware } from "./middlewares/AuthMiddleware.ts"
 
 defineBootstrap((app) => {
+  app.mount(AppMiddleware());
 
-  app.mountMiddleware(AppMiddleware()) // singgle global middleware
-
-  app.mountMiddleware([AppMiddleware(), AuthMidldeware()]) // multi global middleware
 })
 ```
 atau bisa di register ke dalam router tertentu berikut adalah contohnya:
@@ -79,10 +77,12 @@ disini gaman sudah menyiapkan default config bawaan middleware yang bisa kamu pa
 `priority` adalah config yang sangat berguna untuk semakin tinggal prioritas nya maka proses akan di jalankan lebih awal dari yang lain
 
 ```ts
+import { Priority } from "@gaman/common"
+
 export default composeMiddleware((ctx, next) => {
   return next();
 }, {
-  priority: 'normal' // "very-high" | "high" | "normal" | "low" | "very-low"
+  priority: Priority.NORMAL 
 })
 ```
 ### Includes
@@ -134,8 +134,8 @@ Contoh:
 ```ts
 // index.ts
 defineBootstrap((app) => {
-  app.mountMiddleware(AppMiddleware({
-    priority: 'high',
+  app.mount(AppMiddleware({
+    priority: Priority.HIGH,
     includes: ['/dashboard']
   }))
 })

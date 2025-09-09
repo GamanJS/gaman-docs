@@ -44,11 +44,7 @@ Contoh Register Global:
 // index.ts
 
 defineBootstrap((app) => {
-  // single
-  app.mountException(UserException)
-
-  // kamu bisa register banyak sekaligus
-  app.mountException([UserException, AppException])
+  app.mount(UserException)
 })
 ```
 

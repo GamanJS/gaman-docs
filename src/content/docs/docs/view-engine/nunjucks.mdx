@@ -1,0 +1,112 @@
+---
+title: Nunjucks
+---
+
+`@gaman/nunjucks` adalah **middleware resmi** untuk integrasi [Nunjucks](https://mozilla.github.io/nunjucks/) sebagai **view engine** di framework **GamanJS**.  
+Dengan ini Anda bisa merender file template `.njk` (atau ekstensi lain) langsung dari controller/handler menggunakan sistem view bawaan GamanJS.
+
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+  pkg="@gaman/nunjucks nunjucks"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+:::note
+Jika Anda menggunakan TypeScript, disarankan install juga definisi tipe:
+```bash
+npm install --save-dev @types/nunjucks
+```
+:::
+
+## Cara Pakai
+
+### Register Nunjucks
+
+Tambahkan middleware nunjucks ke aplikasi Anda:
+
+
+```ts
+// index.ts
+import { nunjucks } from "@gaman/nunjucks";
+
+defineBootstrap((app) => {
+  app.mount(
+    nunjucks({
+      viewPath: "src/views", // folder template
+      extension: ".njk",     // ekstensi file template
+    })
+  );
+});
+```
+
+### Membuat Template
+Buat file `src/views/index.njk`
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h1>Hello, {{ name }}!</h1>
+  </body>
+</html>
+```
+
+### Render dari Route
+
+Di route handler, gunakan `Res.render()`:
+
+```ts
+// AppRoutes.ts
+route.get("/", (ctx) => {
+  return Res.render("index", {
+    title: "My First Nunjucks Page",
+    name: "GamanJS 🚀"
+  });
+});
+```
+
+## Config Options
+
+| Nama        | Tipe                                                        | Default       | Deskripsi |
+|-------------|-------------------------------------------------------------|---------------|-----------|
+| `viewPath`  | `string`                                                    | `"src/views"` | Direktori root tempat template Nunjucks berada. |
+| `env`       | `(env: Environment) => void` \| `(env: Environment) => void[]` | `undefined`   | Callback untuk mengkustomisasi instance `nunjucks.Environment` (misalnya menambahkan filter, global, extension). Bisa berupa fungsi tunggal atau array fungsi. |
+| `extension` | `string`                                                    | `".njk"`      | Ekstensi default template. Jika nama template tanpa ekstensi, otomatis ditambahkan. |
+| *(opsi lain)* | Semua opsi dari [Nunjucks ConfigureOptions](https://mozilla.github.io/nunjucks/api.html#configure) kecuali `express`. | | |
+
+
+## Cara: Menambahkan Filter & Global 
+```ts
+// index.ts
+import { nunjucks } from "@gaman/nunjucks";
+
+defineBootstrap((app) => {
+  app.mount(
+    nunjucks({
+      env: (env) => {
+        env.addFilter("upper", (str: string) => str.toUpperCase());
+        env.addGlobal("appName", "GamanJS");
+      },
+    })
+  );
+});
+```
+`views/index.njk:`
+```html
+<h1>{{ appName | upper }}</h1>
+```
+Output:
+```html
+<h1>GAMANJS</h1>
+```
+---
+
+> Silakan baca dokumentasi lebih detail tentang [Nunjucks](https://mozilla.github.io/nunjucks)

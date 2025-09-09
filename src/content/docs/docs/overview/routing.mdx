@@ -30,7 +30,7 @@ disini kamu perlu meregister manual routes tadi ke dalam file `src/index.ts`
 import { AppRoutes } from "./routes/AppRoutes.ts"
 
 defineBootstrap((app) => {
-  app.mountRoutes(AppRoutes)
+  app.mount(AppRoutes)
 })
 ```
 

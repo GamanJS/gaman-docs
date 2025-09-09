@@ -33,10 +33,7 @@ nah disini kamu perlu register manual berikut adalah contohnya
 ```ts
 // index.ts
 defineBootstrap((app) => {
-  app.mountInterceptor(UserInterceptor)
-
-  // atau kalau mau register banyak
-  app.mountInterceptor([UserInterceptor, ValidationInterceptor])
+  app.mount(UserInterceptor)
 })
 ```
 berikut adalah contoh untuk route tertentu

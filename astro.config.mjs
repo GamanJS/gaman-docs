@@ -76,18 +76,10 @@ export default defineConfig({
             {
               link: "/docs/overview/interceptors",
               slug: "docs/overview/interceptors",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
             {
               link: "/docs/overview/exceptions",
               slug: "docs/overview/exceptions",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
             {
               link: "/docs/overview/responses",
@@ -97,24 +89,77 @@ export default defineConfig({
         },
         {
           label: "Technical",
-          autogenerate: {
-            directory: "docs/technical",
-          },
+          items: [
+            {
+              link: "/docs/technical/context",
+              slug: "docs/technical/context",
+            },
+            {
+              link: "/docs/technical/cookies",
+              slug: "docs/technical/cookies",
+            },
+            {
+              link: "/docs/technical/logging",
+              slug: "docs/technical/logging",
+            },
+            {
+              link: "/docs/technical/static-serve",
+              slug: "docs/technical/static-serve",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+            {
+              link: "/docs/technical/textformat",
+              slug: "docs/technical/textformat",
+            },
+          ],
         },
-        // {
-        //   label: "Security",
+        {
+          label: "Security",
 
-        //   items: [
-        //     {
-        //       link: "/docs/security/cors",
-        //       slug: "docs/security/cors",
-        //       badge: {
-        //         text: "Baru",
-        //         variant: "success",
-        //       },
-        //     },
-        //   ],
-        // },
+          items: [
+            {
+              link: "/docs/security/cors",
+              slug: "docs/security/cors",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+            {
+              link: "/docs/security/basic-auth",
+              slug: "docs/security/basic-auth",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+          ],
+        },
+        {
+          label: "View Engine",
+
+          items: [
+            {
+              link: "/docs/view-engine/nunjucks",
+              slug: "docs/view-engine/nunjucks",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+            {
+              link: "/docs/view-engine/ejs",
+              slug: "docs/view-engine/ejs",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+          ],
+        },
         {
           label: "CLI",
           link: "/docs/cli",

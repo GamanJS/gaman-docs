@@ -7,7 +7,7 @@ import Secure from "../icons/secure.astro";
 export const navbar = {
   links: [
     {
-      label: "Introduction",
+      label: "Documentations",
       url: "/docs",
     },
     {

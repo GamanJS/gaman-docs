@@ -1,0 +1,42 @@
+---
+interface Props {
+  code: string;
+  lang?: string;
+}
+
+const { code, lang = "bash" } = Astro.props;
+---
+
+<astro-codeblock>
+  <div class="relative w-full max-w-2xl">
+    <pre
+      class={`rounded-xl bg-stone-900 text-pink-100 p-4 m-0 overflow-x-auto font-mono text-sm`}>
+      <code class="language-{lang} p-0 m-0 flex items-center justify-center" lang={lang}>{code}</code>
+    </pre>
+
+    <button
+      class="absolute top-2 right-2 px-3 py-1 text-xs rounded-md bg-stone-800 hover:bg-stone-700 border border-stone-600 transition text-stone-200"
+    >
+      Copy
+    </button>
+  </div>
+</astro-codeblock>
+
+<script>
+  class AstroCodeblock extends HTMLElement {
+    connectedCallback() {
+      const code = this.querySelector("code");
+      const copyBtn = this.querySelector("button");
+
+      copyBtn?.addEventListener("click", (event) => {
+        navigator.clipboard.writeText(code?.innerText || "");
+
+        copyBtn.innerText = "Copied!";
+        setTimeout(() => (copyBtn.innerText = "Copy"), 1500);
+      });
+    }
+  }
+
+  // Tell the browser to use our AstroHeart class for <astro-heart> elements.
+  customElements.define("astro-codeblock", AstroCodeblock);
+</script>
