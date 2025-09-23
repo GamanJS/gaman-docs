@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gaman-docs
+    networks:
+      - net
+networks:
+  net:
+    external: true
