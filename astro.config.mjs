@@ -56,6 +56,10 @@ export default defineConfig({
         },
         {
           label: "Overview",
+          badge: {
+            text: "Baru",
+            variant: "success",
+          },
           items: [
             {
               link: "/docs/overview/first-steps",
@@ -84,11 +88,20 @@ export default defineConfig({
             {
               link: "/docs/overview/responses",
               slug: "docs/overview/responses",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
             },
           ],
         },
         {
           label: "Technical",
+          collapsed: true,
+          badge: {
+            text: "Baru",
+            variant: "success",
+          },
           items: [
             {
               link: "/docs/technical/context",
@@ -105,6 +118,10 @@ export default defineConfig({
             {
               link: "/docs/technical/static-serve",
               slug: "docs/technical/static-serve",
+            },
+            {
+              link: "/docs/technical/session",
+              slug: "docs/technical/session",
               badge: {
                 text: "Baru",
                 variant: "success",
@@ -118,45 +135,49 @@ export default defineConfig({
         },
         {
           label: "Security",
-
+          collapsed: true,
           items: [
             {
               link: "/docs/security/cors",
               slug: "docs/security/cors",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
             {
               link: "/docs/security/basic-auth",
               slug: "docs/security/basic-auth",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
           ],
         },
         {
           label: "View Engine",
-
+          collapsed: true,
           items: [
             {
               link: "/docs/view-engine/nunjucks",
               slug: "docs/view-engine/nunjucks",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
             {
               link: "/docs/view-engine/ejs",
               slug: "docs/view-engine/ejs",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
+            },
+          ],
+        },
+        {
+          label: "Websocket",
+          collapsed: true,
+          badge: {
+            text: "Baru",
+            variant: "success",
+          },
+          items: [
+            {
+              label: "Internal",
+              link: "/docs/websocket/internal",
+              slug: "docs/websocket/internal",
+            },
+            {
+              label: "External",
+              link: "/docs/websocket/external",
+              slug: "docs/websocket/external",
             },
           ],
         },
