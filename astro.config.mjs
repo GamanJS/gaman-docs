@@ -56,10 +56,6 @@ export default defineConfig({
         },
         {
           label: "Overview",
-          badge: {
-            text: "Baru",
-            variant: "success",
-          },
           items: [
             {
               link: "/docs/overview/first-steps",
@@ -88,20 +84,12 @@ export default defineConfig({
             {
               link: "/docs/overview/responses",
               slug: "docs/overview/responses",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
           ],
         },
         {
           label: "Technical",
           collapsed: true,
-          badge: {
-            text: "Baru",
-            variant: "success",
-          },
           items: [
             {
               link: "/docs/technical/context",
@@ -122,10 +110,6 @@ export default defineConfig({
             {
               link: "/docs/technical/session",
               slug: "docs/technical/session",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
             },
             {
               link: "/docs/technical/textformat",
@@ -136,10 +120,22 @@ export default defineConfig({
         {
           label: "Security",
           collapsed: true,
+          badge: {
+            text: "Baru",
+            variant: "success",
+          },
           items: [
             {
               link: "/docs/security/cors",
               slug: "docs/security/cors",
+            },
+            {
+              link: "/docs/security/rate-limit",
+              slug: "docs/security/rate-limit",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
             },
             {
               link: "/docs/security/basic-auth",
@@ -164,10 +160,6 @@ export default defineConfig({
         {
           label: "Websocket",
           collapsed: true,
-          badge: {
-            text: "Baru",
-            variant: "success",
-          },
           items: [
             {
               label: "Internal",

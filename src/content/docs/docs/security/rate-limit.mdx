@@ -1,0 +1,129 @@
+---
+title: Rate Limiter
+description: "@gaman/rate-limit adalah **middleware resmi** untuk **GamanJS** yang berfungsi membatasi jumlah permintaan (request) dari klien dalam periode waktu tertentu. Plugin ini dirancang untuk melindungi aplikasi dari **spam request**, **brute force attack**, dan **overload**, sekaligus menjaga performa server tetap stabil."
+---
+
+
+`@gaman/rate-limit` adalah **middleware resmi** untuk **GamanJS** yang berfungsi membatasi jumlah permintaan (request) dari klien dalam periode waktu tertentu.  
+Plugin ini dirancang untuk melindungi aplikasi dari **spam request**, **brute force attack**, dan **overload**, sekaligus menjaga performa server tetap stabil.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+
+<PackageManagers
+  pkg="@gaman/rate-limit"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+
+## Basic Used
+
+disini saya akan mencontohkan penggunaan sederhana `@gaman/rate-limit`.
+
+```ts
+// index.ts
+import { rateLimit } from '@gaman/rate-limit';
+
+defineBootstrap(async (app) => {
+	app.mount(
+		rateLimit({
+			ttl: 60_000, // 60 detik
+			limit: 5, // 5 klien dalam 60 detik
+		}),
+	);
+});
+```
+`ttl` adalah waktu jendela untuk klien dan `limit` adalah jumlah maksimal klien request
+
+jadi ketika `ttl` adalah `60_000 (60 detik)` dan `limit` adalah `5 (5 klien)` maka, jika klien request `lebih dari 5 kali` dalam kurun waktu `dibawah 60 detik` maka akan kena error rate limit 
+
+
+## Router Only
+
+`@gaman/rate-limit` disini adalah middleware jadi kamu bebas meletakan dimana aja, bisa di `index.ts` atau di `AppRoutes.ts`.
+
+Disini saya akan menyontohkan memakai di spesifik route
+
+```ts
+// AppRoutes.ts
+import { rateLimit } from '@gaman/rate-limit';
+
+export default autoComposeRoutes((r) => {
+	r.get('/', [AppController, 'HelloWorld']).middleware(
+    rateLimit({
+      ttl: 15_000 // 15 detik
+      limit: 3 // 5 klien
+    });
+  );
+});
+```
+disini kurang lebih seperti di awal tadi cuman disini kusus untuk satu route, sebenernya kamu juga bisa pakai di dalam route group juga.
+
+```ts
+// AppRoutes.ts
+import { rateLimit } from '@gaman/rate-limit';
+
+export default autoComposeRoutes((r) => {
+  
+	r.group("/user", (r) => {
+    r.get('/', [AppController, 'HelloWorld']);
+    r.get('/:id', [AppController, 'Get']);
+    r.get('/profile', [AppController, 'Profile']);
+  }).middleware(
+    rateLimit({
+      ttl: 15_000 // 15 detik
+      limit: 3 // 5 klien
+    });
+  );
+});
+```
+## Best Practice
+disini saya akan kasih best practice untuk aplikasi kamu dan sedikit penjelasan
+
+```ts
+// index.ts
+import { rateLimit } from '@gaman/rate-limit';
+
+defineBootstrap(async (app) => {
+	app.mount(
+		rateLimit({
+			ttl: 60_000, // 60 detik
+			limit: 5, // 5 klien dalam 60 detik
+      trustProxy: true // percayai proxy seperti nginx, apache dsb...
+      legacyHeaders: true // gunannya untuk mengirim data rate-limit lewat header
+		}),
+	);
+});
+```
+
+disini sedikit saya jelaskan tentang `trustProxy` jika kamu deploy aplikasi kamu pakai `nginx`, `apache` dan proxy lainnya itu dia akan ngirim ip klien lewat header `X-Forwarded-For` karna fungsi `ctx.request.ip` akan `null` ketika deploy pakai `proxy` jadi ip akan di kirim lewat header, jika `trustProxy` adalah `true` maka kamu akan mendapatkan `ip client` lewat header dan `rate-limit` berfungsi dengan baik.
+
+tetapi ketika kamu deploy tidak memakai `proxy`, config `trustProxy` tidak di butuhkan lagi
+
+
+dan untuk `legacyHeaders` ini adalah opsi header tua untuk mengirim data rate-limit sehingga klien bisa ambil data tersebut.
+
+biasanya ini fungsinya untuk klien ketika gagal request dia akan di kasih pesan kapan lagi dia harus request ke website tersebut, nah datanya itu dari mana? yaitu dari header `X-RateLimit-*`
+
+
+ada header `rate-limit` yang lebih terbaru seperti [draft-6](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers-06) [draft-7](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers-07) dan [draft-8](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers-08.) untuk kamu coba, tetapi ini sedikit berbeda.
+
+**Contoh:**
+```ts
+// index.ts
+import { rateLimit } from '@gaman/rate-limit';
+
+defineBootstrap(async (app) => {
+	app.mount(
+		rateLimit({
+      draft: 'draft-8' // draft-6 | draft-7 | draft-8 | legacy (default)
+		}),
+	);
+});
+```
+
+
