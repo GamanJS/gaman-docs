@@ -67,12 +67,12 @@ export const plugins = {
   items: [
     {
       icon: Secure,
-      title: "Basic Auth",
+      title: "Auth",
       text: "Protect routes using simple HTTP user authentication",
     },
     {
       icon: Securityuser,
-      title: "Session Auth",
+      title: "Session",
       text: "Persistent login system using cookie-based session storage",
     },
     {
