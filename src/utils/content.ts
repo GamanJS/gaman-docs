@@ -73,7 +73,7 @@ export const plugins = {
     {
       icon: Securityuser,
       title: "Session",
-      text: "Persistent login system using cookie-based session storage",
+      text: "Cookie based login system for persistent user sessions",
     },
     {
       icon: Broadcast,
