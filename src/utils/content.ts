@@ -7,6 +7,7 @@ import Documentcode from "../icons/documentcode.astro";
 import Electric from "../icons/electric.astro";
 import Request from "../icons/request.astro";
 import Secure from "../icons/secure.astro";
+import Securityuser from "../icons/securityuser.astro";
 
 // Navbar Section
 export const navbar = {
@@ -64,20 +65,20 @@ export const plugins = {
   description:
     "GamanJS comes with a collection of officially maintained and well-documented plugins.",
   items: [
-    // {
-    //   icon: Code1,
-    //   title: "ORM",
-    //   text: "Inject database access directly into your blocks",
-    // },
+    {
+      icon: Secure,
+      title: "Basic Auth",
+      text: "Protect routes using simple HTTP user authentication",
+    },
+    {
+      icon: Securityuser,
+      title: "Session Auth",
+      text: "Persistent login system using cookie-based session storage",
+    },
     {
       icon: Broadcast,
       title: "Web Socket",
       text: "Build real-time features with event-based channels",
-    },
-    {
-      icon: Secure,
-      title: "Auth",
-      text: "Simple user protection for routes or entire modules",
     },
 
     {
