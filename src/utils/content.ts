@@ -1,9 +1,14 @@
 import Box from "../icons/box.astro";
+import Broadcast from "../icons/broadcast.astro";
 import Code from "../icons/code.astro";
 import Code1 from "../icons/code1.astro";
+import Coludcross from "../icons/coludcross.astro";
+import Documentcode from "../icons/documentcode.astro";
 import Electric from "../icons/electric.astro";
+import Request from "../icons/request.astro";
 import Secure from "../icons/secure.astro";
 
+// Navbar Section
 export const navbar = {
   links: [
     {
@@ -21,9 +26,10 @@ export const navbar = {
   ],
 };
 
+// Feature Section
 export const features = {
   description:
-    "Everything you need to build reliable, scalable backend applications — all in one framework.",
+    "Everything you need to build reliable, scalable backend applications all in one framework.",
   items: [
     {
       icon: Code,
@@ -53,6 +59,47 @@ export const features = {
   ],
 };
 
+// Plugin Section
+export const plugins = {
+  description:
+    "GamanJS comes with a collection of officially maintained and well-documented plugins.",
+  items: [
+    // {
+    //   icon: Code1,
+    //   title: "ORM",
+    //   text: "Inject database access directly into your blocks",
+    // },
+    {
+      icon: Broadcast,
+      title: "Web Socket",
+      text: "Build real-time features with event-based channels",
+    },
+    {
+      icon: Secure,
+      title: "Auth",
+      text: "Simple user protection for routes or entire modules",
+    },
+
+    {
+      icon: Coludcross,
+      title: "CORS",
+      text: "Secure cross-origin access without manual header configs",
+    },
+    {
+      icon: Request,
+      title: "Limiter",
+      text: "Limits how many requests a client can make in a set timeframe.",
+    },
+
+    {
+      icon: Documentcode,
+      title: "View Engine",
+      text: "Render dynamic pages with your preferred template engine",
+    },
+  ],
+};
+
+// Footer
 const date = new Date();
 export const footer = {
   title: `© ${date.getFullYear()} GamanJS. All rights reserved.`,

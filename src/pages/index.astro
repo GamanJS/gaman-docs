@@ -2,7 +2,7 @@
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import "../styles/global.css";
-import { features } from "../utils/content";
+import { features, plugins } from "../utils/content";
 ---
 
 <!doctype html>
@@ -76,10 +76,10 @@ import { features } from "../utils/content";
       </div>
       <!-- END: Hero Content -->
 
-      <!-- START:Key Features -->
+      <!-- START: Key Features -->
       <section class="relative">
         <div class="container relative z-10">
-          <h2 class="section-title text-center">
+          <h2 class="section-title max-w-2xl mx-auto text-center">
             Why <span
               class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
               >Developers</span
@@ -121,7 +121,7 @@ import { features } from "../utils/content";
 
         <!-- background glow -->
         <div
-          class="absolute bottom-0 left-0 w-80 h-72 bg-purple-500 opacity-20 blur-3xl animate-pulse"
+          class="absolute bottom-0 left-0 w-80 h-72 bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 blur-3xl animate-pulse"
         >
         </div>
         <!-- <div
@@ -129,8 +129,63 @@ import { features } from "../utils/content";
         style="animation-delay: 2s;"
       > -->
       </section>
+      <!-- END: Key Features -->
+
+      <!-- START: Plugins -->
+      <section class="relative">
+        <div class="container relative z-10">
+          <h2 class="section-title text-center max-w-2xl mx-auto">
+            Extend <span
+              class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
+              >GamanJS</span
+            >
+            without touching <span
+              class="from-purple-400 to-pink-400 bg-gradient-to-r bg-clip-text text-transparent"
+              >the core</span
+            >
+          </h2>
+
+          <p class="section-subtitle text-center max-w-lg mx-auto mt-6">
+            {plugins.description}
+          </p>
+
+          <!-- START: List Plugins -->
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mt-10">
+            {
+              plugins.items.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <div class="card flex-col gap-4">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-pink-400/40 to-purple-400/30">
+                      <Icon class=" text-purple-300" />
+                    </div>
+                    <div>
+                      <h3 class="text-xl md:text-2xl font-semibold mb-4">
+                        {item.title}
+                      </h3>
+                      <p>{item.text}</p>
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
+          <!-- END: List Features -->
+        </div>
+
+        <!-- background glow -->
+        <div
+          class="absolute bottom-0 right-0 w-80 h-72 bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 blur-3xl animate-pulse"
+        >
+        </div>
+        <!-- <div
+        class="absolute -bottom-20 right-0 w-[25rem] h-[28rem] bg-pink-500 opacity-20 animate-pulse blur-3xl"
+        style="animation-delay: 2s;"
+      > -->
+      </section>
+      <!-- END: Plugins -->
     </main>
-    <!-- END: Key Features -->
   </body>
 
   <Footer />

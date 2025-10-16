@@ -13,13 +13,13 @@
     @apply font-poppins;
   }
   .container {
-    @apply mx-auto px-4 w-full max-w-7xl;
+    @apply mx-auto px-4 w-full max-w-6xl;
   }
   section {
     @apply py-14;
   }
   .section-title {
-    @apply text-2xl md:text-4xl text-white font-bold;
+    @apply text-2xl md:text-4xl lg:text-5xl text-white font-bold;
   }
   .section-subtitle {
     @apply text-pink-200 leading-relaxed tracking-wide;
