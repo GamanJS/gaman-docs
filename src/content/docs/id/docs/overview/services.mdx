@@ -1,0 +1,160 @@
+---
+title: Services
+---
+
+`composeService` adalah **utility function** untuk membuat service layer di **GamanJS**.  
+Service berisi business logic aplikasi yang terpisah dari controller/handler.
+
+## Membuat Service
+
+```ts
+// AppService.ts
+import { composeService } from "@gaman/core";
+
+export const AppService = composeService((userId: number) => ({
+  Welcome() {
+    return `Welcome user ${userId}!`;
+  },
+  
+  async GetProfile() {
+    return await db.user.findUnique({ where: { id: userId } });
+  }
+}));
+
+export type AppServiceType = ReturnType<typeof AppService>;
+```
+
+### Parameter Service
+
+Parameter di `composeService` bisa di-custom sesuai kebutuhan:
+
+```ts
+// Single parameter
+composeService((id: number) => ({ /* ... */ }))
+
+// Multiple parameters
+composeService((id: number, token: string) => ({ /* ... */ }))
+
+// Object parameter
+composeService((config: { userId: number; secret: string }) => ({ /* ... */ }))
+
+// Tanpa parameter
+composeService(() => ({ /* ... */ }))
+```
+
+## Cara Menggunakan Service
+
+### 1. Di Controller (Static Service)
+
+Inject service langsung ke controller dengan parameter tetap:
+
+```ts
+// UserController.ts
+import { composeController } from "@gaman/core";
+import { AppService, type AppServiceType } from "./AppService";
+
+export default composeController((service: AppServiceType = AppService()) => ({
+  CreateUser: async (ctx) => {
+    const profile = await service.GetProfile();
+    return Res.json({ message: "user created!", profile });
+  },
+}));
+```
+
+**Note:** Jika service memiliki parameter, masukkan nilainya saat inject: `AppService(userId)`
+
+### 2. Di Controller (Dynamic Service)
+
+Buat service instance baru dengan parameter dinamis dari request:
+
+```ts
+// UserController.ts
+import { composeController } from "@gaman/core";
+import { AppService } from "./AppService";
+
+export default composeController(() => ({
+  UpdateUser: (ctx) => {
+    // Service dinamis berdasarkan parameter dari request
+    const dynamicService = AppService(ctx.param("userId"));
+    const profile = await dynamicService.GetProfile();
+    return Res.json({ message: "user updated!", profile });
+  },
+}));
+```
+
+### 3. Langsung di Route
+
+```ts
+// AppRoutes.ts
+import { AppService } from "./AppService";
+
+route.get("/profile/:id", async (ctx) => {
+  const userId = parseInt(ctx.params.id);
+  const service = AppService(userId);
+  
+  const profile = await service.GetProfile();
+  return Res.json(profile);
+});
+
+route.get("/welcome", (ctx) => {
+  const service = AppService(ctx.user.id);
+  return Res.json({ message: service.Welcome() });
+});
+```
+
+## Contoh Lengkap
+
+```ts
+// UserService.ts
+export const UserService = composeService((userId: number, token: string) => ({
+  async GetUser() {
+    return await db.user.findUnique({ 
+      where: { id: userId } 
+    });
+  },
+  
+  async UpdateUser(data: any) {
+    // Verifikasi token
+    if (!this.verifyToken(token)) {
+      throw new Error("Invalid token");
+    }
+    
+    return await db.user.update({
+      where: { id: userId },
+      data
+    });
+  },
+  
+  verifyToken(token: string) {
+    // Logic verifikasi token
+    return true;
+  }
+}));
+
+export type UserServiceType = ReturnType<typeof UserService>;
+```
+
+Penggunaan:
+
+```ts
+// Di Controller
+export default composeController(
+  (service: UserServiceType = UserService(1, "secret-token")) => ({
+    GetProfile: async (ctx) => {
+      const user = await service.GetUser();
+      return Res.json(user);
+    }
+  })
+);
+
+// Atau langsung di Route
+route.get("/user/:id", async (ctx) => {
+  const service = UserService(
+    parseInt(ctx.params.id),
+    ctx.headers.authorization
+  );
+  
+  const user = await service.GetUser();
+  return Res.json(user);
+});
+```

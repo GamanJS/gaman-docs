@@ -1,0 +1,108 @@
+---
+title: Edge
+---
+
+`@gaman/edge` is the **official middleware** for integrating [Edge Engine](http://edgejs.dev) as a **view engine** in the **GamanJS** framework.  
+With this, you can render `.edge` template files (or other extensions) directly from controllers/handlers using GamanJS's built-in view system.
+
+## Installation
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+  pkg="@gaman/edge edge"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+## Usage
+
+### Register Edge
+
+Add the edge middleware to your application:
+
+```ts
+// index.ts
+import { edge } from "@gaman/edge";
+
+defineBootstrap((app) => {
+  app.mount(
+    edge({
+      viewPath: "src/views", 
+    })
+  );
+});
+```
+
+### Creating a Template
+Create a file `src/views/index.edge`
+
+```edge
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h1>Hello, {{ name }}</h1>
+  </body>
+</html>
+```
+
+### Rendering from a Route
+
+In your route handler, use `Res.render()`:
+
+```ts
+// AppRoutes.ts
+route.get("/", (ctx) => {
+  return Res.render("index", {
+    title: "My First Edge Page",
+    name: "GamanJS 🚀"
+  });
+});
+```
+
+## Edge Handler
+Here we provide what's called `composeEdgeHandler` which functions to create templates and other edge environments.
+
+### `composeEdgeHandler()`
+
+Create a file with any name
+```ts
+// EdgeHandler.ts
+import { composeEdgeHandler } from "@gaman/edge"
+
+export default composeEdgeHandler((edge) => {
+  edge.global('config', {
+    colorScheme: 'dark',
+    menu: [],
+    socialLinks: [],
+  });
+});
+```
+
+Then in `index.ts` do this:
+```ts
+// index.ts
+import { EdgeHandler } from "./EdgeHandler.ts"
+
+defineBootstrap(async (app) => {
+  app.mount(
+    edge({
+      handler: EdgeHandler
+    })
+  )
+});
+```
+
+## Config Options
+
+| Name        | Type                                                        | Default       | Description |
+|-------------|-------------------------------------------------------------|---------------|-------------|
+| `viewPath`  | `string`                                                    | `"src/views"` | Root directory where Edge templates are located. |
+| `handler`   | `(edge) => {}`                                              | `undefined`   | Edge handler |
+
+---
+
+> Please read more detailed documentation about [Edge.js](https://edgejs.dev)

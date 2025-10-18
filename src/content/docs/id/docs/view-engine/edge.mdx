@@ -1,0 +1,110 @@
+---
+title: Edge
+---
+
+`@gaman/edge` adalah **middleware resmi** untuk integrasi [Edge Engine](http://edgejs.dev) sebagai **view engine** di framework **GamanJS**.  
+Dengan ini Anda bisa merender file template `.edge` (atau ekstensi lain) langsung dari controller/handler menggunakan sistem view bawaan GamanJS.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+  pkg="@gaman/edge edge"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+## Cara Pakai
+
+### Register edge
+
+Tambahkan middleware ejs ke aplikasi Anda:
+
+
+```ts
+// index.ts
+import { edge } from "@gaman/edge";
+
+defineBootstrap((app) => {
+  app.mount(
+    edge({
+      viewPath: "src/views", 
+    })
+  );
+});
+```
+
+### Membuat Template
+Buat file `src/views/index.edge`
+
+```edge
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h1>Hello, {{ name }}</h1>
+  </body>
+</html>
+```
+
+### Render dari Route
+
+Di route handler, gunakan `Res.render()`:
+
+```ts
+// AppRoutes.ts
+route.get("/", (ctx) => {
+  return Res.render("index", {
+    title: "My First EJS Page",
+    name: "GamanJS 🚀"
+  });
+});
+```
+
+## Edge Handler
+disini kita menyediakan yang namanya `composeEdgeHandler` yang berfungsi untuk membuat template dan environment edge lainnya.
+
+### `composeEdgeHandler()`
+
+buat file namanya bebas
+```ts
+// EdgeHandler.ts
+import { composeEdgeHandler } from "@gaman/edge"
+
+export default composeEdgeHandler((edge) => {
+  edge.global('config', {
+    colorScheme: 'dark',
+    menu: [],
+    socialLinks: [],
+  });
+});
+```
+
+lalu di `index.ts` lakukan ini.
+```ts
+// index.ts
+import { EdgeHandler } from "./EdgeHandler.ts"
+
+defineBootstrap(async (app) => {
+  app.mount(
+    edge({
+      handler: EdgeHandler
+    })
+  )
+});
+```
+
+## Config Options
+
+| Nama        | Tipe                                                        | Default       | Deskripsi |
+|-------------|-------------------------------------------------------------|---------------|-----------|
+| `viewPath`  | `string`                                                    | `"src/views"` | Direktori root tempat template EJS berada. |
+| `handler`  | `(edge) => {}`                                                    | `undefined` | handler edge |
+
+
+---
+
+> Silakan baca dokumentasi lebih detail tentang [EJS (Embedded JavaScript Templates)](https://ejs.co)
