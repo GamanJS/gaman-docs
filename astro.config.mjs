@@ -8,6 +8,9 @@ import node from "@astrojs/node";
 // https://astro.build/config
 export default defineConfig({
   vite: {
+    server: {
+      allowedHosts: ["gaman.7togk.id"],
+    },
     plugins: [tailwindcss()],
   },
 
@@ -20,6 +23,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Gaman Docs",
+      favicon: "/img/gaman-big.png",
       defaultLocale: "en",
       locales: {
         en: { label: "English", lang: "en", dir: "ltr" },
@@ -28,10 +32,19 @@ export default defineConfig({
       social: [
         {
           icon: "github",
-          label: "GitHub",
-          href: "https://github.com/GamanJS/gaman-docs",
+          label: "Github",
+          href: "https://github.com/7TogkID/gaman",
+        },
+        {
+          icon: "comment",
+          label: "WhatsApp",
+          href: "https://whatsapp.com/channel/0029VbB0keR7z4kgczdSZ33s",
         },
       ],
+      logo: {
+        src: "/public/img/gaman-big.png",
+      },
+      customCss: ["./src/styles/custom.css"],
       sidebar: [
         {
           label: "Overview",
