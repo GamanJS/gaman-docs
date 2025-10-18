@@ -1,0 +1,64 @@
+---
+title: Exceptions
+---
+
+Apa itu exceptions di gaman? gaman memiki exceptions handler bisa di sebut error handling, jadi mengontroll error system yang ada. penggunaanya cukup simple memakai `composeExceptionHandler` saja.
+
+## Exception Definition
+### `composeExceptionHandler()`
+`composeExceptionHandler` disini tidak akan otomatis keregister otomatis kedalam sistem, jadi kamu perlu meregister secara manual.
+
+```ts
+// UserException.ts
+import { composeExceptionHandler } from "@gaman/core"
+
+export default composeExceptionHandler((err: Error) => {
+  if(err instanceof HttpException){
+    const context = err.context;
+    if(context.url.pathname.includes('/dashboard')){
+      return Res.text("Ini Adalah dashboard")
+    }
+  }
+
+  return Res.json({
+    message: 'Internal Server Error'
+  }, { status: 500 })
+})
+```
+disini kamu perlu meregister exception kamu ke spesifik route atau secara global
+
+Contoh Spesifik Route:
+```ts
+// single route
+route.get('/user', Handler).exception(UserException);
+
+// atau langsung group biar ga satu satu
+route.group('/user', (route) => {
+  // other routes
+}).exception([UserException, AppException])
+
+```
+
+Contoh Register Global:
+```ts
+// index.ts
+
+defineBootstrap((app) => {
+  app.mount(UserException)
+})
+```
+
+### `autoComposeExceptionHandler()`
+jika kamu memakai `autoComposeExceptionHandler` maka exception handler akan otomatis di register kedalam sistem secara global dengan persyaratan harus berada di dalam folder `src/exceptions/**`.
+
+```ts
+// UserException.ts
+import { autoComposeExceptionHandler } from "@gaman/core"
+
+export default autoComposeExceptionHandler((err: Error) => {
+  return Res.json({
+    message: "Internal server error!"
+  }, { status: 500 })
+})
+```
+disini kamu tidak perlu meregister manual karna sudah otomatis di register oleh sistem

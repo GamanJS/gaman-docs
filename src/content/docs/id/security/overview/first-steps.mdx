@@ -1,0 +1,44 @@
+---
+title: Langkah Awal
+description: GamanJS is a modular and efficient backend framework designed for simplicity and performance. Follow the steps below to quickly get started with your first GamanJS project.
+---
+
+### Bahasa
+
+GamanJS dirancang khusus untuk bekerja dengan ***TypeScript*** dan ***JavaScript*** modern menggunakan sistem Modul ***ECMAScript (ESM)***. Ini berarti semua modul harus ditulis menggunakan sintaksis **import** dan **export** CommonJS (require, modul.exports) tidak didukung. Jika Anda membangun proyek dengan GamanJS, pastikan lingkungan dan basis kode Anda sepenuhnya kompatibel dengan **ESM**.
+
+### Prasyarat
+
+Tolong pastikan `Node.js` (version => 18.x) terinstal pada sistem operasi Anda.
+
+---
+
+## Buat proyek pertama
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat membuatnya menggunakan manajer paket favorit Anda:
+
+<PackageManagers
+  pkg="gaman@latest"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="create"
+/>
+
+## Struktur Proyek
+
+import { FileTree } from "@astrojs/starlight/components";
+
+Setelah membuat proyek baru, struktur file Anda akan terlihat seperti ini:
+
+<FileTree>
+- src
+  - controllers
+    - AppController.ts
+  - routes
+    - AppRoutes.ts
+  - index.d.ts
+  - index.ts
+- package.json
+- tsconfig.json
+</FileTree>

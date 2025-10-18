@@ -1,0 +1,48 @@
+---
+title: Websocket External
+description: Websocket external juga bisa di pasang di gamanjs seperti socket.io atau sejenisnya...
+---
+
+Websocket external ini bukan bawaan dari gamanjs yang di maksud disini kita hanya ingin menyampaikan: *GamanJS ini juga bisa kamu pasang library Websocket lain loh, contohnya seperti [socket.io](https://socket.io) dan sejenisnya.*
+
+## Socket.io
+disini saya akan memberikan contoh library websocket yang banyak di ketahui oleh developer developer di dunia yaitu [socket.io](https://socket.io).
+
+### Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+
+<PackageManagers
+  pkg="socket.io"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+### Implementasi
+
+```diff lang="ts"
+// index.ts
++ import { Server } from 'socket.io';
+
+ defineBootstrap(async (app) => {
+   const server = await app.mountSever(":3431");
++   const io = new Server(server);
++   io.on('connection', (socket) => {
++     console.log('a user connected');
++   });
+ });
+```
+### Client Side
+
+```diff lang="html"
++  <script src="/socket.io/socket.io.js"></script>
+   <script>
++    const socket = io();
+   </script>
+```
+
+:::note
+Baca dokumentasi lengkap [socket.io](https://socket.io)
+:::

@@ -1,0 +1,83 @@
+---
+title: Static Serve
+---
+
+`@gaman/static` adalah **middleware resmi** untuk melayani **static files** pada framework **GamanJS**.  
+Dengan middleware ini Anda bisa menyajikan file seperti **HTML, CSS, JS, gambar, font, manifest** dan asset lainnya langsung dari folder tertentu (default: `public/`).
+
+Middleware ini sudah mendukung:
+- Deteksi otomatis **MIME type** (dengan opsi kustomisasi).
+- **Brotli (.br)** dan **Gzip (.gz)** compression berdasarkan `Accept-Encoding`.
+- **ETag** untuk caching efisien (mendukung `304 Not Modified`).
+- Opsi fallback ke **`index.html`** untuk aplikasi **SPA**.
+
+---
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+  pkg="@gaman/static"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+---
+
+## Cara Pakai
+
+Contoh paling sederhana:
+
+```ts
+// index.ts
+import { staticServe } from "@gaman/static"
+
+defineBootstrap((app) => {
+  app.mount(staticServe())
+})
+```
+Secara default, middleware akan membaca file dari folder public/.
+
+## Contoh Lengkap
+
+```ts
+// index.ts
+import { staticServe } from "@gaman/static"
+
+defineBootstrap((app) => {
+  app.mount(
+    staticServe({
+      path: "assets", // folder asset
+      defaultDocument: "home.html", // file default jika akses ke folder
+      fallbackToIndexHTML: true, // fallback SPA
+      cacheControl: "public, max-age=86400", // cache 1 hari
+      rewriteRequestPath: (p) => p.replace(/^\/static/, ""), // hapus prefix
+      mimes: {
+        ".webmanifest": "application/manifest+json"
+      },
+      onFound: (filePath, ctx) => {
+        Log.log("Serve file:", filePath)
+      },
+      onNotFound: (filePath, ctx) => {
+        Log.log("File tidak ditemukan:", filePath)
+      }
+    })
+  )
+})
+```
+
+## Config
+| Nama                  | Tipe                                 | Default                   | Deskripsi |
+|-----------------------|--------------------------------------|---------------------------|-----------|
+| `path`                | `string`                            | `"public"`                | Root folder untuk asset static. |
+| `mimes`               | `Record<string, string>`            | `{}`                      | Mapping kustom MIME type. |
+| `defaultDocument`     | `string`                            | `"index.html"`            | File default ketika direktori diakses. |
+| `rewriteRequestPath`  | `(path: string) => string`          | `undefined`               | Fungsi untuk memodifikasi request path. |
+| `onFound`             | `(path: string, ctx: any) => void`  | `undefined`               | Callback ketika file ditemukan. |
+| `onNotFound`          | `(path: string, ctx: any) => void`  | `undefined`               | Callback ketika file tidak ditemukan. |
+| `cacheControl`        | `string`                            | `"public, max-age=3600"`  | Header `Cache-Control`. |
+| `fallbackToIndexHTML` | `boolean`                           | `false`                   | Fallback ke `index.html` untuk aplikasi SPA. |
+| `priority`            | `Priority` enum                     | `Priority.MONITOR`        | Urutan eksekusi middleware di pipeline. |
+| `includes`            | `string[]`                          | `[]`                      | Path yang akan diproteksi middleware. |
+| `excludes`            | `string[]`                          | `[]`                      | Path yang dikecualikan dari middleware. |

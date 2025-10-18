@@ -2,10 +2,8 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
-
-import node from "@astrojs/node";
-
 import sitemap from "@astrojs/sitemap";
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,172 +15,85 @@ export default defineConfig({
   },
 
   site: "https://gaman.7togk.id",
-
   server: {
     port: 3521,
     host: "0.0.0.0",
   },
-
   integrations: [
     starlight({
       title: "Gaman Docs",
-      favicon: "/img/gaman-big.png",
-      locales: {
-        root: {
-          lang: "id",
-          label: "Indonesia",
-        },
-      },
       social: [
         {
           icon: "github",
-          label: "Github",
-          href: "https://github.com/7TogkID/gaman",
-        },
-        {
-          icon: "comment",
-          label: "WhatsApp",
-          href: "https://whatsapp.com/channel/0029VbB0keR7z4kgczdSZ33s",
+          label: "GitHub",
+          href: "https://github.com/GamanJS/gaman-docs",
         },
       ],
-      logo: {
-        src: "/public/img/gaman-big.png",
-      },
-      customCss: ["./src/styles/custom.css"],
-      sidebar: [
-        {
-          link: "/docs",
-          slug: "docs",
+      defaultLocale: "en",
+      locales: {
+        en: {
+          label: "English",
+          lang: "en",
+          direction: "ltr",
         },
+        id: {
+          label: "Bahasa Indonesia",
+          lang: "id",
+          direction: "ltr",
+        },
+      },
+      sidebar: [
         {
           label: "Overview",
           items: [
-            {
-              link: "/docs/overview/first-steps",
-              slug: "docs/overview/first-steps",
-            },
-            {
-              link: "/docs/overview/routing",
-              slug: "docs/overview/routing",
-            },
-            {
-              link: "/docs/overview/controllers",
-              slug: "docs/overview/controllers",
-            },
-            {
-              link: "/docs/overview/middlewares",
-              slug: "docs/overview/middlewares",
-            },
-            {
-              link: "/docs/overview/interceptors",
-              slug: "docs/overview/interceptors",
-            },
-            {
-              link: "/docs/overview/exceptions",
-              slug: "docs/overview/exceptions",
-            },
-            {
-              link: "/docs/overview/responses",
-              slug: "docs/overview/responses",
-            },
+            // Each item in this array is a link to a page.
+            { label: "First Steps", link: "/overview/first-steps" },
+            { label: "Routing", link: "/overview/routing" },
+            { label: "Controllers", link: "/overview/controllers" },
+            { label: "Responses", link: "/overview/responses" },
+            { label: "Middlewares", link: "/overview/middlewares" },
+            { label: "Interceptors", link: "/overview/interceptors" },
+            { label: "Exceptions", link: "/overview/exceptions" },
+            { label: "CLI", link: "/overview/cli" },
           ],
         },
         {
           label: "Technical",
-          collapsed: true,
           items: [
-            {
-              link: "/docs/technical/context",
-              slug: "docs/technical/context",
-            },
-            {
-              link: "/docs/technical/cookies",
-              slug: "docs/technical/cookies",
-            },
-            {
-              link: "/docs/technical/logging",
-              slug: "docs/technical/logging",
-            },
-            {
-              link: "/docs/technical/static-serve",
-              slug: "docs/technical/static-serve",
-            },
-            {
-              link: "/docs/technical/session",
-              slug: "docs/technical/session",
-            },
-            {
-              link: "/docs/technical/textformat",
-              slug: "docs/technical/textformat",
-            },
+            { label: "Context", link: "/technical/context" },
+            { label: "Session", link: "/technical/session" },
+            { label: "Cookies", link: "/technical/cookies" },
+            { label: "Logging", link: "/technical/logging" },
+            { label: "Static Serve", link: "/technical/static-serve" },
+            { label: "Text Format", link: "/technical/textformat" },
           ],
         },
         {
           label: "Security",
-          collapsed: true,
-          badge: {
-            text: "Baru",
-            variant: "success",
-          },
           items: [
-            {
-              link: "/docs/security/cors",
-              slug: "docs/security/cors",
-            },
-            {
-              link: "/docs/security/rate-limit",
-              slug: "docs/security/rate-limit",
-              badge: {
-                text: "Baru",
-                variant: "success",
-              },
-            },
-            {
-              link: "/docs/security/basic-auth",
-              slug: "docs/security/basic-auth",
-            },
+            { label: "CORS", link: "/security/cors" },
+            { label: "Basic Auth", link: "/security/basic-auth" },
+            { label: "Rate Limit", link: "/security/rate-limit" },
           ],
         },
         {
           label: "View Engine",
-          collapsed: true,
           items: [
-            {
-              link: "/docs/view-engine/nunjucks",
-              slug: "docs/view-engine/nunjucks",
-            },
-            {
-              link: "/docs/view-engine/ejs",
-              slug: "docs/view-engine/ejs",
-            },
+            { label: "EJS", link: "/view-engine/ejs" },
+            { label: "Nunjucks", link: "/view-engine/nunjucks" },
           ],
         },
         {
           label: "Websocket",
-          collapsed: true,
           items: [
-            {
-              label: "Internal",
-              link: "/docs/websocket/internal",
-              slug: "docs/websocket/internal",
-            },
-            {
-              label: "External",
-              link: "/docs/websocket/external",
-              slug: "docs/websocket/external",
-            },
+            { label: "Internal", link: "/websocket/internal" },
+            { label: "External", link: "/websocket/external" },
           ],
-        },
-        {
-          label: "CLI",
-          link: "/docs/cli",
-          slug: "docs/cli",
         },
       ],
     }),
     sitemap(),
   ],
-
   adapter: node({
     mode: "standalone",
   }),

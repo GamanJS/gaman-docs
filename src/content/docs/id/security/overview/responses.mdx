@@ -1,0 +1,296 @@
+---
+
+title: Responses
+description: GamanJS menyediakan sistem Response yang fleksibel untuk menangani respons HTTP. Anda dapat mengembalikan respons menggunakan kelas `Res` atau shortcut praktis yang secara otomatis menentukan tipe respons.
+---
+
+**Response Gaman** disini kita memakai fungsi `Res`, anda tidak perlu mengimport nya terlebih dahulu dikarenakan fungsi `Res` disini sudah menjadi fungsi `global` jadi bisa anda pakai dimana saja.
+
+## Gambaran Umum
+
+Import kelas Response dan gunakan dalam handler route Anda:
+
+```ts
+(ctx) => {
+  return Res.json({ message: "Halo Dunia" }, { status: 200 });
+};
+```
+FYI: Response status bisa sorthand seperti ini
+
+```ts
+(ctx) => {
+  return Res.json({ message: "Bad Request" }, 403); // langsung masukin status number
+};
+```
+
+---
+
+## Metode Response
+
+### `Res.json(data, init?)`
+
+Mengembalikan respons JSON dengan `Content-Type: application/json`.
+
+```ts
+(ctx) => {
+  return Res.json({
+    user: { id: 1, name: "Angga" },
+    status: "success",
+  });
+};
+
+// Dengan opsi kustom
+(ctx) => {
+  return Res.json(
+    { error: "Tidak ditemukan" },
+    { status: 404, headers: { "X-Custom": "value" } }
+  );
+};
+```
+
+### `Res.text(message, init?)`
+
+Mengembalikan respons teks biasa dengan `Content-Type: text/plain`.
+
+```ts
+(ctx) => {
+  return Res.text("Halo, Dunia!");
+};
+
+// Dengan status kustom
+(ctx) => {
+  return Res.text("Kesalahan Server", { status: 500 });
+};
+```
+
+### `Res.html(body, init?)`
+
+Mengembalikan respons HTML dengan `Content-Type: text/html`.
+
+```ts
+(ctx) => {
+  return Res.html(`
+    <html>
+      <body>
+        <h1>Selamat Datang</h1>
+        <p>Halo dari GamanJS!</p>
+      </body>
+    </html>
+  `);
+};
+
+// Dengan header kustom
+(ctx) => {
+  return Res.html("<h1>Halaman Kustom</h1>", {
+    status: 201,
+    headers: { "X-Frame-Options": "DENY" },
+  });
+};
+```
+
+### `Res.render(viewName, data?, init?)`
+
+Merender template menggunakan view engine yang telah dikonfigurasi. Memerlukan pengaturan integrasi view engine terlebih dahulu.
+
+```ts
+(ctx) => {
+  return Res.render("home", {
+    title: "Selamat Datang",
+    user: { name: "Angga" },
+  });
+};
+
+// Dengan status kustom
+(ctx) => {
+  return Res.render("error", { message: "Halaman tidak ditemukan" }, { status: 404 });
+};
+```
+
+### `Res.stream(stream, init?)`
+
+Mengembalikan respons streaming dengan `Content-Type: application/octet-stream`.
+
+```ts
+import { createReadStream } from "fs";
+
+(ctx) => {
+  const fileStream = createReadStream("./file-besar.pdf");
+  return Res.stream(fileStream);
+};
+
+// Dengan tipe konten kustom
+(ctx) => {
+  const videoStream = createReadStream("./video.mp4");
+  return Res.stream(videoStream, {
+    headers: { "Content-Type": "video/mp4" },
+  });
+};
+```
+
+### `Res.redirect(location, status?)`
+
+Mengembalikan respons redirect. Status default adalah 302 (redirect sementara).
+
+```ts
+(ctx) => {
+  return Res.redirect("/login");
+};
+
+// Redirect permanen (301)
+(ctx) => {
+  return Res.redirect("/url-baru", 301);
+};
+
+// Redirect sementara (302) - eksplisit
+(ctx) => {
+  return Res.redirect("/dashboard", 302);
+};
+```
+
+## Shorthand Response
+
+### `Res.ok(body)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `200`.
+
+```ts
+ctx => {
+  return Res.ok({ message: "OK" })
+}
+```
+
+### `Res.created(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `201`.
+
+```ts
+ctx => {
+  return Res.created({ message: "Created" })
+}
+```
+
+### `Res.accepted(body)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `202`.
+
+```ts
+ctx => {
+  return Res.accepted({ message: "Accepted" })
+}
+```
+
+### `Res.nonAuthoritativeInformation(body)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `203`.
+
+```ts
+ctx => {
+  return Res.nonAuthoritativeInformation({ message: "Non Authoritative Information" })
+}
+```
+
+### `Res.noContent()`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `204` tanpa konten.
+
+```ts
+ctx => {
+  return Res.noContent()
+}
+```
+
+### `Res.resetContent()`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `205` tanpa konten.
+
+```ts
+ctx => {
+  return Res.resetContent()
+}
+```
+
+### `Res.partialContent(body)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `206`.
+
+```ts
+ctx => {
+  return Res.partialContent({ message: "Partial Content" })
+}
+```
+
+### `Res.multipleChoices(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `300`.
+
+```ts
+ctx => {
+  return Res.multipleChoices({ message: "Multiple Choices" })
+}
+```
+
+### `Res.movedPermanently(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `301`.
+
+```ts
+ctx => {
+  return Res.movedPermanently({ message: "Moved Permanently" })
+}
+```
+
+### `Res.movedTemporarily(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `302`.
+
+```ts
+ctx => {
+  return Res.movedTemporarily({ message: "Moved Temporarily" })
+}
+```
+
+### `Res.seeOther(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `303`.
+
+```ts
+ctx => {
+  return Res.seeOther({ message: "See Other" })
+}
+```
+
+### `Res.notModified(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `304`.
+
+```ts
+ctx => {
+  return Res.notModified({ message: "Not Modified" })
+}
+```
+
+### `Res.useProxy(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `305`.
+
+```ts
+ctx => {
+  return Res.useProxy({ message: "Use Proxy" })
+}
+```
+
+### `Res.temporaryRedirect(body?)`
+
+Metode singkat untuk menyelesaikan permintaan dengan kode status `307`.
+
+```ts
+ctx => {
+  return Res.temporaryRedirect({ message: "Temporary Redirect" })
+}
+```
+
+---
+
+*(dst bisa dilanjutkan untuk semua kode 4xx dan 5xx dengan format sama)*
+
+> Sistem Response GamanJS memberikan kenyamanan dan fleksibilitas, memungkinkan Anda memilih antara metode respons eksplisit dan shortcut otomatis sesuai kebutuhan Anda.

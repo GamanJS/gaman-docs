@@ -1,0 +1,83 @@
+---
+title: EJS
+---
+
+`@gaman/ejs` adalah **middleware resmi** untuk integrasi [EJS (Embedded JavaScript Templates)](https://ejs.co) sebagai **view engine** di framework **GamanJS**.  
+Dengan ini Anda bisa merender file template `.ejs` (atau ekstensi lain) langsung dari controller/handler menggunakan sistem view bawaan GamanJS.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+  pkg="@gaman/ejs ejs"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+:::note
+Jika Anda menggunakan TypeScript, disarankan install juga definisi tipe:
+```bash
+npm install --save-dev @types/ejs
+```
+:::
+
+## Cara Pakai
+
+### Register ejs
+
+Tambahkan middleware ejs ke aplikasi Anda:
+
+
+```ts
+// index.ts
+import { ejs } from "@gaman/ejs";
+
+defineBootstrap((app) => {
+  app.mount(
+    ejs({
+      viewPath: "src/views", // folder template
+    })
+  );
+});
+```
+
+### Membuat Template
+Buat file `src/views/index.ejs`
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+  </head>
+  <body>
+    <h1>Hello, <%= name %>!</h1>
+  </body>
+</html>
+```
+
+### Render dari Route
+
+Di route handler, gunakan `Res.render()`:
+
+```ts
+// AppRoutes.ts
+route.get("/", (ctx) => {
+  return Res.render("index", {
+    title: "My First EJS Page",
+    name: "GamanJS 🚀"
+  });
+});
+```
+
+## Config Options
+
+| Nama        | Tipe                                                        | Default       | Deskripsi |
+|-------------|-------------------------------------------------------------|---------------|-----------|
+| `viewPath`  | `string`                                                    | `"src/views"` | Direktori root tempat template EJS berada. |
+
+
+---
+
+> Silakan baca dokumentasi lebih detail tentang [EJS (Embedded JavaScript Templates)](https://ejs.co)

@@ -1,0 +1,112 @@
+---
+title: Session
+description: session adalah plugins resmi dari gamanjs
+---
+
+`@gaman/session` adalah middleware `session` untuk GamanJS.
+Ini membantu Anda mengelola `session` pengguna menggunakan `cookies` dan penyimpanan eksternal opsional.
+Anda dapat dengan mudah mengonfigurasi opsi sesi seperti nama `cookies`, masa berlaku, keamanan, dan apakah `cookies` tersebut akan berfungsi dalam permintaan lintas situs.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+
+<PackageManagers
+  pkg="@gaman/session"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+
+## Basic
+```ts
+// index.ts
+import { session } from "@gaman/session"
+
+defineBootstrap((app) => {
+   app.mount(
+     session({
+        crossSite: false // if you want 2 applications such as Vite React + GamanJS, crossSite: make it true
+     })
+   )
+});
+```
+```ts
+// Handler.ts
+async (ctx) => {
+  await ctx.session.set({userId: '...'});
+  
+  await ctx.session.get();
+  await ctx.session.delete();
+}
+```
+
+## Cross Site
+
+![Cross Site Session GamanJS](/img/workflow/cross-site-session.png)
+
+Simplenya gini semisal anda membuat aplikasi `backend` sama `frontend`, frontend pakai `vite + react` backend pakai `gamanjs` nah semisal URL frontend `https://frontend.com` dan backend `https://backend.com` nah kedua itu saling berhubungan lewat cookies.
+
+Ketika dari frontend `berhasil login -> request fetch -> backend -> response Set-Cookie: sesion` otomatis di `vite + react` ada cookies bernama `gaman-session-sid` dia ini bersifat `httpOnly` jadi tidak bisa di ambil dari javascript
+
+nah sekarang `client sudah ada session` jadi ketika dia request ke backend, backend otomatis dapat cookies `gaman-session-sid`. ya kasarannya gitu :)
+
+:::note
+jika anda ingin cross site anda memerlukan plugin tambahan yaitu [@gaman/cors](/docs/security/cors)
+
+<PackageManagers
+  pkg="@gaman/cors"
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+  type="install"
+/>
+:::
+
+pastikan credentials nya di kasih true biar dari backend bisa ngirim cookies ke client!
+```ts
+// index.ts
+import { session } from "@gaman/session"
+import { cors } from "@gaman/cors"
+
+defineBootstrap((app) => {
+
+   app.mount(
+     cors({
+       origin: ['https://frontend.com'] // set client app url,
+       credentials: true // must be true
+     }),
+     session({
+        crossSite: true //<- set true,
+        domain: '.frontend.com' // pastikan ini juga di atur tapi kalau masih tahap development ga wajib
+     })
+   )
+});
+```
+
+### Create route
+
+kita coba buat route login disini untuk membuat session, semisal berhasil login
+
+```ts
+route.post('/login', async (ctx) => {
+
+  await ctx.session.set({ userId: 'abogoboga' }); // set session
+
+  return Res.json({message: "OK!"});
+});
+```
+
+### Client Side
+
+disini di server client side anggap aja kita memakai html biasa, disini request ke url `/login` backend memakai `fetch`
+
+```html
+<script>
+  fetch('https://backend.com/login', {
+    method: "POST",
+    credentials: 'include' // must be include
+  });
+
+</script>
+```
+pastikan `credentials: 'include'` biar bisa nerima cookies dari backend dan otomatis ke set ke client side (HTTP Only)
