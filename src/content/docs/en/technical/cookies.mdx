@@ -12,72 +12,47 @@ title: Cookies
 
 here is a simple example of creating cookies
 
-```ts
-
-(ctx) => {
-
-  ctx.cookies.set('session', 'abogoboga', {
-
-    secure: true
-
-    expires: 60 * 60 * 24 * 30 // 30 days
-
-  })
-
-}
-
-```
+ ```ts
+ (ctx) => {
+   ctx.cookies.set('session', 'abogoboga', {
+     secure: true,
+     expires: 60 * 60 * 24 * 30 // 30 days
+   })
+ }
+ ```
 
 ### `ctx.cookies.get(key)`
 
 here is a simple example of getting cookie value
 
-```ts
-
-(ctx) => {
-
-  const session = ctx.cookies.get('session')
-
-  session.value // string value;
-
-  session.json() // json value
-
-  session.number() // number value
-
-  session.boolean() // boolean value
-
-}
-
-```
+ ```ts
+ (ctx) => {
+   const session = ctx.cookies.get('session')
+   session.value // string value;
+   session.json() // json value
+   session.number() // number value
+   session.boolean() // boolean value
+ }
+ ```
 
 ### `ctx.cookies.has(key)`
 
 here is a simple example to check if cookie exists or not
 
-```ts
-
-(ctx) => {
-
-  if(ctx.cookies.has('session')){
-
-    // TODO
-
-  }
-
-}
-
-```
+ ```ts
+ (ctx) => {
+   if(ctx.cookies.has('session')){
+     // TODO
+   }
+ }
+ ```
 
 ### `ctx.cookies.delete(key)`
 
 here is a simple example to delete existing cookie
 
-```ts
-
-(ctx) => {
-
-  ctx.cookies.delete('session')
-
-}
-
-```
+ ```ts
+ (ctx) => {
+   ctx.cookies.delete('session')
+ }
+ ```

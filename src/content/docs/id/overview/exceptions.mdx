@@ -28,7 +28,7 @@ export default composeExceptionHandler((err: Error) => {
 disini kamu perlu meregister exception kamu ke spesifik route atau secara global
 
 Contoh Spesifik Route:
-```ts
+ ```ts
 // single route
 route.get('/user', Handler).exception(UserException);
 
@@ -36,13 +36,11 @@ route.get('/user', Handler).exception(UserException);
 route.group('/user', (route) => {
   // other routes
 }).exception([UserException, AppException])
-
 ```
 
 Contoh Register Global:
-```ts
+ ```ts
 // index.ts
-
 defineBootstrap((app) => {
   app.mount(UserException)
 })

@@ -31,40 +31,29 @@ GamanJS is a framework for backend applications. You can install the plugin usin
 
 Here is an example of implementing `@gaman/jwt` in a GamanJS application:
 
-```ts
+ ```ts
+ // index.ts
+ import { jwt } from "@gaman/jwt"
 
-// index.ts
-
-import { jwt } from "@gaman/jwt"
-
-defineBootstrap((app) => {
-
-  app.mount(
-
-    jwt({
-      secret: 'secret',
-      header: 'Authorization',
-      required: false,
-      includes: ['/jwt/unprotected', '/jwt/token'],
-
-    }),
-
-    jwt({
-      secret: 'secret',
-      header: 'Authorization',
-      required: true,
-      includes: ['/jwt/protected'],
-      excludes: ['/jwt/unprotected', '/jwt/token'],
-
-    }),
-
-  );
-
-  // mount other routes here
-
-})
-
-```
+ defineBootstrap((app) => {
+   app.mount(
+     jwt({
+       secret: 'secret',
+       header: 'Authorization',
+       required: false,
+       includes: ['/jwt/unprotected', '/jwt/token'],
+     }),
+     jwt({
+       secret: 'secret',
+       header: 'Authorization',
+       required: true,
+       includes: ['/jwt/protected'],
+       excludes: ['/jwt/unprotected', '/jwt/token'],
+     }),
+   );
+   // mount other routes here
+ })
+ ```
 
 The code above results in:
 
@@ -78,58 +67,34 @@ The code above results in:
 
 To create login endpoint and JWT testing, you can create a controller like this:
 
-```ts
+ ```ts
+ // JwtController.ts
+ import { composeController, Res } from "@gaman/core"
 
-// JwtController.ts
-
-import { composeController, Res } from "@gaman/core"
-
-import { jwt } from "@gaman/jwt"
-
-export default composeController(() => ({
-
-  // endpoint for generating token
-
-  Token: async (ctx) => {
-
-    const { username, password } = await ctx.req.json()
-
-    // simple validation
-
-    if (username !== "admin" || password !== "123456") {
-
-      return Res.json({ message: "invalid credentials" }, { status: 401 })
-
-    }
-
-    const token = jwt.sign({ user: { username } }, { secret: "secret", expiresIn: "1h" })
-
-    return Res.json({ token })
-
-  },
-
-  // protected endpoint
-
-  Protected: (ctx) => {
-    return Res.json({
-      message: "Access granted",
-      user: ctx.jwt?.user,
-
-    })
-
-  },
-
-  // free access endpoint
-
-  Unprotected: () => {
-
-    return Res.json({ message: "Public route" })
-
-  },
-
-}))
-
-```
+ export default composeController(() => ({
+   // endpoint for generating token
+   Token: async (ctx) => {
+     const { username, password } = await ctx.req.json()
+     // simple validation
+     if (username !== "admin" || password !== "123456") {
+       return Res.json({ message: "invalid credentials" }, { status: 401 })
+     }
+     const token = ctx.jwt.sign({ user: { username } }, { secret: "secret", expiresIn: "1h" })
+     return Res.json({ token })
+   },
+   // protected endpoint
+   Protected: (ctx) => {
+     return Res.json({
+       message: "Access granted",
+       user: ctx.jwt?.user,
+     })
+   },
+   // free access endpoint
+   Unprotected: () => {
+     return Res.json({ message: "Public route" })
+   },
+ }))
+ ```
 
 ---
 
@@ -137,29 +102,19 @@ export default composeController(() => ({
 
 Add the controller in your routing:
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { autoComposeRoutes } from "@gaman/core"
+ import { JwtController } from "../controllers/JwtController.ts"
 
-// AppRoutes.ts
-
-import { autoComposeRoutes } from "@gaman/core"
-
-import { JwtController } from "../controllers/JwtController.ts"
-
-export default autoComposeRoutes((route) => {
-
-  route.group("/jwt", (route) => {
-
-    route.post("/token", [JwtController, "Token"])
-
-    route.get("/protected", [JwtController, "Protected"])
-
-    route.get("/unprotected", [JwtController, "Unprotected"])
-
-  })
-
-})
-
-```
+ export default autoComposeRoutes((route) => {
+   route.group("/jwt", (route) => {
+     route.post("/token", [JwtController, "Token"])
+     route.get("/protected", [JwtController, "Protected"])
+     route.get("/unprotected", [JwtController, "Unprotected"])
+   })
+ })
+ ```
 
 ---
 
@@ -167,17 +122,12 @@ export default autoComposeRoutes((route) => {
 
 1. Send `POST /jwt/token` with body:
 
-   ```json
-
-   {
-
-     "username": "admin",
-
-     "password": "123456"
-
-   }
-
-   ```
+    ```json
+    {
+      "username": "admin",
+      "password": "123456"
+    }
+    ```
 
    will return JWT token.
 

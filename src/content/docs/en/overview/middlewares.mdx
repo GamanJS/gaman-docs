@@ -18,71 +18,47 @@ Middleware here acts as a guard for the request system, middleware will be execu
 
 Here we use `composeMiddleware` which means it will not be automatically registered to the `middlewares` data, so you have to manually register it to `index.ts`
 
-```ts
+ ```ts
+ // AppMiddleware.ts
+ import { composeMiddleware } from "@gaman/core"
 
-// AppMiddleware.ts
-
-import { composeMiddleware } from "@gaman/core"
-
-export default composeMiddleware((ctx, next) => {
-
-  return next();
-
-});
-
-```
+ export default composeMiddleware((ctx, next) => {
+   return next();
+ });
+ ```
 
 After that, you have to manually register it to the `src/index.ts` file
 
-```ts
+ ```ts
+ // index.ts
+ import { AppMiddleware } from "./middlewares/AppMiddleware.ts"
+ import { AuthMiddleware } from "./middlewares/AuthMiddleware.ts"
 
-// index.ts
-
-import { AppMiddleware } from "./middlewares/AppMiddleware.ts"
-
-import { AuthMiddleware } from "./middlewares/AuthMiddleware.ts"
-
-defineBootstrap((app) => {
-
-  app.mount(AppMiddleware());
-
-})
-
-```
+ defineBootstrap((app) => {
+   app.mount(AppMiddleware());
+ })
+ ```
 
 Or it can be registered to a specific router, here is the example:
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { AppMiddleware } from "./middlewares/AppMiddleware.ts"
+ import { AuthMiddleware } from "./middlewares/AuthMiddleware.ts"
 
-// AppRoutes.ts
+ export default autoComposeRoutes((route) => {
+   route
+     .get('/generate-token', Handler)
+     .middleware(AppMiddleware()) // single middleware
+     .middleware([AppMiddleware(), AuthMiddleware()]) // multi middleware
 
-import { AppMiddleware } from "./middlewares/AppMiddleware.ts"
-
-import { AuthMiddleware } from "./middlewares/AuthMiddleware.ts"
-
-export default autoComposeRoutes((route) => {
-
-  route
-
-    .get('/generate-token', Handler)
-
-    .middleware(AppMiddleware()) // single middleware
-
-    .middleware([AppMiddleware(), AuthMiddleware()]) // multi middleware
-
-  route.group('/user', (route) => {
-
-    route.post('/create', Handler)
-
-    route.get('/profile', Handler)
-
-  }).middleware(AppMiddleware()) // single middleware
-
-    .middleware([AppMiddleware(), AuthMiddleware()]) // multi middleware
-
-})
-
-```
+   route.group('/user', (route) => {
+     route.post('/create', Handler)
+     route.get('/profile', Handler)
+   }).middleware(AppMiddleware()) // single middleware
+     .middleware([AppMiddleware(), AuthMiddleware()]) // multi middleware
+ })
+ ```
 
 If you put middleware in a group, the routes inside will also be affected.
 
@@ -90,19 +66,14 @@ If you put middleware in a group, the routes inside will also be affected.
 
 Here we use `autoComposeMiddleware` which means it will be automatically registered to the `middlewares` data, with the requirement that it must be in the `src/middlewares/**` folder.
 
-```ts
+ ```ts
+ // AppMiddleware.ts
+ import { autoComposeMiddleware } from "@gaman/core"
 
-// AppMiddleware.ts
-
-import { autoComposeMiddleware } from "@gaman/core"
-
-export default autoComposeMiddleware((ctx, next) => {
-
-  return next();
-
-})
-
-```
+ export default autoComposeMiddleware((ctx, next) => {
+   return next();
+ })
+ ```
 
 This will be automatically registered into the `middlewares` data, so you don't need to register manually.
 
@@ -114,93 +85,57 @@ Here Gaman has prepared default middleware config that you can use.
 
 `priority` is a very useful config, the higher the priority, the earlier the process will be executed than others.
 
-```ts
+ ```ts
+ import { Priority } from "@gaman/common"
 
-import { Priority } from "@gaman/common"
-
-export default composeMiddleware((ctx, next) => {
-
-  return next();
-
-}, {
-
-  priority: Priority.NORMAL
-
-})
-
-```
+ export default composeMiddleware((ctx, next) => {
+   return next();
+ }, {
+   priority: Priority.NORMAL
+ })
+ ```
 
 ### Includes
 
 `includes` here functions to filter which route or path to run the middleware.
 
-```ts
-
-export default composeMiddleware((ctx, next) => {
-
-  return next()
-
-}, {
-
-  includes: [
-
-    {
-
-      path: '/user{/*splat}' // means path /user and after will be affected by middleware
-
-    },
-
-    {
-
-      path: '/blog/*splat' // means after path /blog/ will be middleware except path /blog itself
-
-      method: ['GET', "POST"] // so only GET and POST methods
-
-    },
-
-    "/dashboard" // path /dashboard will be affected by middleware
-
-  ]
-
-})
-
-```
+ ```ts
+ export default composeMiddleware((ctx, next) => {
+   return next()
+ }, {
+   includes: [
+     {
+       path: '/user{/*splat}' // means path /user and after will be affected by middleware
+     },
+     {
+       path: '/blog/*splat' // means after path /blog/ will be middleware except path /blog itself
+       method: ['GET', "POST"] // so only GET and POST methods
+     },
+     "/dashboard" // path /dashboard will be affected by middleware
+   ]
+ })
+ ```
 
 ### Excludes
 
 `excludes` here functions to filter which route or path will not run the middleware.
 
-```ts
-
-export default composeMiddleware((ctx, next) => {
-
-  return next()
-
-}, {
-
-  excludes: [
-
-    {
-
-      path: '/profile{/*splat}' // means path /profile and after will not be affected by middleware
-
-    },
-
-    {
-
-      path: '/setting/*splat' // means after path /setting/ will not be middleware except path /setting itself
-
-      method: ['GET', "POST"]
-
-    },
-
-    "/" // root path will not be affected by middleware
-
-  ]
-
-})
-
-```
+ ```ts
+ export default composeMiddleware((ctx, next) => {
+   return next()
+ }, {
+   excludes: [
+     {
+       path: '/profile{/*splat}' // means path /profile and after will not be affected by middleware
+     },
+     {
+       path: '/setting/*splat' // means after path /setting/ will not be middleware except path /setting itself
+       method: ['GET', "POST"]
+     },
+     "/" // root path will not be affected by middleware
+   ]
+ })
+ ```
 
 :::tip[path-to-regexp]
 
@@ -212,36 +147,21 @@ Middleware config can also be set when registering to the route, but only `compo
 
 Example:
 
-```ts
+ ```ts
+ // index.ts
+ defineBootstrap((app) => {
+   app.mount(AppMiddleware({
+     priority: Priority.HIGH,
+     includes: ['/dashboard']
+   }))
+ })
 
-// index.ts
-
-defineBootstrap((app) => {
-
-  app.mount(AppMiddleware({
-
-    priority: Priority.HIGH,
-
-    includes: ['/dashboard']
-
-  }))
-
-})
-
-// AppRoutes.ts
-
-composeRoutes((route) => {
-
-  route.get('/', Handler).middleware(AppMiddleware({
-
-    excludes: [{
-
-      path: '/api/*splat'
-
-    }]
-
-  }))
-
-})
-
-```
+ // AppRoutes.ts
+ composeRoutes((route) => {
+   route.get('/', Handler).middleware(AppMiddleware({
+     excludes: [{
+       path: '/api/*splat'
+     }]
+   }))
+ })
+ ```

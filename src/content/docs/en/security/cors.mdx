@@ -32,37 +32,26 @@ GamanJS is a framework for backend applications, you can install using your favo
 
 here is how to implement `@gaman/cors`
 
-```ts
+ ```ts
+ // index.ts
+ import { cors } from "@gaman/cors"
 
-// index.ts
-
-import { cors } from "@gaman/cors"
-
-defineBootstrap((app) => {
-
-  app.mount(
-
-    cors({ origin: '*' })
-
-  )
-
-  ...
-
-})
-
-```
+ defineBootstrap((app) => {
+   app.mount(
+     cors({ origin: '*' })
+   )
+   ...
+ })
+ ```
 
 if you want specific to a certain route just implement like this
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { cors } from "@gaman/cors"
 
-// AppRoutes.ts
-
-import { cors } from "@gaman/cors"
-
-route.get('/user').middleware(cors())
-
-```
+ route.get('/user').middleware(cors())
+ ```
 
 ## Config
 

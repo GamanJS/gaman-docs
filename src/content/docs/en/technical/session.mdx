@@ -30,43 +30,27 @@ GamanJS is a framework for backend applications, you can install using your favo
 
 ## Basic
 
-```ts
+ ```ts
+ // index.ts
+ import { session } from "@gaman/session"
 
-// index.ts
+ defineBootstrap((app) => {
+     app.mount(
+       session({
+          crossSite: false // if you want 2 applications such as Vite React + GamanJS, crossSite: make it true
+       })
+     )
+ });
+ ```
 
-import { session } from "@gaman/session"
-
-defineBootstrap((app) => {
-
-    app.mount(
-
-      session({
-
-         crossSite: false // if you want 2 applications such as Vite React + GamanJS, crossSite: make it true
-
-      })
-
-    )
-
-});
-
-```
-
-```ts
-
-// Handler.ts
-
-async (ctx) => {
-
-  await ctx.session.set({userId: '...'} );
-
-  await ctx.session.get();
-
-  await ctx.session.delete();
-
-}
-
-```
+ ```ts
+ // Handler.ts
+ async (ctx) => {
+   await ctx.session.set({userId: '...'} );
+   await ctx.session.get();
+   await ctx.session.delete();
+ }
+ ```
 
 ## Cross Site
 
@@ -96,74 +80,47 @@ if you want cross site you need an additional plugin namely [@gaman/cors](/docs/
 
 make sure credentials are set to true so that from backend can send cookies to client!
 
-```ts
+ ```ts
+ // index.ts
+ import { session } from "@gaman/session"
+ import { cors } from "@gaman/cors"
 
-// index.ts
-
-import { session } from "@gaman/session"
-
-import { cors } from "@gaman/cors"
-
-defineBootstrap((app) => {
-
-    app.mount(
-
-      cors({
-
-        origin: ['https://frontend.com'] // set client app url,
-
-        credentials: true // must be true
-
-      }),
-
-      session({
-
-         crossSite: true //<- set true,
-
-         domain: '.frontend.com' // make sure this is also set but if still in development stage not mandatory
-
-      })
-
-    )
-
-});
-
-```
+ defineBootstrap((app) => {
+     app.mount(
+       cors({
+         origin: ['https://frontend.com'] // set client app url,
+         credentials: true // must be true
+       }),
+       session({
+          crossSite: true, //<- set true,
+          domain: '.frontend.com' // make sure this is also set but if still in development stage not mandatory
+       })
+     )
+ });
+ ```
 
 ### Create route
 
 let's try to create a login route here to create session, if login successful
 
-```ts
-
-route.post('/login', async (ctx) => {
-
-  await ctx.session.set({ userId: 'abogoboga' }); // set session
-
-  return Res.json({message: "OK!"});
-
-});
-
-```
+ ```ts
+ route.post('/login', async (ctx) => {
+   await ctx.session.set({ userId: 'abogoboga' }); // set session
+   return Res.json({message: "OK!"});
+ });
+ ```
 
 ### Client Side
 
 here on the server client side assume we are using plain html, here request to url `/login` backend using `fetch`
 
-```html
-
-<script>
-
-  fetch('https://backend.com/login', {
-
-    method: "POST",
-
-    credentials: 'include' // must be include
-
-  });
-
-</script>
-
-```
+ ```html
+ <script>
+   fetch('https://backend.com/login', {
+     method: "POST",
+     credentials: 'include' // must be include
+   });
+ </script>
+ ```
 
 make sure `credentials: 'include'` so that it can receive cookies from backend and automatically set to client side (HTTP Only)

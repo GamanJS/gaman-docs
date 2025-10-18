@@ -12,90 +12,61 @@ What are exceptions in Gaman? Gaman has an exceptions handler, which can be call
 
 `composeExceptionHandler` here will not be automatically registered into the system, so you need to register it manually.
 
-```ts
+ ```ts
+ // UserException.ts
+ import { composeExceptionHandler } from "@gaman/core"
 
-// UserException.ts
+ export default composeExceptionHandler((err: Error) => {
+   if(err instanceof HttpException){
+     const context = err.context;
 
-import { composeExceptionHandler } from "@gaman/core"
+     if(context.url.pathname.includes('/dashboard')){
+       return Res.text("This is the dashboard")
+     }
+   }
 
-export default composeExceptionHandler((err: Error) => {
-
-  if(err instanceof HttpException){
-
-    const context = err.context;
-
-    if(context.url.pathname.includes('/dashboard')){
-
-      return Res.text("This is the dashboard")
-
-    }
-
-  }
-
-  return Res.json({
-
-    message: 'Internal Server Error'
-
-  }, { status: 500 })
-
-})
-
-```
+   return Res.json({
+     message: 'Internal Server Error'
+   }, { status: 500 })
+ })
+ ```
 
 Here you need to register your exception to a specific route or globally.
 
 Example Specific Route:
 
-```ts
+ ```ts
+ // single route
+ route.get('/user', Handler).exception(UserException);
 
-// single route
-
-route.get('/user', Handler).exception(UserException);
-
-// or directly group to avoid one by one
-
-route.group('/user', (route) => {
-
-  // other routes
-
-}).exception([UserException, AppException])
-
-```
+ // or directly group to avoid one by one
+ route.group('/user', (route) => {
+   // other routes
+ }).exception([UserException, AppException])
+ ```
 
 Example Register Global:
 
-```ts
-
-// index.ts
-
-defineBootstrap((app) => {
-
-  app.mount(UserException)
-
-})
-
-```
+ ```ts
+ // index.ts
+ defineBootstrap((app) => {
+   app.mount(UserException)
+ })
+ ```
 
 ### `autoComposeExceptionHandler()`
 
 If you use `autoComposeExceptionHandler`, the exception handler will be automatically registered into the system globally, with the requirement that it must be in the `src/exceptions/**` folder.
 
-```ts
+ ```ts
+ // UserException.ts
+ import { autoComposeExceptionHandler } from "@gaman/core"
 
-// UserException.ts
-
-import { autoComposeExceptionHandler } from "@gaman/core"
-
-export default autoComposeExceptionHandler((err: Error) => {
-
-  return Res.json({
-
-    message: "Internal server error!"
-
-  }, { status: 500 })
-
-})
-
-```
+ export default autoComposeExceptionHandler((err: Error) => {
+   return Res.json({
+     message: "Internal server error!"
+   }, { status: 500 })
+ })
+ ```
 
 Here you don't need to register manually because it's already automatically registered by the system.

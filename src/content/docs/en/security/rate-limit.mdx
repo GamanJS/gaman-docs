@@ -30,29 +30,19 @@ GamanJS is a framework for backend applications, you can install using your favo
 
 here I will give an example of simple usage of `@gaman/rate-limit`.
 
-```ts
+ ```ts
+ // index.ts
+ import { rateLimit } from '@gaman/rate-limit';
 
-// index.ts
-
-import { rateLimit } from '@gaman/rate-limit';
-
-defineBootstrap(async (app) => {
-
-	app.mount(
-
-		rateLimit({
-
-			ttl: 60_000, // 60 seconds
-
-			limit: 5, // 5 clients in 60 seconds
-
-		}),
-
-	);
-
-});
-
-```
+ defineBootstrap(async (app) => {
+ 	app.mount(
+ 		rateLimit({
+ 			ttl: 60_000, // 60 seconds
+ 			limit: 5, // 5 clients in 60 seconds
+ 		}),
+ 	);
+ });
+ ```
 
 `ttl` is the time window for clients and `limit` is the maximum number of client requests
 
@@ -64,95 +54,59 @@ so when `ttl` is `60_000 (60 seconds)` and `limit` is `5 (5 clients)` then, if t
 
 Here I will give an example of using it in a specific route
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { rateLimit } from '@gaman/rate-limit';
 
-// AppRoutes.ts
-
-import { rateLimit } from '@gaman/rate-limit';
-
-export default autoComposeRoutes((r) => {
-
-	r.get('/', [AppController, 'HelloWorld']).middleware(
-
-    rateLimit({
-
-      ttl: 15_000 // 15 seconds
-
-      limit: 3 // 5 clients
-
-    });
-
-  );
-
-});
-
-```
+ export default autoComposeRoutes((r) => {
+ 	r.get('/', [AppController, 'HelloWorld']).middleware(
+     rateLimit({
+       ttl: 15_000, // 15 seconds
+       limit: 3, // 5 clients
+     });
+   );
+ });
+ ```
 
 here it's more or less like at the beginning but here it's specific for one route, actually you can also use it in route group too.
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { rateLimit } from '@gaman/rate-limit';
 
-// AppRoutes.ts
-
-import { rateLimit } from '@gaman/rate-limit';
-
-export default autoComposeRoutes((r) => {
-
-	r.group("/user", (r) => {
-
-    r.get('/', [AppController, 'HelloWorld']);
-
-    r.get('/:id', [AppController, 'Get']);
-
-    r.get('/profile', [AppController, 'Profile']);
-
-  }).middleware(
-
-    rateLimit({
-
-      ttl: 15_000 // 15 seconds
-
-      limit: 3 // 5 clients
-
-    });
-
-  );
-
-});
-
-```
+ export default autoComposeRoutes((r) => {
+ 	r.group("/user", (r) => {
+     r.get('/', [AppController, 'HelloWorld']);
+     r.get('/:id', [AppController, 'Get']);
+     r.get('/profile', [AppController, 'Profile']);
+   }).middleware(
+     rateLimit({
+       ttl: 15_000, // 15 seconds
+       limit: 3, // 5 clients
+     });
+   );
+ });
+ ```
 
 ## Best Practice
 
 here I will give best practice for your application and a little explanation
 
-```ts
+ ```ts
+ // index.ts
+ import { rateLimit } from '@gaman/rate-limit';
 
-// index.ts
-
-import { rateLimit } from '@gaman/rate-limit';
-
-defineBootstrap(async (app) => {
-
-	app.mount(
-
-		rateLimit({
-
-			ttl: 60_000, // 60 seconds
-
-			limit: 5, // 5 clients in 60 seconds
-
-      trustProxy: true // trust proxy like nginx, apache etc...
-
-      legacyHeaders: true // used to send rate-limit data via header
-
-		}),
-
-	);
-
-});
-
-```
+ defineBootstrap(async (app) => {
+ 	app.mount(
+ 		rateLimit({
+ 			ttl: 60_000, // 60 seconds
+ 			limit: 5, // 5 clients in 60 seconds
+ 			trustProxy: true, // trust proxy like nginx, apache etc...
+ 			legacyHeaders: true, // used to send rate-limit data via header
+ 		}),
+ 	);
+ });
+ ```
 
 here a little I explain about `trustProxy` if you deploy your application using `nginx`, `apache` and other proxies it will send client ip via header `X-Forwarded-For` because the function `ctx.request.ip` will be `null` when deployed with `proxy` so ip will be sent via header, if `trustProxy` is `true` then you will get `client ip` via header and `rate-limit` works well.
 
@@ -166,24 +120,15 @@ there is a newer `rate-limit` header like [draft-6](https://datatracker.ietf.org
 
 **Example:**
 
-```ts
+ ```ts
+ // index.ts
+ import { rateLimit } from '@gaman/rate-limit';
 
-// index.ts
-
-import { rateLimit } from '@gaman/rate-limit';
-
-defineBootstrap(async (app) => {
-
-	app.mount(
-
-		rateLimit({
-
-      draft: 'draft-8' // draft-6 | draft-7 | draft-8 | legacy (default)
-
-		}),
-
-	);
-
-});
-
-```
+ defineBootstrap(async (app) => {
+ 	app.mount(
+ 		rateLimit({
+ 			draft: 'draft-8', // draft-6 | draft-7 | draft-8 | legacy (default)
+ 		}),
+ 	);
+ });
+ ```

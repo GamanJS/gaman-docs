@@ -201,11 +201,9 @@ A little explanation, there is an array `[controller, functionName]`, so the arr
 
 Route group here to wrap routes into 1 path
 
-```ts
+ ```ts
 route.group('/user', (route) => {
-
   route.post('/create', Handler); // `/user/create` (POST)
-
   route.get('/profile', Handler) // `/user/profile` (GET)
 })
 ```

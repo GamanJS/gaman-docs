@@ -30,41 +30,28 @@ GamanJS is a framework for backend applications, you can install using your favo
 
 ### Implementation
 
-```diff lang="ts"
+ ```diff lang="ts"
+ // index.ts
+ + import { Server } from 'socket.io';
 
-// index.ts
-
-+ import { Server } from 'socket.io';
-
-  defineBootstrap(async (app) => {
-
-    const server = await app.mountSever(":3431");
-
-+   const io = new Server(server);
-
-+   io.on('connection', (socket) => {
-
-+     console.log('a user connected');
-
-+   });
-
-  });
-
-```
+   defineBootstrap(async (app) => {
+     const server = await app.mountSever(":3431");
+ +   const io = new Server(server);
+ +   io.on('connection', (socket) => {
+ +     console.log('a user connected');
+ +   });
+   });
+ ```
 
 ### Client Side
 
-```diff lang="html"
+ ```diff lang="html"
+ +  <script src="/socket.io/socket.io.js"></script>
 
-+  <script src="/socket.io/socket.io.js"></script>
-
-    <script>
-
-+    const socket = io();
-
-    </script>
-
-```
+     <script>
+ +    const socket = io();
+     </script>
+ ```
 
 :::note
 

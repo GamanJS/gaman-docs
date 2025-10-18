@@ -28,11 +28,9 @@ GamanJS is a framework for backend applications, you can install using your favo
 
 If you are using TypeScript, it is recommended to install the type definitions as well:
 
-```bash
-
-npm install --save-dev @types/ws
-
-```
+ ```bash
+ npm install --save-dev @types/ws
+ ```
 
 :::
 
@@ -40,63 +38,44 @@ npm install --save-dev @types/ws
 
 Upgrade your HTTP server with `@gaman/websocket` here's how:
 
-```ts
+ ```ts
+ // index.ts
+ import { WebsocketGateway } from "@gaman/websocket"
 
-// index.ts
-
-import { WebsocketGateway } from "@gaman/websocket"
-
-defineBootstrap(async (app) => {
-
-  const server = await app.mountServer(':3431').
-
-  WebsocketGateway.upgrade(server); // upgrade your http
-
-});
-
-```
+ defineBootstrap(async (app) => {
+   const server = await app.mountServer(':3431').
+   WebsocketGateway.upgrade(server); // upgrade your http
+ });
+ ```
 
 ### Websocket Handler
 
 Now create your websocket handler using `composeWebsocket()`
 
-```ts
+ ```ts
+ // ChatWebsocket.ts
+ import { composeWebsocket } from "@gaman/websocket"
 
-// ChatWebsocket.ts
-
-import { composeWebsocket } from "@gaman/websocket"
-
-export default composeWebsocket((event) => {
-
-  Log.info('Client joined: ' + event.clientId);
-
-  event.onMessage((msg) => {
-
-    event.send('your message: ' + msg);
-
-  })
-
-})
-
-```
+ export default composeWebsocket((event) => {
+   Log.info('Client joined: ' + event.clientId);
+   event.onMessage((msg) => {
+     event.send('your message: ' + msg);
+   })
+ })
+ ```
 
 ### Add to Route
 
 Now add the `ChatWebsocket.ts` to the route you want
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { ChatWebsocket } from ".";
 
-// AppRoutes.ts
-
-import { ChatWebsocket } from ".";
-
-export default autoComposeRoutes((route) => {
-
-  route.ws('/chat', ChatWebsocket);
-
-});
-
-```
+ export default autoComposeRoutes((route) => {
+   route.ws('/chat', ChatWebsocket);
+ });
+ ```
 
 Then connect to `ws://localhost:3431/chat`
 
@@ -106,18 +85,11 @@ If you are using `wscat`, use this command `wscat -c ws://localhost:3431/chat` t
 
 Here is an example of accessing GamanJS websocket from the client side
 
-```html
-
-<script>
-
-  const socket = new WebSocket('ws://localhost:3431/chat')
-
-  socket.onmessage = (event) => {
-
-    console.log(event.data) // output: 'Client joined: 21515151-client-id'
-
-  }
-
-</script>
-
-```
+ ```html
+ <script>
+   const socket = new WebSocket('ws://localhost:3431/chat')
+   socket.onmessage = (event) => {
+     console.log(event.data) // output: 'Client joined: 21515151-client-id'
+   }
+ </script>
+ ```

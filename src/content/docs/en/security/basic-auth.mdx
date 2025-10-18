@@ -28,49 +28,32 @@ GamanJS is a framework for backend applications, you can install using your favo
 
 here is how to implement `@gaman/basic-auth`
 
-```ts
+ ```ts
+ // index.ts
+ import { basicAuth } from "@gaman/basic-auth"
 
-// index.ts
-
-import { basicAuth } from "@gaman/basic-auth"
-
-defineBootstrap((app) => {
-
-  app.mount(
-
-    basicAuth({
-
-      username: 'admin',
-
-      password: 'admin123'
-
+ defineBootstrap((app) => {
+   app.mount(
+     basicAuth({
+       username: 'admin',
+       password: 'admin123'
      })
-
-  )
-
-  ...
-
-})
-
-```
+   )
+   ...
+ })
+ ```
 
 if you want specific to a certain route just implement like this
 
-```ts
+ ```ts
+ // AppRoutes.ts
+ import { basicAuth } from "@gaman/basic-auth"
 
-// AppRoutes.ts
-
-import { basicAuth } from "@gaman/basic-auth"
-
-route.get('/user').middleware(basicAuth({
-
-    username: 'admin',
-
-    password: 'admin123'
-
-}))
-
-```
+ route.get('/user').middleware(basicAuth({
+   username: 'admin',
+   password: 'admin123'
+ }))
+ ```
 
 ## Config
 
@@ -80,17 +63,12 @@ Here **Basic Auth** has 2 different configs one `static` one `dynamic`.
 
 here is an example of static config
 
-```ts
-
-basicAuth({
-
-  username: 'admin',
-
-  password: "admin123",
-
-})
-
-```
+ ```ts
+ basicAuth({
+   username: 'admin',
+   password: "admin123",
+ })
+ ```
 
 This configuration is very simple and suitable for basic endpoint protection.
 
@@ -98,19 +76,13 @@ This configuration is very simple and suitable for basic endpoint protection.
 
 here is an example of dynamic config
 
-```ts
-
-basicAuth({
-
-  verifyAuth: (username, password, ctx) => {
-
-    return username === process.env.USERNAME && password === process.env.PASSWORD
-
-  }
-
-})
-
-```
+ ```ts
+ basicAuth({
+   verifyAuth: (username, password, ctx) => {
+     return username === process.env.USERNAME && password === process.env.PASSWORD
+   }
+ })
+ ```
 
 This configuration is suitable if you want:
 
