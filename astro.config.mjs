@@ -27,6 +27,7 @@ export default defineConfig({
     starlight({
       title: "Gaman Docs",
       favicon: "/img/gaman-big.png",
+      
       locales: {
         root: {
           lang: "id",
