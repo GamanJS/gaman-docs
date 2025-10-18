@@ -1,21 +1,29 @@
 ---
 
 title: Context
+
 description: Context (`ctx`) adalah inti dari penanganan permintaan GamanJS. Objek ini menyediakan akses ke data permintaan, utilitas respons, dan status aplikasi. Setiap handler rute dan middleware menerima objek konteks sebagai parameter pertama.
+
 ---
 
-## Gambaran Umum
+## Overview
 
-Objek context memberi Anda semua yang diperlukan untuk menangani permintaan HTTP:
+The context object gives you everything you need to handle HTTP requests:
 
 ```ts
+
 (ctx) => {
+
   const userId = ctx.param("id");
+
   const name = await ctx.input("name");
+
   ctx.cookies.set("lastVisit", new Date());
 
   return Response.json({ userId, name });
+
 }
+
 ```
 
 ---
@@ -24,26 +32,38 @@ Objek context memberi Anda semua yang diperlukan untuk menangani permintaan HTTP
 
 ### `ctx.url`
 
-Objek `URL` yang berisi URL lengkap permintaan dengan komponen yang sudah diurai.
+The `URL` object containing the full request URL with parsed components.
 
 ```ts
+
 (ctx) => {
+
   console.log(ctx.url.hostname); // "localhost"
+
   console.log(ctx.url.pathname); // "/api/users"
+
   console.log(ctx.url.search);   // "?page=1&limit=10"
+
 }
+
 ```
 
 ### `ctx.request`
 
-Objek permintaan lengkap yang berisi semua detail permintaan HTTP termasuk metode, header, dan utilitas parsing body.
+The complete request object containing all HTTP request details including method, headers, and body parsing utilities.
 
 ```ts
+
 (ctx) => {
+
   console.log(ctx.request.method);   // "POST"
+
   console.log(ctx.request.pathname); // "/api/users"
+
   console.log(ctx.request.ip);       // "127.0.0.1"
+
 }
+
 ```
 
 ---
@@ -52,24 +72,34 @@ Objek permintaan lengkap yang berisi semua detail permintaan HTTP termasuk metod
 
 ### `ctx.headers`
 
-Akses header permintaan melalui instance `GamanHeaders`.
+Access request headers through the `GamanHeaders` instance.
 
 ```ts
+
 (ctx) => {
+
   const contentType = ctx.headers.get("content-type");
+
   const userAgent = ctx.headers.get("user-agent");
+
 }
+
 ```
 
 ### `ctx.header(key)`
 
-Ambil nilai header tertentu berdasarkan nama (tidak peka huruf besar/kecil).
+Get a specific header value by name (case-insensitive).
 
 ```ts
+
 (ctx) => {
+
   const auth = ctx.header("authorization");
+
   const accept = ctx.header("Accept");
+
 }
+
 ```
 
 ---
@@ -78,25 +108,36 @@ Ambil nilai header tertentu berdasarkan nama (tidak peka huruf besar/kecil).
 
 ### `ctx.param(name)`
 
-Ambil satu parameter route berdasarkan nama.
+Get a single route parameter by name.
 
 ```ts
-// Rute: /users/:id
+
+// Route: /users/:id
+
 (ctx) => {
+
   const userId = ctx.param("id"); // "123"
+
 }
+
 ```
 
 ### `ctx.params`
 
-Ambil semua parameter rute sebagai objek.
+Get all route parameters as an object.
 
 ```ts
-// Rute: /posts/:postId/comments/:commentId
+
+// Route: /posts/:postId/comments/:commentId
+
 (ctx) => {
+
   const { postId, commentId } = ctx.params;
+
   // { postId: "123", commentId: "456" }
+
 }
+
 ```
 
 ---
@@ -105,15 +146,22 @@ Ambil semua parameter rute sebagai objek.
 
 ### `ctx.query`
 
-Akses parameter query URL. Mendukung akses dengan fungsi atau properti objek.
+Access URL query parameters. Supports access with function or object property.
 
 ```ts
+
 // URL: /search?q=hello&page=2&tags=js&tags=web
+
 (ctx) => {
+
   const search = ctx.query("q");        // "hello"
+
   const page = ctx.query.page;          // "2"
+
   const tags = ctx.query.tags;          // ["js", "web"]
+
 }
+
 ```
 
 ---
@@ -121,142 +169,219 @@ Akses parameter query URL. Mendukung akses dengan fungsi atau properti objek.
 ## Body
 
 ### `ctx.request.body()`
-di body ini adalah data mentah dari semuanya data di sini type nya buffer
+
+in body this is raw data from everything data here type is buffer
+
 ```ts
+
 (ctx) => {
+
   const body = await ctx.request.body();
+
   return Res.text(body.toString())
+
 }
+
 ```
 
 ### `ctx.text()`
 
-Baca body permintaan sebagai teks biasa.
+Read the request body as plain text.
 
 ```ts
+
 (ctx) => {
+
   const textData = await ctx.text();
+
   console.log(textData); // "Hello, world!"
+
 }
+
 ```
 
 ### `ctx.json()`
 
-Parse body permintaan sebagai JSON dengan tipe opsional.
+Parse the request body as JSON with optional type.
 
 ```ts
+
 (ctx) => {
+
   const data = await ctx.json();
+
   const user = await ctx.json<{ name: string; email: string }>();
+
 }
+
 ```
 
 ### `ctx.formData()`
 
-Parse data form dari body permintaan.
+Parse form data from the request body.
 
 ```ts
+
 (ctx) => {
+
   const form = await ctx.formData();
+
   const name = form.get("name")?.asString();
+
   const file = form.get("avatar")?.asFile();
+
 }
+
 ```
 
 ### `ctx.input(name)`
 
-Ambil nilai field string form tertentu secara langsung.
+Get the value of a specific string form field directly.
 
 ```ts
+
 (ctx) => {
+
   const username = await ctx.input("username");
+
   const email = await ctx.input("email");
+
 }
+
 ```
 
 ### `ctx.intputs(name)`
-ambil nilai field array di form tertentu secara langsung.
+
+get the value of an array field in a specific form directly.
+
 ```ts
+
 (ctx) => {
+
   const usernames = await ctx.inputs('usernames'); // string[]
+
 }
+
 ```
 
 ### `ctx.file(name)`
-ambil nilai field berupa file di form tertentu secara langsung
+
+get the value of a file field in a specific form directly
+
 ```ts
+
 (ctx) => {
+
   const icon = await ctx.file('icon')
 
   await icon.saveTo('/assets/icon.png')
+
 }
+
 ```
 
 ### `ctx.files(name)`
-ambil banyak file di form tertentu secara langsung
+
+get multiple files in a specific form directly
+
 ```ts
+
 (ctx) => {
+
   const icons = await ctx.files('icons')
 
   for(const icon of icons){
-    await icon.saveTo(`/assets/${icon.filename}`)
-  }
-}
-```
 
+    await icon.saveTo(`/assets/${icon.filename}`)
+
+  }
+
+}
+
+```
 
 ## State
 
 ### `ctx.locals`
 
-Simpan dan akses data yang bersifat request-scope. Cocok untuk berbagi data antara middleware dan handler rute.
+Store and access request-scope data. Suitable for sharing data between middleware and route handlers.
 
-disini kamu bisa menaruh function juga
+here you can put function too
 
 ```ts
-// Di middleware
+
+// In middleware
+
 (ctx, next) => {
+
   ctx.locals.startTime = Date.now();
+
   ctx.locals.user = { id: 1, name: "Angga" };
 
   ctx.locals.createUser = (username: string) => {
+
     // todo create
+
   }
 
   return next();
+
 }
 
-// Di handler rute
+// In route handler
+
 (ctx) => {
+
   const user = ctx.locals.user;
+
   const duration = Date.now() - ctx.locals.startTime;
 
   ctx.locals.createUser(ctx.params.username); // call function
+
 }
+
 ```
 
 ### `ctx.set(key, value)`
+
 ### `ctx.get(key)`
+
 ### `ctx.has(key)`
-ctx.set disini hampir sama seperti locals cuman bedanya disini tidak bisa menaruh function.
-kelebihannya disini tanpa perlu mengatur type di `index.d.ts`
+
+ctx.set here is almost the same as locals but the difference is here you can't put function.
+
+the advantage here is without needing to set type in `index.d.ts`
 
 ```ts
-// di middleware
+
+// in middleware
+
 (ctx, next) => {
+
   ctx.set('username', ctx.params.username)
+
   return next()
+
 }
 
-// di handler
+// in handler
+
 (ctx) => {
-  if(ctx.has('username')){
-    return Res.json({
-      message: 'ok!',
-      username: ctx.get('username')
-    })
-  }
-  return Res.json({message: "FAILED"}, {status: 404})
-}
-```
 
+  if(ctx.has('username')){
+
+    return Res.json({
+
+      message: 'ok!',
+
+      username: ctx.get('username')
+
+    })
+
+  }
+
+  return Res.json({message: "FAILED"}, {status: 404})
+
+}
+
+```

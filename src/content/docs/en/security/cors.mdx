@@ -1,63 +1,87 @@
 ---
+
 title: CORS
+
 description: "@gaman/cors adalah **middleware resmi** untuk menangani **CORS (Cross-Origin Resource Sharing)** di framework **GamanJS**. CORS dibutuhkan ketika aplikasi web frontend (misalnya React, Vue, Svelte, dsb) melakukan request ke server API yang domain/port-nya berbeda."
+
 ---
 
-`@gaman/cors` adalah **middleware resmi** untuk menangani **CORS (Cross-Origin Resource Sharing)** di framework **GamanJS**.  
-CORS dibutuhkan ketika aplikasi web frontend (misalnya React, Vue, Svelte, dsb) melakukan request ke server API yang domain/port-nya berbeda.  
+`@gaman/cors` is the **official middleware** for handling **CORS (Cross-Origin Resource Sharing)** in the **GamanJS** framework.
 
-Tanpa CORS, browser akan memblokir request lintas-origin tersebut karena alasan keamanan.
+CORS is needed when web frontend applications (for example React, Vue, Svelte, etc.) make requests to server APIs with different domains/ports.
+
+Without CORS, the browser will block cross-origin requests for security reasons.
 
 ## Install
 
 import { PackageManagers } from "starlight-package-managers";
 
-GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+GamanJS is a framework for backend applications, you can install using your favorite package manager:
 
 <PackageManagers
+
   pkg="@gaman/cors"
+
   pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
   type="install"
-/>
 
-## Cara Pakai
+ />
 
-berikut adalah cara implementasi `@gaman/cors`
+## How to Use
+
+here is how to implement `@gaman/cors`
 
 ```ts
+
 // index.ts
+
 import { cors } from "@gaman/cors"
 
 defineBootstrap((app) => {
+
   app.mount(
+
     cors({ origin: '*' })
+
   )
 
   ...
+
 })
+
 ```
 
-jika ingin spesifik ke route tertentu tinggal implementasi seperti berikut
+if you want specific to a certain route just implement like this
 
 ```ts
+
 // AppRoutes.ts
+
 import { cors } from "@gaman/cors"
 
 route.get('/user').middleware(cors())
+
 ```
 
 ## Config
 
-Disini banyak configurasi untuk `@gaman/cors` ini, berikut adalah penjelasannya
+Here are many configurations for `@gaman/cors`, here is the explanation
 
-| Nama             | Tipe                 | Default                                               | Deskripsi |
+| Name             | Type                 | Default                                               | Description |
+
 |------------------|----------------------|-------------------------------------------------------|-----------|
-| `origin`         | `string \| string[]` | `"*"`                                                 | Domain asal yang diizinkan. Bisa berupa string tunggal atau array. |
-| `allowMethods`   | `string[]`           | `["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]` | Method HTTP yang diizinkan. |
-| `allowHeaders`   | `string[] \| null`   | `null`                                                | Header yang diizinkan. `null` berarti semua header diizinkan. |
-| `maxAge`         | `number`             | `undefined`                                           | Waktu cache preflight dalam detik. |
-| `credentials`    | `boolean`            | `false`                                               | Apakah mengizinkan kredensial (cookie, autentikasi HTTP, dll.). |
-| `exposeHeaders`  | `string[]`           | `[]`                                                  | Header yang dapat diekspos ke client. |
 
+| `origin`         | `string \| string[]` | `"*"`                                                 | Allowed origin domain. Can be a single string or array. |
 
-Dan ada 3 lagi config bawaan middleware silakan cek halaman berikut [Middleware Config](/docs/overview/middlewares/#middleware-config).
+| `allowMethods`   | `string[]`           | `["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]` | Allowed HTTP methods. |
+
+| `allowHeaders`   | `string[] \| null`   | `null`                                                | Allowed headers. `null` means all headers are allowed. |
+
+| `maxAge`         | `number`             | `undefined`                                           | Preflight cache time in seconds. |
+
+| `credentials`    | `boolean`            | `false`                                               | Whether to allow credentials (cookie, HTTP authentication, etc.). |
+
+| `exposeHeaders`  | `string[]`           | `[]`                                                  | Headers that can be exposed to the client. |
+
+And there are 3 more default middleware configs please check the following page [Middleware Config](/docs/overview/middlewares/#middleware-config).

@@ -1,89 +1,135 @@
 ---
+
 title: Basic Auth
+
 ---
 
-`@gaman/basic-auth` adalah **middleware resmi** untuk menambahkan **Basic Authentication** di framework **GamanJS**.  
-Basic Auth adalah mekanisme sederhana untuk melindungi endpoint menggunakan kombinasi **username** dan **password** yang dikirim lewat header `Authorization`.
+`@gaman/basic-auth` is the **official middleware** for adding **Basic Authentication** in the **GamanJS** framework.
+
+Basic Auth is a simple mechanism to protect endpoints using a combination of **username** and **password** sent via the `Authorization` header.
 
 ## Install
 
 import { PackageManagers } from "starlight-package-managers";
 
-GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+GamanJS is a framework for backend applications, you can install using your favorite package manager:
 
 <PackageManagers
-  pkg="@gaman/basic-auth"
-  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
-  type="install"
-/>
-## Cara Pakai
 
-berikut adalah cara implementasi `@gaman/basic-auth`
+  pkg="@gaman/basic-auth"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+## How to Use
+
+here is how to implement `@gaman/basic-auth`
 
 ```ts
+
 // index.ts
+
 import { basicAuth } from "@gaman/basic-auth"
 
 defineBootstrap((app) => {
+
   app.mount(
-    basicAuth({ 
+
+    basicAuth({
+
       username: 'admin',
+
       password: 'admin123'
+
      })
+
   )
 
   ...
+
 })
+
 ```
 
-jika ingin spesifik ke route tertentu tinggal implementasi seperti berikut
+if you want specific to a certain route just implement like this
 
 ```ts
+
 // AppRoutes.ts
+
 import { basicAuth } from "@gaman/basic-auth"
 
 route.get('/user').middleware(basicAuth({
+
     username: 'admin',
+
     password: 'admin123'
+
 }))
+
 ```
 
 ## Config
 
-Disini **Basic Auth** punya 2 config yang berbeda satunya `static` satunya `dynamic`.
+Here **Basic Auth** has 2 different configs one `static` one `dynamic`.
 
 ### Static Config
-berikut adalah contoh config static
+
+here is an example of static config
 
 ```ts
+
 basicAuth({
+
   username: 'admin',
+
   password: "admin123",
+
 })
+
 ```
-Konfigurasi ini sangat sederhana dan cocok untuk proteksi endpoint dasar.
+
+This configuration is very simple and suitable for basic endpoint protection.
 
 ### Dynamic Config
-berikut adalah contoh config dynamic
+
+here is an example of dynamic config
 
 ```ts
+
 basicAuth({
+
   verifyAuth: (username, password, ctx) => {
+
     return username === process.env.USERNAME && password === process.env.PASSWORD
-  } 
+
+  }
+
 })
+
 ```
-Konfigurasi ini cocok jika anda ingin:
-- Mengambil kredensial dari environment variable.
-- Melakukan validasi terhadap database.
-- Membuat logika otentikasi yang lebih fleksibel.
+
+This configuration is suitable if you want:
+
+- Take credentials from environment variable.
+
+- Perform validation against database.
+
+- Create more flexible authentication logic.
 
 ### Default Config
-disini ada tambahan config default yaitu 
-| Nama                 | Tipe                              | Default        | Deskripsi |
+
+here there is additional default config namely
+
+| Name                 | Type                              | Default        | Description |
+
 |----------------------|-----------------------------------|----------------|-----------|
-| `realm`              | `string`                          | `"Secure Area"` | Label area proteksi yang ditampilkan pada prompt login browser. |
-| `invalidAuthMessage` | `string \| object \| function`    | `undefined`    | Pesan yang dikirimkan ketika autentikasi gagal. Bisa berupa string, object (JSON), atau fungsi `async (ctx) => string \| object`. |
 
+| `realm`              | `string`                          | `"Secure Area"` | Protection area label displayed on browser login prompt. |
 
-Dan ada 3 lagi config bawaan middleware silakan cek halaman berikut [Middleware Config](/docs/overview/middlewares/#middleware-config).
+| `invalidAuthMessage` | `string \| object \| function`    | `undefined`    | Message sent when authentication fails. Can be string, object (JSON), or function `async (ctx) => string \| object`. |
+
+And there are 3 more default middleware configs please check the following page [Middleware Config](/docs/overview/middlewares/#middleware-config).

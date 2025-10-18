@@ -8,9 +8,6 @@ import node from "@astrojs/node";
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    server: {
-      allowedHosts: ["gaman.7togk.id"],
-    },
     plugins: [tailwindcss()],
   },
 
@@ -19,9 +16,15 @@ export default defineConfig({
     port: 3521,
     host: "0.0.0.0",
   },
+
   integrations: [
     starlight({
       title: "Gaman Docs",
+      defaultLocale: "en",
+      locales: {
+        en: { label: "English", lang: "en", dir: "ltr" },
+        id: { label: "Indonesian", lang: "id", dir: "ltr" },
+      },
       social: [
         {
           icon: "github",
@@ -29,24 +32,10 @@ export default defineConfig({
           href: "https://github.com/GamanJS/gaman-docs",
         },
       ],
-      defaultLocale: "en",
-      locales: {
-        en: {
-          label: "English",
-          lang: "en",
-          direction: "ltr",
-        },
-        id: {
-          label: "Bahasa Indonesia",
-          lang: "id",
-          direction: "ltr",
-        },
-      },
       sidebar: [
         {
           label: "Overview",
           items: [
-            // Each item in this array is a link to a page.
             { label: "First Steps", link: "/overview/first-steps" },
             { label: "Routing", link: "/overview/routing" },
             { label: "Controllers", link: "/overview/controllers" },
@@ -70,10 +59,29 @@ export default defineConfig({
         },
         {
           label: "Security",
+          badge: {
+            text: "Baru",
+            variant: "success",
+          },
           items: [
             { label: "CORS", link: "/security/cors" },
             { label: "Basic Auth", link: "/security/basic-auth" },
-            { label: "Rate Limit", link: "/security/rate-limit" },
+            {
+              label: "Rate Limit",
+              link: "/security/rate-limit",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
+            {
+              label: "JWT (Json Web Token)",
+              link: "/security/jwt",
+              badge: {
+                text: "Baru",
+                variant: "success",
+              },
+            },
           ],
         },
         {
@@ -94,6 +102,7 @@ export default defineConfig({
     }),
     sitemap(),
   ],
+
   adapter: node({
     mode: "standalone",
   }),

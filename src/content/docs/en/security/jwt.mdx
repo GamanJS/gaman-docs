@@ -1,0 +1,206 @@
+---
+
+title: JWT (Json Web Token)
+description: "`@gaman/jwt` is a plugin for integrating security based on *JSON Web Token (JWT)* in the **GamanJS** framework"
+
+---
+
+`@gaman/jwt` is a plugin for integrating security based on *JSON Web Token (JWT)* in the **GamanJS** framework.
+
+This plugin allows you to easily add token-based authentication.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS is a framework for backend applications. You can install the plugin using your favorite package manager:
+
+<PackageManagers
+
+  pkg="@gaman/jwt"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+---
+
+## How to Use
+
+Here is an example of implementing `@gaman/jwt` in a GamanJS application:
+
+```ts
+
+// index.ts
+
+import { jwt } from "@gaman/jwt"
+
+defineBootstrap((app) => {
+
+  app.mount(
+
+    jwt({
+
+      secret: 'secret',
+
+      header: 'Authorization',
+
+      required: false,
+
+      includes: ['/jwt/unprotected', '/jwt/token'],
+
+    }),
+
+    jwt({
+
+      secret: 'secret',
+
+      header: 'Authorization',
+
+      required: true,
+
+      includes: ['/jwt/protected'],
+
+      excludes: ['/jwt/unprotected', '/jwt/token'],
+
+    }),
+
+  );
+
+  // mount other routes here
+
+})
+
+```
+
+The code above results in:
+
+* `/jwt/unprotected` and `/jwt/token` **not protected** (free access)
+
+* `/jwt/protected` **protected** and requires header `Authorization` containing a valid token
+
+---
+
+## Creating Controller for Login
+
+To create login endpoint and JWT testing, you can create a controller like this:
+
+```ts
+
+// JwtController.ts
+
+import { composeController, Res } from "@gaman/core"
+
+import { sign } from "@gaman/jwt"
+
+export default composeController(() => ({
+
+  // endpoint for generating token
+
+  Token: async (ctx) => {
+
+    const { username, password } = await ctx.req.json()
+
+    // simple validation
+
+    if (username !== "admin" || password !== "123456") {
+
+      return Res.json({ message: "invalid credentials" }, { status: 401 })
+
+    }
+
+    const token = sign({ user: { username } }, { secret: "secret", expiresIn: "1h" })
+
+    return Res.json({ token })
+
+  },
+
+  // protected endpoint
+
+  Protected: (ctx) => {
+
+    return Res.json({
+
+      message: "Access granted",
+
+      user: ctx.jwt?.user,
+
+    })
+
+  },
+
+  // free access endpoint
+
+  Unprotected: () => {
+
+    return Res.json({ message: "Public route" })
+
+  },
+
+}))
+
+```
+
+---
+
+## Register Controller to Router
+
+Add the controller in your routing:
+
+```ts
+
+// AppRoutes.ts
+
+import { autoComposeRoutes } from "@gaman/core"
+
+import { JwtController } from "../controllers/JwtController.ts"
+
+export default autoComposeRoutes((route) => {
+
+  route.group("/jwt", (route) => {
+
+    route.post("/token", [JwtController, "Token"])
+
+    route.get("/protected", [JwtController, "Protected"])
+
+    route.get("/unprotected", [JwtController, "Unprotected"])
+
+  })
+
+})
+
+```
+
+---
+
+## Testing
+
+1. Send `POST /jwt/token` with body:
+
+   ```json
+
+   {
+
+     "username": "admin",
+
+     "password": "123456"
+
+   }
+
+   ```
+
+   will return JWT token.
+
+2. Use token in header:
+
+   ```
+
+   Authorization: Bearer <token>
+
+   ```
+
+3. Access `/jwt/protected` → will display user data from token.
+
+4. Access `/jwt/unprotected` → can be accessed without token.

@@ -1,48 +1,73 @@
 ---
+
 title: Websocket External
+
 description: Websocket external juga bisa di pasang di gamanjs seperti socket.io atau sejenisnya...
+
 ---
 
-Websocket external ini bukan bawaan dari gamanjs yang di maksud disini kita hanya ingin menyampaikan: *GamanJS ini juga bisa kamu pasang library Websocket lain loh, contohnya seperti [socket.io](https://socket.io) dan sejenisnya.*
+Websocket external is not built-in to GamanJS, what I mean here is that we just want to convey: *GamanJS can also install other Websocket libraries, for example like [socket.io](https://socket.io) and the like.*
 
 ## Socket.io
-disini saya akan memberikan contoh library websocket yang banyak di ketahui oleh developer developer di dunia yaitu [socket.io](https://socket.io).
+
+Here I will give an example of a websocket library that is widely known by developers in the world, namely [socket.io](https://socket.io).
 
 ### Install
 
 import { PackageManagers } from "starlight-package-managers";
 
-GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+GamanJS is a framework for backend applications, you can install using your favorite package manager:
 
 <PackageManagers
-  pkg="socket.io"
-  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
-  type="install"
-/>
 
-### Implementasi
+  pkg="socket.io"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+### Implementation
 
 ```diff lang="ts"
+
 // index.ts
+
 + import { Server } from 'socket.io';
 
- defineBootstrap(async (app) => {
-   const server = await app.mountSever(":3431");
+  defineBootstrap(async (app) => {
+
+    const server = await app.mountSever(":3431");
+
 +   const io = new Server(server);
+
 +   io.on('connection', (socket) => {
+
 +     console.log('a user connected');
+
 +   });
- });
+
+  });
+
 ```
+
 ### Client Side
 
 ```diff lang="html"
+
 +  <script src="/socket.io/socket.io.js"></script>
-   <script>
+
+    <script>
+
 +    const socket = io();
-   </script>
+
+    </script>
+
 ```
 
 :::note
-Baca dokumentasi lengkap [socket.io](https://socket.io)
+
+Read the full documentation [socket.io](https://socket.io)
+
 :::

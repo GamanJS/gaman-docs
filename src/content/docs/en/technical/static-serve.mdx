@@ -1,15 +1,22 @@
 ---
+
 title: Static Serve
+
 ---
 
-`@gaman/static` adalah **middleware resmi** untuk melayani **static files** pada framework **GamanJS**.  
-Dengan middleware ini Anda bisa menyajikan file seperti **HTML, CSS, JS, gambar, font, manifest** dan asset lainnya langsung dari folder tertentu (default: `public/`).
+`@gaman/static` is the **official middleware** for serving **static files** in the **GamanJS** framework.
 
-Middleware ini sudah mendukung:
-- Deteksi otomatis **MIME type** (dengan opsi kustomisasi).
-- **Brotli (.br)** dan **Gzip (.gz)** compression berdasarkan `Accept-Encoding`.
-- **ETag** untuk caching efisien (mendukung `304 Not Modified`).
-- Opsi fallback ke **`index.html`** untuk aplikasi **SPA**.
+With this middleware, you can serve files like **HTML, CSS, JS, images, fonts, manifest** and other assets directly from a specific folder (default: `public/`).
+
+This middleware already supports:
+
+- Automatic **MIME type** detection (with customization options).
+
+- **Brotli (.br)** and **Gzip (.gz)** compression based on `Accept-Encoding`.
+
+- **ETag** for efficient caching (supports `304 Not Modified`).
+
+- Fallback option to **`index.html`** for **SPA** applications.
 
 ---
 
@@ -18,66 +25,111 @@ Middleware ini sudah mendukung:
 import { PackageManagers } from "starlight-package-managers";
 
 <PackageManagers
+
   pkg="@gaman/static"
+
   pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
   type="install"
-/>
+
+ />
 
 ---
 
-## Cara Pakai
+## How to Use
 
-Contoh paling sederhana:
+Simplest example:
 
 ```ts
+
 // index.ts
+
 import { staticServe } from "@gaman/static"
 
 defineBootstrap((app) => {
+
   app.mount(staticServe())
-})
-```
-Secara default, middleware akan membaca file dari folder public/.
 
-## Contoh Lengkap
+})
+
+```
+
+By default, the middleware will read files from the public/ folder.
+
+## Complete Example
 
 ```ts
+
 // index.ts
+
 import { staticServe } from "@gaman/static"
 
 defineBootstrap((app) => {
+
   app.mount(
+
     staticServe({
-      path: "assets", // folder asset
-      defaultDocument: "home.html", // file default jika akses ke folder
-      fallbackToIndexHTML: true, // fallback SPA
-      cacheControl: "public, max-age=86400", // cache 1 hari
-      rewriteRequestPath: (p) => p.replace(/^\/static/, ""), // hapus prefix
+
+      path: "assets", // asset folder
+
+      defaultDocument: "home.html", // default file if accessing folder
+
+      fallbackToIndexHTML: true, // SPA fallback
+
+      cacheControl: "public, max-age=86400", // cache 1 day
+
+      rewriteRequestPath: (p) => p.replace(/^\/static/, ""), // remove prefix
+
       mimes: {
+
         ".webmanifest": "application/manifest+json"
+
       },
+
       onFound: (filePath, ctx) => {
+
         Log.log("Serve file:", filePath)
+
       },
+
       onNotFound: (filePath, ctx) => {
-        Log.log("File tidak ditemukan:", filePath)
+
+        Log.log("File not found:", filePath)
+
       }
+
     })
+
   )
+
 })
+
 ```
 
 ## Config
-| Nama                  | Tipe                                 | Default                   | Deskripsi |
+
+| Name                  | Type                                 | Default                   | Description |
+
 |-----------------------|--------------------------------------|---------------------------|-----------|
-| `path`                | `string`                            | `"public"`                | Root folder untuk asset static. |
-| `mimes`               | `Record<string, string>`            | `{}`                      | Mapping kustom MIME type. |
-| `defaultDocument`     | `string`                            | `"index.html"`            | File default ketika direktori diakses. |
-| `rewriteRequestPath`  | `(path: string) => string`          | `undefined`               | Fungsi untuk memodifikasi request path. |
-| `onFound`             | `(path: string, ctx: any) => void`  | `undefined`               | Callback ketika file ditemukan. |
-| `onNotFound`          | `(path: string, ctx: any) => void`  | `undefined`               | Callback ketika file tidak ditemukan. |
-| `cacheControl`        | `string`                            | `"public, max-age=3600"`  | Header `Cache-Control`. |
-| `fallbackToIndexHTML` | `boolean`                           | `false`                   | Fallback ke `index.html` untuk aplikasi SPA. |
-| `priority`            | `Priority` enum                     | `Priority.MONITOR`        | Urutan eksekusi middleware di pipeline. |
-| `includes`            | `string[]`                          | `[]`                      | Path yang akan diproteksi middleware. |
-| `excludes`            | `string[]`                          | `[]`                      | Path yang dikecualikan dari middleware. |
+
+| `path`                | `string`                            | `"public"`                | Root folder for static assets. |
+
+| `mimes`               | `Record<string, string>`            | `{}`                      | Custom MIME type mapping. |
+
+| `defaultDocument`     | `string`                            | `"index.html"`            | Default file when directory is accessed. |
+
+| `rewriteRequestPath`  | `(path: string) => string`          | `undefined`               | Function to modify the request path. |
+
+| `onFound`             | `(path: string, ctx: any) => void`  | `undefined`               | Callback when file is found. |
+
+| `onNotFound`          | `(path: string, ctx: any) => void`  | `undefined`               | Callback when file is not found. |
+
+| `cacheControl`        | `string`                            | `"public, max-age=3600"`  | `Cache-Control` header. |
+
+| `fallbackToIndexHTML` | `boolean`                           | `false`                   | Fallback to `index.html` for SPA applications. |
+
+| `priority`            | `Priority` enum                     | `Priority.MONITOR`        | Execution order of middleware in the pipeline. |
+
+| `includes`            | `string[]`                          | `[]`                      | Paths that will be protected by middleware. |
+
+| `excludes`            | `string[]`                          | `[]`                      | Paths excluded from middleware. |

@@ -1,85 +1,123 @@
 ---
+
 title: Websocket
+
 description: adalah modul GamanJS untuk membuat dan mengelola koneksi WebSocket dengan mudah.
+
 ---
 
-`@gaman/websocket` adalah plugin resmi yang didedikasikan untuk GamanJS. Plugin ini dibangun di atas library [`ws`](https://github.com/websockets/ws).
+`@gaman/websocket` is the official plugin dedicated to GamanJS. This plugin is built on top of the [`ws`](https://github.com/websockets/ws) library.
 
 ## install
 
 import { PackageManagers } from "starlight-package-managers";
 
-GamanJS adalah kerangka kerja untuk aplikasi backend, Anda dapat menginstall menggunakan manajer paket favorit Anda:
+GamanJS is a framework for backend applications, you can install using your favorite package manager:
 
 <PackageManagers
+
   pkg="@gaman/websocket ws"
+
   pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
   type="install"
-/>
+
+ />
 
 :::note
-Jika Anda menggunakan TypeScript, disarankan install juga definisi tipe:
+
+If you are using TypeScript, it is recommended to install the type definitions as well:
+
 ```bash
+
 npm install --save-dev @types/ws
+
 ```
+
 :::
 
-## Pemakaian
+## Usage
 
-Upgrade server http kamu pakai `@gaman/websocket` berikut adalah caranya:
+Upgrade your HTTP server with `@gaman/websocket` here's how:
+
 ```ts
+
 // index.ts
+
 import { WebsocketGateway } from "@gaman/websocket"
 
 defineBootstrap(async (app) => {
 
   const server = await app.mountServer(':3431').
+
   WebsocketGateway.upgrade(server); // upgrade your http
+
 });
+
 ```
 
 ### Websocket Handler
 
-sekarang buat websocket handler kamu memakai `composeWebsocket()`
+Now create your websocket handler using `composeWebsocket()`
+
 ```ts
+
 // ChatWebsocket.ts
+
 import { composeWebsocket } from "@gaman/websocket"
 
 export default composeWebsocket((event) => {
+
   Log.info('Client joined: ' + event.clientId);
-  
+
   event.onMessage((msg) => {
+
     event.send('your message: ' + msg);
+
   })
+
 })
+
 ```
 
 ### Add to Route
-sekarang masukan `ChatWebsocket.ts` tadi ke route yang kamu inginkan
+
+Now add the `ChatWebsocket.ts` to the route you want
 
 ```ts
+
 // AppRoutes.ts
+
 import { ChatWebsocket } from ".";
 
 export default autoComposeRoutes((route) => {
+
   route.ws('/chat', ChatWebsocket);
+
 });
+
 ```
 
-lalu sambungkan ke `ws://localhost:3431/chat`
-Jika Anda menggunakan `wscat`, gunakan perintah ini `wscat -c ws://localhost:3431/chat` lalu ketik pesan dan enter
+Then connect to `ws://localhost:3431/chat`
 
+If you are using `wscat`, use this command `wscat -c ws://localhost:3431/chat` then type a message and enter
 
 ### Client Side
-berikut adalah contoh akses websocket gamanjs dari client side 
+
+Here is an example of accessing GamanJS websocket from the client side
 
 ```html
+
 <script>
+
   const socket = new WebSocket('ws://localhost:3431/chat')
 
   socket.onmessage = (event) => {
+
     console.log(event.data) // output: 'Client joined: 21515151-client-id'
+
   }
 
 </script>
+
 ```
