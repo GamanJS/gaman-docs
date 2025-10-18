@@ -42,27 +42,18 @@ defineBootstrap((app) => {
   app.mount(
 
     jwt({
-
       secret: 'secret',
-
       header: 'Authorization',
-
       required: false,
-
       includes: ['/jwt/unprotected', '/jwt/token'],
 
     }),
 
     jwt({
-
       secret: 'secret',
-
       header: 'Authorization',
-
       required: true,
-
       includes: ['/jwt/protected'],
-
       excludes: ['/jwt/unprotected', '/jwt/token'],
 
     }),
@@ -93,7 +84,7 @@ To create login endpoint and JWT testing, you can create a controller like this:
 
 import { composeController, Res } from "@gaman/core"
 
-import { sign } from "@gaman/jwt"
+import { jwt } from "@gaman/jwt"
 
 export default composeController(() => ({
 
@@ -111,7 +102,7 @@ export default composeController(() => ({
 
     }
 
-    const token = sign({ user: { username } }, { secret: "secret", expiresIn: "1h" })
+    const token = jwt.sign({ user: { username } }, { secret: "secret", expiresIn: "1h" })
 
     return Res.json({ token })
 
@@ -120,11 +111,8 @@ export default composeController(() => ({
   // protected endpoint
 
   Protected: (ctx) => {
-
     return Res.json({
-
       message: "Access granted",
-
       user: ctx.jwt?.user,
 
     })
