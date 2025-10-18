@@ -1,0 +1,45 @@
+---
+
+title: TextFormat
+
+---
+
+**TextFormat** is a built-in utility for giving color and style to text in the terminal using ANSI escape codes. With this, you can make the output in the console more attractive and easy to read.
+
+---
+
+## Main Features
+
+- Supports **foreground** and **background** colors
+
+- Supports **styles** like **bold**, *italic*, underline, etc.
+
+- Can use **Minecraft-style** codes (`§a`, `§l`) through the `format()` method
+
+---
+
+## How to Use
+
+There are two ways to use it:
+
+### 1. Using Color/Style Constants
+
+You can directly combine color or style constants with text, then close with `RESET` to return the format to normal.
+
+```ts
+
+Log.info(`${TextFormat.YELLOW}Hi, I'm Yellow!${TextFormat.RESET}`);
+
+Log.info(`${TextFormat.BOLD}${TextFormat.GREEN}Bold Green Text${TextFormat.RESET}`);
+
+```
+
+### 2. Using `TextFormat.format()`
+
+If you are familiar with Minecraft-style format codes (example: `§a`, `§l`), you can use the `format()` function.
+
+```ts
+
+Log.info(TextFormat.format('§e Hi, I'm Yellow!'))
+
+```

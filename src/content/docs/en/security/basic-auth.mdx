@@ -1,0 +1,107 @@
+---
+
+title: Basic Auth
+
+---
+
+`@gaman/basic-auth` is the **official middleware** for adding **Basic Authentication** in the **GamanJS** framework.
+
+Basic Auth is a simple mechanism to protect endpoints using a combination of **username** and **password** sent via the `Authorization` header.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS is a framework for backend applications, you can install using your favorite package manager:
+
+<PackageManagers
+
+  pkg="@gaman/basic-auth"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+## How to Use
+
+here is how to implement `@gaman/basic-auth`
+
+ ```ts
+ // index.ts
+ import { basicAuth } from "@gaman/basic-auth"
+
+ defineBootstrap((app) => {
+   app.mount(
+     basicAuth({
+       username: 'admin',
+       password: 'admin123'
+     })
+   )
+   ...
+ })
+ ```
+
+if you want specific to a certain route just implement like this
+
+ ```ts
+ // AppRoutes.ts
+ import { basicAuth } from "@gaman/basic-auth"
+
+ route.get('/user').middleware(basicAuth({
+   username: 'admin',
+   password: 'admin123'
+ }))
+ ```
+
+## Config
+
+Here **Basic Auth** has 2 different configs one `static` one `dynamic`.
+
+### Static Config
+
+here is an example of static config
+
+ ```ts
+ basicAuth({
+   username: 'admin',
+   password: "admin123",
+ })
+ ```
+
+This configuration is very simple and suitable for basic endpoint protection.
+
+### Dynamic Config
+
+here is an example of dynamic config
+
+ ```ts
+ basicAuth({
+   verifyAuth: (username, password, ctx) => {
+     return username === process.env.USERNAME && password === process.env.PASSWORD
+   }
+ })
+ ```
+
+This configuration is suitable if you want:
+
+- Take credentials from environment variable.
+
+- Perform validation against database.
+
+- Create more flexible authentication logic.
+
+### Default Config
+
+here there is additional default config namely
+
+| Name                 | Type                              | Default        | Description |
+
+|----------------------|-----------------------------------|----------------|-----------|
+
+| `realm`              | `string`                          | `"Secure Area"` | Protection area label displayed on browser login prompt. |
+
+| `invalidAuthMessage` | `string \| object \| function`    | `undefined`    | Message sent when authentication fails. Can be string, object (JSON), or function `async (ctx) => string \| object`. |
+
+And there are 3 more default middleware configs please check the following page [Middleware Config](/docs/overview/middlewares/#middleware-config).

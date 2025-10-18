@@ -1,0 +1,53 @@
+---
+title: CLI
+---
+
+The Gaman Command Line Interface has several commands as follows:
+
+## Common
+
+### `gaman dev`
+`gaman dev` is an alias for `npm run dev` and is useful for running the Gaman app in development mode.
+
+Example:
+```bash
+# node
+npx gaman dev
+
+# or
+npm run dev
+```
+
+### `gaman build`
+`gaman build` is an alias for `npm run build` and is useful for building your project to production mode. After building, the result will be in the `dist/**` folder by default.
+
+Example:
+```bash
+# node
+npx gaman build
+
+# or
+npm run build
+```
+
+### `gaman start`
+`gaman start` is an alias for `npm start` and is useful for running the app in production mode that you've already built. So, before `gaman start`, you must build first.
+
+Example:
+```bash
+# node
+npx gaman start
+
+# or
+npm start
+```
+
+Here I give a bonus if you want to deploy with `pm2`, you can use the following command:
+```bash
+pm2 start --name your-project-name "npm start"
+```
+Or you can go directly to the GamanJS entry point, which is `dist/index.js`.
+Example:
+```bash
+pm2 start --name your-project-name "dist/index.js"
+```

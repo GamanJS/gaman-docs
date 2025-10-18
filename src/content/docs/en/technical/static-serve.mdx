@@ -1,0 +1,135 @@
+---
+
+title: Static Serve
+
+---
+
+`@gaman/static` is the **official middleware** for serving **static files** in the **GamanJS** framework.
+
+With this middleware, you can serve files like **HTML, CSS, JS, images, fonts, manifest** and other assets directly from a specific folder (default: `public/`).
+
+This middleware already supports:
+
+- Automatic **MIME type** detection (with customization options).
+
+- **Brotli (.br)** and **Gzip (.gz)** compression based on `Accept-Encoding`.
+
+- **ETag** for efficient caching (supports `304 Not Modified`).
+
+- Fallback option to **`index.html`** for **SPA** applications.
+
+---
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+
+  pkg="@gaman/static"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+---
+
+## How to Use
+
+Simplest example:
+
+```ts
+
+// index.ts
+
+import { staticServe } from "@gaman/static"
+
+defineBootstrap((app) => {
+
+  app.mount(staticServe())
+
+})
+
+```
+
+By default, the middleware will read files from the public/ folder.
+
+## Complete Example
+
+```ts
+
+// index.ts
+
+import { staticServe } from "@gaman/static"
+
+defineBootstrap((app) => {
+
+  app.mount(
+
+    staticServe({
+
+      path: "assets", // asset folder
+
+      defaultDocument: "home.html", // default file if accessing folder
+
+      fallbackToIndexHTML: true, // SPA fallback
+
+      cacheControl: "public, max-age=86400", // cache 1 day
+
+      rewriteRequestPath: (p) => p.replace(/^\/static/, ""), // remove prefix
+
+      mimes: {
+
+        ".webmanifest": "application/manifest+json"
+
+      },
+
+      onFound: (filePath, ctx) => {
+
+        Log.log("Serve file:", filePath)
+
+      },
+
+      onNotFound: (filePath, ctx) => {
+
+        Log.log("File not found:", filePath)
+
+      }
+
+    })
+
+  )
+
+})
+
+```
+
+## Config
+
+| Name                  | Type                                 | Default                   | Description |
+
+|-----------------------|--------------------------------------|---------------------------|-----------|
+
+| `path`                | `string`                            | `"public"`                | Root folder for static assets. |
+
+| `mimes`               | `Record<string, string>`            | `{}`                      | Custom MIME type mapping. |
+
+| `defaultDocument`     | `string`                            | `"index.html"`            | Default file when directory is accessed. |
+
+| `rewriteRequestPath`  | `(path: string) => string`          | `undefined`               | Function to modify the request path. |
+
+| `onFound`             | `(path: string, ctx: any) => void`  | `undefined`               | Callback when file is found. |
+
+| `onNotFound`          | `(path: string, ctx: any) => void`  | `undefined`               | Callback when file is not found. |
+
+| `cacheControl`        | `string`                            | `"public, max-age=3600"`  | `Cache-Control` header. |
+
+| `fallbackToIndexHTML` | `boolean`                           | `false`                   | Fallback to `index.html` for SPA applications. |
+
+| `priority`            | `Priority` enum                     | `Priority.MONITOR`        | Execution order of middleware in the pipeline. |
+
+| `includes`            | `string[]`                          | `[]`                      | Paths that will be protected by middleware. |
+
+| `excludes`            | `string[]`                          | `[]`                      | Paths excluded from middleware. |

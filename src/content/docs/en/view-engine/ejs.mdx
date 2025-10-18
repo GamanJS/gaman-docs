@@ -1,0 +1,94 @@
+---
+
+title: EJS
+
+---
+
+`@gaman/ejs` is the **official middleware** for integrating [EJS (Embedded JavaScript Templates)](https://ejs.co) as a **view engine** in the **GamanJS** framework.
+
+With this, you can render `.ejs` template files (or other extensions) directly from the controller/handler using the built-in view system of GamanJS.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+
+  pkg="@gaman/ejs ejs"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+:::note
+
+If you are using TypeScript, it is recommended to install the type definitions as well:
+
+ ```bash
+ npm install --save-dev @types/ejs
+ ```
+
+:::
+
+## How to Use
+
+### Register ejs
+
+Add the EJS middleware to your application:
+
+ ```ts
+ // index.ts
+ import { ejs } from "@gaman/ejs";
+
+ defineBootstrap((app) => {
+   app.mount(
+     ejs({
+       viewPath: "src/views", // template folder
+     })
+   );
+ });
+ ```
+
+### Creating Template
+
+Create the file `src/views/index.ejs`
+
+ ```html
+ <!DOCTYPE html>
+ <html>
+   <head>
+     <title><%= title %></title>
+   </head>
+   <body>
+     <h1>Hello, <%= name %>!</h1>
+   </body>
+ </html>
+ ```
+
+### Render from Route
+
+In the route handler, use `Res.render()`:
+
+ ```ts
+ // AppRoutes.ts
+ route.get("/", (ctx) => {
+   return Res.render("index", {
+     title: "My First EJS Page",
+     name: "GamanJS 🚀"
+   });
+ });
+ ```
+
+## Config Options
+
+| Name        | Type                                                        | Default       | Description |
+
+|-------------|-------------------------------------------------------------|---------------|-----------|
+
+| `viewPath`  | `string`                                                    | `"src/views"` | Root directory where EJS templates are located. |
+
+---
+
+> Please read the more detailed documentation about [EJS (Embedded JavaScript Templates)](https://ejs.co)

@@ -1,0 +1,209 @@
+---
+title: Routing
+---
+
+Normally **Gaman Routing** is located in the folder `src/routes/**` so if you use `autoComposeRoutes((route) => {})` it will be automatically registered by the system.
+Example as follows
+
+## Routes definition
+
+### `composeRoutes()`
+
+Here we use `composeRoutes` which means it will not be automatically registered to the `routes` data, so you have to manually register it to `index.ts`
+
+```ts
+// AppRoutes.ts
+import { composeRoutes } from "@gaman/core"
+
+export default composeRoutes((route) => {
+  route.get('/', (ctx) => {
+    return Res.json({ message: "OK!" })
+  })
+})
+```
+
+Here you need to manually register the routes to the `src/index.ts` file
+
+```ts
+// index.ts
+import { AppRoutes } from "./routes/AppRoutes.ts"
+
+defineBootstrap((app) => {
+  app.mount(AppRoutes)
+})
+```
+
+### `autoComposeRoutes()`
+
+Here we use `autoComposeRoutes` which means routes will be automatically registered to the `routes` data. With the requirement that it must be in the folder `src/routes/**`
+
+```ts
+// AppRoutes.ts
+import { autoComposeRoutes } from "@gaman/core"
+
+export default autoComposeRoutes((route) => {
+  route.get('/', (ctx) => {
+    return Res.json({ message: "OK!" })
+  })
+})
+```
+
+After that, the routes will be automatically registered to the `routes` data
+
+## Routing
+
+Here we will enter into route management within the compose that we have created
+
+### Basic Routing
+
+The most basic GamanJS routing, accepts URL path and creates handler directly in the route
+
+```ts
+// AppRoutes.ts
+export default autoComposeRoutes((route) => {
+  route.get('/', (ctx) => {
+    return Res.json({ message: "OK!" })
+  })
+})
+```
+
+### Available Router Methods
+
+Here Gaman has prepared common shortcut methods for you to use
+
+```ts
+route.get('/', Handler)
+route.post('/', Handler)
+route.put('/', Handler)
+route.patch('/', Handler)
+route.delete('/', Handler)
+route.head('/', Handler)
+route.options('/', Handler)
+```
+
+One day you will need more settings for the router, here I have made additional utilities
+If you want to create routing for specific methods you can use `match`. Or if you want to create routing for all methods you can use `all`.
+
+```ts
+route.match(['GET', 'POST'], '/', Handler)
+
+route.all('/', Handler)
+```
+
+### Parameter
+
+If you want to create dynamic paths like `/player/:name`
+
+```ts
+route.delete('/player/:id/delete', (ctx) => {
+  const { id } = ctx.params;
+  // TODO Delete player
+  return Res.json({message: `Player ${id} deleted.`})
+})
+```
+
+If you access the URL `/player/155/delete` then `{ id }` will be `155`
+
+:::tip[Parameters?]
+If you want to know more about the **Context Parameter** function please open the following link ["Parameters"](/docs/technical/context/#params)
+:::
+
+### Optional Parameter
+
+If you want to create optional parameters it's very easy, for example `/player{/:id}/delete`
+
+```ts
+route.delete('/player{/:id}/delete', (ctx) => {
+  const id = ctx.param('id');
+  if(!id){
+    return Res.json({message: 'Id must be there!'}, 400)
+  }
+
+  // TODO delete player
+  return Res.json({message: `Player ${id} deleted.`})
+})
+```
+
+So if you access the URL `/player/delete` then the response will be `status: 400`.
+If you access the URL `/player/155/delete` then the response will be `status: 200`
+
+:::tip[path-to-regexp]
+We use the `path-to-regexp` library to manipulate the path URL, so if you want more information about path and other experiments, you can visit the following repository ["path-to-regexp"](https://github.com/pillarjs/path-to-regexp)
+:::
+
+## Route Handler
+
+For route handler there are 3 types in Gaman, you can use one of them
+
+### Basic Handler
+
+This handler is suitable for super simple and minimalist projects, or when you're on a tight deadline, you can temporarily use a handler like this.
+
+```ts
+route.get('/', (ctx) => {
+  return Res.text("OK!")
+})
+```
+
+### Request Handler
+
+This handler is also suitable for small-scale projects that you can use, and this is also recommended, it's better to use than the `basic handler` earlier, here is the example:
+
+```ts
+// AppHandler.ts
+import { RequestHandler } from "@gaman/common"
+
+export const CreateUser: RequestHandler = (ctx) => {
+  return Res.json(ctx.params)
+}
+```
+
+Then in `AppRoutes.ts` you can use the handler
+
+```ts
+// AppRoutes.ts
+import { CreateUser } from "AppHandler.ts"
+
+export default autoComposeRoutes((route) => {
+  route.post("/user/create", CreateUser)
+})
+```
+
+### Controller Handler
+
+This one is suitable for large and small scale projects, and the code will remain clean because there are not many handler imports.
+
+```ts
+// AppController.ts
+import { composeController } from "@gaman/core"
+
+export default composeController(() => ({
+  HelloWorld(ctx) {
+    return Res.text("❤️ Welcome to Gaman.js")
+  }
+}))
+```
+
+And this for the routes
+
+```ts
+// AppRoutes.ts
+import AppController from "../controllers/AppController.ts"
+
+export default autoComposeRoutes((route) => {
+  route.get("/", [AppController, 'HelloWorld'])
+})
+```
+
+A little explanation, there is an array `[controller, functionName]`, so the array in the **first index** is the controller container, and for the array in the **second index** is the function name inside the controller container.
+
+## Route Groups
+
+Route group here to wrap routes into 1 path
+
+ ```ts
+route.group('/user', (route) => {
+  route.post('/create', Handler); // `/user/create` (POST)
+  route.get('/profile', Handler) // `/user/profile` (GET)
+})
+```
