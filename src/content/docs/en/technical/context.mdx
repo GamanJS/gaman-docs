@@ -1,0 +1,266 @@
+---
+
+title: Context
+
+description: Context (`ctx`) adalah inti dari penanganan permintaan GamanJS. Objek ini menyediakan akses ke data permintaan, utilitas respons, dan status aplikasi. Setiap handler rute dan middleware menerima objek konteks sebagai parameter pertama.
+
+---
+
+## Overview
+
+The context object gives you everything you need to handle HTTP requests:
+
+ ```ts
+ (ctx) => {
+   const userId = ctx.param("id");
+   const name = await ctx.input("name");
+   ctx.cookies.set("lastVisit", new Date());
+   return Response.json({ userId, name });
+ }
+ ```
+
+---
+
+## Request Information
+
+### `ctx.url`
+
+The `URL` object containing the full request URL with parsed components.
+
+ ```ts
+ (ctx) => {
+   console.log(ctx.url.hostname); // "localhost"
+   console.log(ctx.url.pathname); // "/api/users"
+   console.log(ctx.url.search);   // "?page=1&limit=10"
+ }
+ ```
+
+### `ctx.request`
+
+The complete request object containing all HTTP request details including method, headers, and body parsing utilities.
+
+ ```ts
+ (ctx) => {
+   console.log(ctx.request.method);   // "POST"
+   console.log(ctx.request.pathname); // "/api/users"
+   console.log(ctx.request.ip);       // "127.0.0.1"
+ }
+ ```
+
+---
+
+## Header
+
+### `ctx.headers`
+
+Access request headers through the `GamanHeaders` instance.
+
+ ```ts
+ (ctx) => {
+   const contentType = ctx.headers.get("content-type");
+   const userAgent = ctx.headers.get("user-agent");
+ }
+ ```
+
+### `ctx.header(key)`
+
+Get a specific header value by name (case-insensitive).
+
+ ```ts
+ (ctx) => {
+   const auth = ctx.header("authorization");
+   const accept = ctx.header("Accept");
+ }
+ ```
+
+---
+
+## Params
+
+### `ctx.param(name)`
+
+Get a single route parameter by name.
+
+ ```ts
+ // Route: /users/:id
+ (ctx) => {
+   const userId = ctx.param("id"); // "123"
+ }
+ ```
+
+### `ctx.params`
+
+Get all route parameters as an object.
+
+ ```ts
+ // Route: /posts/:postId/comments/:commentId
+ (ctx) => {
+   const { postId, commentId } = ctx.params;
+   // { postId: "123", commentId: "456" }
+ }
+ ```
+
+---
+
+## Query
+
+### `ctx.query`
+
+Access URL query parameters. Supports access with function or object property.
+
+ ```ts
+ // URL: /search?q=hello&page=2&tags=js&tags=web
+ (ctx) => {
+   const search = ctx.query("q");        // "hello"
+   const page = ctx.query.page;          // "2"
+   const tags = ctx.query.tags;          // ["js", "web"]
+ }
+ ```
+
+---
+
+## Body
+
+### `ctx.request.body()`
+
+in body this is raw data from everything data here type is buffer
+
+ ```ts
+ (ctx) => {
+   const body = await ctx.request.body();
+   return Res.text(body.toString())
+ }
+ ```
+
+### `ctx.text()`
+
+Read the request body as plain text.
+
+ ```ts
+ (ctx) => {
+   const textData = await ctx.text();
+   console.log(textData); // "Hello, world!"
+ }
+ ```
+
+### `ctx.json()`
+
+Parse the request body as JSON with optional type.
+
+ ```ts
+ (ctx) => {
+   const data = await ctx.json();
+   const user = await ctx.json<{ name: string; email: string }>();
+ }
+ ```
+
+### `ctx.formData()`
+
+Parse form data from the request body.
+
+ ```ts
+ (ctx) => {
+   const form = await ctx.formData();
+   const name = form.get("name")?.asString();
+   const file = form.get("avatar")?.asFile();
+ }
+ ```
+
+### `ctx.input(name)`
+
+Get the value of a specific string form field directly.
+
+ ```ts
+ (ctx) => {
+   const username = await ctx.input("username");
+   const email = await ctx.input("email");
+ }
+ ```
+
+### `ctx.intputs(name)`
+
+get the value of an array field in a specific form directly.
+
+ ```ts
+ (ctx) => {
+   const usernames = await ctx.inputs('usernames'); // string[]
+ }
+ ```
+
+### `ctx.file(name)`
+
+get the value of a file field in a specific form directly
+
+ ```ts
+ (ctx) => {
+   const icon = await ctx.file('icon')
+   await icon.saveTo('/assets/icon.png')
+ }
+ ```
+
+### `ctx.files(name)`
+
+get multiple files in a specific form directly
+
+ ```ts
+ (ctx) => {
+   const icons = await ctx.files('icons')
+   for(const icon of icons){
+     await icon.saveTo(`/assets/${icon.filename}`)
+   }
+ }
+ ```
+
+## State
+
+### `ctx.locals`
+
+Store and access request-scope data. Suitable for sharing data between middleware and route handlers.
+
+here you can put function too
+
+ ```ts
+ // In middleware
+ (ctx, next) => {
+   ctx.locals.startTime = Date.now();
+   ctx.locals.user = { id: 1, name: "Angga" };
+   ctx.locals.createUser = (username: string) => {
+     // todo create
+   }
+   return next();
+ }
+ // In route handler
+ (ctx) => {
+   const user = ctx.locals.user;
+   const duration = Date.now() - ctx.locals.startTime;
+   ctx.locals.createUser(ctx.params.username); // call function
+ }
+ ```
+
+### `ctx.set(key, value)`
+
+### `ctx.get(key)`
+
+### `ctx.has(key)`
+
+ctx.set here is almost the same as locals but the difference is here you can't put function.
+
+the advantage here is without needing to set type in `index.d.ts`
+
+ ```ts
+ // in middleware
+ (ctx, next) => {
+   ctx.set('username', ctx.params.username)
+   return next()
+ }
+ // in handler
+ (ctx) => {
+   if(ctx.has('username')){
+     return Res.json({
+       message: 'ok!',
+       username: ctx.get('username')
+     })
+   }
+   return Res.json({message: "FAILED"}, {status: 404})
+ }
+ ```

@@ -1,0 +1,63 @@
+---
+
+title: Controllers
+
+---
+
+**Gaman Controller** is actually quite simple; it only uses `composeController`.
+
+```ts
+
+// UserController.ts
+
+import { composeController } from "@gaman/core"
+
+export default composeController(() => ({
+
+  CreateUser: (ctx) => {
+
+    return Res.json({message: "user created!"})
+
+  },
+
+  UpdateUser: (ctx) => {
+
+    return Res.json({message: "user updated!"})
+
+  },
+
+  DeleteUser: (ctx) => {
+
+    return Res.json({message: 'user deleted!'})
+
+  }
+
+}))
+
+```
+
+Then you can add the controller and handler to the router as follows:
+
+```ts
+
+// AppRoutes.ts
+
+import { autoComposeRoutes } from "@gaman/core"
+
+import { UserController } from "../controllers/UserController.ts"
+
+export default autoComposeRoutes((route) => {
+
+  route.group('/user', (route) => {
+
+    route.post('/create', [UserController, 'CreateUser'])
+
+    route.put('/update', [UserController, 'UpdateUser'])
+
+    route.delete('/delete', [UserController, 'DeleteUser'])
+
+  })
+
+})
+
+```

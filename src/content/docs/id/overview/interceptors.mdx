@@ -1,0 +1,242 @@
+---
+title: Interceptors
+---
+
+Normalnya **Interceptor** disini berada di folder `src/interceptors/**`, jika kamu pakai `autoComposeInterceptor` itu otomatis akan keregister oleh sistem.
+
+![workflow interceptor](/img/workflow/interceptor.png)
+
+**Interceptor** disini akan di jalankan setelah `middleware` jadi emang fungsi interceptor disini normalnya untuk spesifik route aja, tapi tetep bisa di pakai untuk global.
+
+Berikut adalah fungsi interceptor:
+- Menangani Data Request atau Data Response
+- Transformasi data request sebelum sampai ke request handler.
+- Transformasi data response sebelum dikirim ke client.
+- Validasi data seperti `ctx.json()`. `ctx.formData()` dll
+
+
+## Interceptor Definition
+
+### `composeInterceptor()`
+disini `interceptorCompose` tidak akan otomatis di register oleh sistem, jadi kamu harus meregister manual kedalam route tertentu atau sebagai global.
+
+Contoh:
+```ts
+// UserInterceptor.ts
+import { composeInterceptor } from "@gaman/core"
+
+export default composeInterceptor((ctx, next, error) => {
+  return next();
+})
+```
+nah disini kamu perlu register manual berikut adalah contohnya
+```ts
+// index.ts
+defineBootstrap((app) => {
+  app.mount(UserInterceptor)
+})
+```
+berikut adalah contoh untuk route tertentu
+```ts
+// AppRoutes.ts
+export default composeRoutes((route) => {
+  route.get('/', Handler).interceptor(UserInterceptor)
+
+  // kalau mau register banyak
+  route.get('/user', Handler).interceptor([UserInterceptor, ValidationInterceptor])
+})
+```
+
+### `autoComposeInterceptor()`
+nah `autoComposeInterceptor` disini akan otomatis di register ke data sistem, dengan persyaratan harus berada di folder `src/interceptors/**`.
+
+Contoh:
+```ts
+// UserInterceptor.ts
+import { autoComposeInterceptor } from "@gaman/core"
+
+export default autoComposeInterceptor((ctx, next, error) => {
+  return next();
+})
+```
+ini akan otomatis ke register kedalam sistem jadi tidak perlu repot register manual
+
+
+## Parameter
+di composeInterceptor ini ada 3 parameter yaitu `ctx`, `next`, dan `error`, berikut adalah penjelasan dan kegunaan masing masing parameternya
+
+- `ctx` Interceptor Context, untuk mengambil dan manipulasi data request sebelum nyampai ke handler
+- `next` Untuk mentriger handler selanjutnya dan bisa manipulasi data response sebelum dikirim ke client
+- `error` untuk melakukan throw jika ada error
+
+Contoh kerja nyata sebagai berikut:
+ ```ts
+export default composeInterceptor(await (ctx, next, error) => {
+  // PROSES SEBELUM HANDLER
+  // MANIPULASI ATAU VALIDASI DATA REQUEST DI KERJAKAN DISINI
+  if(ctx.param('name') != 'Angga'){
+    throw error('Name must be "angga"', 400)
+    // disini akan otomatis response json 
+    /**
+     * {
+     *   statusCode: 400,
+     *   message: 'Name must be "angga"'
+     * }
+     */
+  }
+  const response = await next(); // jalankan handler berikutnya
+  // PROSES SETELAH HANDLER SELESAI
+  // MANIPULASI DATA RESPONSE DI KERJAKAN DISINI
+  const body = JSON.parse(response.body);
+  body['umur'] = 100;
+  response.body = JSON.stringify(body);
+  return response;
+})
+```
+
+### Error Response
+
+fungsi `error` akan otomatis mengirim response json seperti berikut
+```json
+// HTTP STATUS 400
+{
+  "statusCode": 400,  // default nya 400 kalau di ubah error('msg', 404) akan jadi 404
+  "message": "Name must be 'angga'" // tergantung message yang di set
+}
+```
+
+tetapi jika anda ingin mengubah response errornya bisa pakai `composeExceptionHandler`
+saya contohin sedikit ya :)
+ ```ts
+// UserException.ts
+export default composeExceptionHandler((err: Error) => {
+  if(err instanceof InterceptorException){
+    const ctx = err.context; // ngambil context request
+    const status = err.statusCode; // ngambil statusCode
+    const message = err.message; // ngambil message;
+    // ganti response error interceptor
+    return Res.json({
+      msg: message, // return message
+      error: status > 299 // jika status di atas 299 akan true maka di anggap error
+    }, {
+      status: status,
+      statusText: message,
+    })
+  }
+})
+```
+lalu register exception ke route yang kamu mau semisal
+```ts
+// single route
+route.get('/user', Handler).exception(UserException);
+
+// atau langsung group biar ga satu satu
+route.group('/user', (route) => {
+  // other routes
+}).exception(UserException)
+
+// atau bisa register global
+app.mountException(UserException)
+```
+Untuk Selengkapnya bisa baca baca di [dokumentasi exception](/docs/overview/exceptions)
+
+Maka ketika anda panggil `throw error('not found', 404)` maka respon nya akan:
+```json
+// HTTP STATUS CODE     404
+// HTTP STATUS MESSAGE  not found
+{
+  "msg": "not found",
+  "error": true
+}
+```
+
+## Transformasi Method
+berikut adalah utilitas untuk kamu pakai biar mempermudah transformasi data request, jika blom ada disini kamu harus melakukanya manual :)
+
+### `ctx.transformJson()`
+transform json disini adalah untuk mengubah data json sehingga bisa kamu pakai di handler berikutnya contoh sebagai berikut:
+
+ ```ts
+// UserInterceptor.ts
+export default composeInterceptor(async (ctx, next, error) => {
+  const defaultJson = await ctx.json();
+  if(defaultJson.name == 'Angga'){
+    ctx.transformJson({
+      name: 'Angga Ganteng'
+    })
+  }
+  return next();
+})
+```
+lalu kamu pakai di request handler kamu 
+contoh:
+ ```ts
+route.get('/', async (ctx) => {
+  const json = await ctx.json()
+  return Res.text(json.name) // Angga Ganteng
+}).interceptor(UserInterceptor)
+```
+
+### `ctx.transformParams()`
+ini untuk transformasi parameter url sehingga di handler berikut nya tinggal pakai :)
+
+ ```ts
+// UserInterceptor.ts
+export default composeInterceptor((ctx, next, error) => {
+  // jika umur tidak integer maka parse integer langsung
+  if(typeof ctx.params.umur == 'string') {
+    ctx.transformParams({
+      umur: parseInt(ctx.params.umur)
+    })
+  }
+  return next();
+})
+```
+lalu kamu pakai di request handler kamu 
+contoh:
+ ```ts
+route.get('/:umur', (ctx) => {
+  const umur = ctx.params.umur; // otomatis integer
+  return Res.json({
+    message: "OK!"
+  })
+})
+```
+### `ctx.transformQuery()`
+### `ctx.transformBody()`
+### `ctx.transformText()`
+
+semua method transformasi kurang lebih penggunaannya sama semua hanya mempermudah saja.
+
+### Eksperimen
+Jika anda sangat proplayer :v sebnenrya kamu bisa merubah data ctx langsung seperti fungsi `json` fungsi `fromData` fungsi `header` dll.
+
+Berikut adalah contoh sederhana manipulasi `context` langsung.
+
+ ```ts
+// UserInterceptor.ts
+export default composeInterceptor((ctx, next, error) => {
+  ctx.json = async () => {
+    return {
+      name: ctx.query('name'), // name dari query ?name='abogoboga'
+      umur: ctx.param('umur'), // umur dari param /:umur = /12
+      credit: 'GamanJS' // custom
+    }
+  }
+  return next();
+})
+```
+penggunaan di handler sebagai berikut
+ ```ts
+route.get('/:umur', async (ctx) => {
+  const json = await ctx.json()
+  return Res.json(json);
+  /**
+   * {
+   *    name: 'abogoboga',
+   *    umur: 12,
+   *    credit: 'GamanJS'
+   * }
+  */
+})
+```

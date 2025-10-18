@@ -1,0 +1,131 @@
+---
+
+title: Nunjucks
+
+---
+
+`@gaman/nunjucks` is the **official middleware** for integrating [Nunjucks](https://mozilla.github.io/nunjucks/) as a **view engine** in the **GamanJS** framework.
+
+With this, you can render `.njk` template files (or other extensions) directly from the controller/handler using the built-in view system of GamanJS.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+<PackageManagers
+
+  pkg="@gaman/nunjucks nunjucks"
+
+  pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+
+  type="install"
+
+ />
+
+:::note
+
+If you are using TypeScript, it is recommended to install the type definitions as well:
+
+ ```bash
+ npm install --save-dev @types/nunjucks
+ ```
+
+:::
+
+## How to Use
+
+### Register Nunjucks
+
+Add the Nunjucks middleware to your application:
+
+ ```ts
+ // index.ts
+ import { nunjucks } from "@gaman/nunjucks";
+
+ defineBootstrap((app) => {
+   app.mount(
+     nunjucks({
+       viewPath: "src/views", // template folder
+       extension: ".njk",     // template file extension
+     })
+   );
+ });
+ ```
+
+### Creating Template
+
+Create the file `src/views/index.njk`
+
+ ```html
+ <!DOCTYPE html>
+ <html>
+   <head>
+     <title>{{ title }}</title>
+   </head>
+   <body>
+     <h1>Hello, {{ name }}!</h1>
+   </body>
+ </html>
+ ```
+
+### Render from Route
+
+In the route handler, use `Res.render()`:
+
+ ```ts
+ // AppRoutes.ts
+ route.get("/", (ctx) => {
+   return Res.render("index", {
+     title: "My First Nunjucks Page",
+     name: "GamanJS 🚀"
+   });
+ });
+ ```
+
+## Config Options
+
+| Name        | Type                                                        | Default       | Description |
+
+|-------------|-------------------------------------------------------------|---------------|-----------|
+
+| `viewPath`  | `string`                                                    | `"src/views"` | Root directory where Nunjucks templates are located. |
+
+| `env`       | `(env: Environment) => void` \| `(env: Environment) => void[]` | `undefined`   | Callback to customize the `nunjucks.Environment` instance (e.g., adding filters, globals, extensions). Can be a single function or an array of functions. |
+
+| `extension` | `string`                                                    | `".njk"`      | Default template extension. If the template name has no extension, it is automatically added. |
+
+| *(other options)* | All options from [Nunjucks ConfigureOptions](https://mozilla.github.io/nunjucks/api.html#configure) except `express`. | | |
+
+## How: Adding Filters & Globals
+
+ ```ts
+ // index.ts
+ import { nunjucks } from "@gaman/nunjucks";
+
+ defineBootstrap((app) => {
+   app.mount(
+     nunjucks({
+       env: (env) => {
+         env.addFilter("upper", (str: string) => str.toUpperCase());
+         env.addGlobal("appName", "GamanJS");
+       },
+     })
+   );
+ });
+ ```
+
+`views/index.njk:`
+
+ ```html
+ <h1>{{ appName | upper }}</h1>
+ ```
+
+Output:
+
+ ```html
+ <h1>GAMANJS</h1>
+ ```
+
+---
+
+> Please read the more detailed documentation about [Nunjucks](https://mozilla.github.io/nunjucks)

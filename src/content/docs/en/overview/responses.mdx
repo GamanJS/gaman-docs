@@ -1,0 +1,320 @@
+---
+
+title: Responses
+
+description: GamanJS menyediakan sistem Response yang fleksibel untuk menangani respons HTTP. Anda dapat mengembalikan respons menggunakan kelas `Res` atau shortcut praktis yang secara otomatis menentukan tipe respons.
+
+---
+
+**Gaman Response** here we use the `Res` function, you don't need to import it first because the `Res` function here is already a `global` function so you can use it anywhere.
+
+## Overview
+
+Import the Response class and use it in your route handler:
+
+ ```ts
+ (ctx) => {
+   return Res.json({ message: "Hello World" }, { status: 200 });
+ };
+ ```
+
+FYI: Response status can be shorthand like this
+
+ ```ts
+ (ctx) => {
+   return Res.json({ message: "Bad Request" }, 403); // directly enter status number
+ };
+ ```
+
+---
+
+## Response Methods
+
+### `Res.json(data, init?)`
+
+Returns a JSON response with `Content-Type: application/json`.
+
+ ```ts
+ (ctx) => {
+   return Res.json({
+     user: { id: 1, name: "Angga" },
+     status: "success",
+   });
+ };
+ ```
+
+// With custom options
+
+ ```ts
+ (ctx) => {
+   return Res.json(
+     { error: "Not found" },
+     { status: 404, headers: { "X-Custom": "value" } }
+   );
+ };
+ ```
+
+### `Res.text(message, init?)`
+
+Returns a plain text response with `Content-Type: text/plain`.
+
+ ```ts
+ (ctx) => {
+   return Res.text("Hello, World!");
+ };
+ ```
+
+// With custom status
+
+ ```ts
+ (ctx) => {
+   return Res.text("Server Error", { status: 500 });
+ };
+ ```
+
+### `Res.html(body, init?)`
+
+Returns an HTML response with `Content-Type: text/html`.
+
+ ```ts
+ (ctx) => {
+   return Res.html(`
+     <html>
+       <body>
+         <h1>Welcome</h1>
+         <p>Hello from GamanJS!</p>
+       </body>
+     </html>
+   `);
+ };
+ ```
+
+// With custom header
+
+ ```ts
+ (ctx) => {
+   return Res.html("<h1>Custom Page</h1>", {
+     status: 201,
+     headers: { "X-Frame-Options": "DENY" },
+   });
+ };
+ ```
+
+### `Res.render(viewName, data?, init?)`
+
+Renders a template using the configured view engine. Requires view engine integration setup first.
+
+ ```ts
+ (ctx) => {
+   return Res.render("home", {
+     title: "Welcome",
+     user: { name: "Angga" },
+   });
+ };
+ ```
+
+// With custom status
+
+ ```ts
+ (ctx) => {
+   return Res.render("error", { message: "Page not found" }, { status: 404 });
+ };
+ ```
+
+### `Res.stream(stream, init?)`
+
+Returns a streaming response with `Content-Type: application/octet-stream`.
+
+ ```ts
+ import { createReadStream } from "fs";
+
+ (ctx) => {
+   const fileStream = createReadStream("./large-file.pdf");
+   return Res.stream(fileStream);
+ };
+ ```
+
+// With custom content type
+
+ ```ts
+ (ctx) => {
+   const videoStream = createReadStream("./video.mp4");
+   return Res.stream(videoStream, {
+     headers: { "Content-Type": "video/mp4" },
+   });
+ };
+ ```
+
+### `Res.redirect(location, status?)`
+
+Returns a redirect response. Default status is 302 (temporary redirect).
+
+ ```ts
+ (ctx) => {
+   return Res.redirect("/login");
+ };
+ ```
+
+// Permanent redirect (301)
+
+ ```ts
+ (ctx) => {
+   return Res.redirect("/new-url", 301);
+ };
+ ```
+
+// Temporary redirect (302) - explicit
+
+ ```ts
+ (ctx) => {
+   return Res.redirect("/dashboard", 302);
+ };
+ ```
+
+## Shorthand Response
+
+### `Res.ok(body)`
+
+Shortcut method to resolve the request with status code `200`.
+
+ ```ts
+ ctx => {
+   return Res.ok({ message: "OK" })
+ }
+ ```
+
+### `Res.created(body?)`
+
+Shortcut method to resolve the request with status code `201`.
+
+ ```ts
+ ctx => {
+   return Res.created({ message: "Created" })
+ }
+ ```
+
+### `Res.accepted(body)`
+
+Shortcut method to resolve the request with status code `202`.
+
+ ```ts
+ ctx => {
+   return Res.accepted({ message: "Accepted" })
+ }
+ ```
+
+### `Res.nonAuthoritativeInformation(body)`
+
+Shortcut method to resolve the request with status code `203`.
+
+ ```ts
+ ctx => {
+   return Res.nonAuthoritativeInformation({ message: "Non Authoritative Information" })
+ }
+ ```
+
+### `Res.noContent()`
+
+Shortcut method to resolve the request with status code `204` without content.
+
+ ```ts
+ ctx => {
+   return Res.noContent()
+ }
+ ```
+
+### `Res.resetContent()`
+
+Shortcut method to resolve the request with status code `205` without content.
+
+ ```ts
+ ctx => {
+   return Res.resetContent()
+ }
+ ```
+
+### `Res.partialContent(body)`
+
+Shortcut method to resolve the request with status code `206`.
+
+ ```ts
+ ctx => {
+   return Res.partialContent({ message: "Partial Content" })
+ }
+ ```
+
+### `Res.multipleChoices(body?)`
+
+Shortcut method to resolve the request with status code `300`.
+
+ ```ts
+ ctx => {
+   return Res.multipleChoices({ message: "Multiple Choices" })
+ }
+ ```
+
+### `Res.movedPermanently(body?)`
+
+Shortcut method to resolve the request with status code `301`.
+
+ ```ts
+ ctx => {
+   return Res.movedPermanently({ message: "Moved Permanently" })
+ }
+ ```
+
+### `Res.movedTemporarily(body?)`
+
+Shortcut method to resolve the request with status code `302`.
+
+ ```ts
+ ctx => {
+   return Res.movedTemporarily({ message: "Moved Temporarily" })
+ }
+ ```
+
+### `Res.seeOther(body?)`
+
+Shortcut method to resolve the request with status code `303`.
+
+ ```ts
+ ctx => {
+   return Res.seeOther({ message: "See Other" })
+ }
+ ```
+
+### `Res.notModified(body?)`
+
+Shortcut method to resolve the request with status code `304`.
+
+ ```ts
+ ctx => {
+   return Res.notModified({ message: "Not Modified" })
+ }
+ ```
+
+### `Res.useProxy(body?)`
+
+Shortcut method to resolve the request with status code `305`.
+
+ ```ts
+ ctx => {
+   return Res.useProxy({ message: "Use Proxy" })
+ }
+ ```
+
+### `Res.temporaryRedirect(body?)`
+
+Shortcut method to resolve the request with status code `307`.
+
+ ```ts
+ ctx => {
+   return Res.temporaryRedirect({ message: "Temporary Redirect" })
+ }
+ ```
+
+---
+
+*(can be continued for all 4xx and 5xx codes with the same format)*
+
+> The GamanJS Response system provides convenience and flexibility, allowing you to choose between explicit response methods and automatic shortcuts according to your needs.

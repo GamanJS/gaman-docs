@@ -1,0 +1,139 @@
+---
+
+title: JWT (Json Web Token)
+description: "@gaman/jwt adalah plugin untuk mengintegrasikan keamanan berbasis JWT token pada framework *GamanJS*"
+
+---
+
+`@gaman/jwt` adalah plugin untuk mengintegrasikan keamanan berbasis *JSON Web Token (JWT)* pada framework **GamanJS**.
+Plugin ini memungkinkan Anda menambahkan autentikasi berbasis token dengan mudah.
+
+## Install
+
+import { PackageManagers } from "starlight-package-managers";
+
+GamanJS adalah kerangka kerja untuk aplikasi backend. Anda dapat menginstal plugin menggunakan manajer paket favorit Anda:
+
+<PackageManagers
+pkg="@gaman/jwt"
+pkgManagers={["npm", "pnpm", "yarn", "bun"]}
+type="install"
+/>
+
+---
+
+## Cara Pakai
+
+Berikut contoh implementasi `@gaman/jwt` pada aplikasi GamanJS:
+
+```ts
+// index.ts
+import { jwt } from "@gaman/jwt"
+
+defineBootstrap((app) => {
+  app.mount(
+    jwt({
+      secret: 'secret',
+      header: 'Authorization',
+      required: false,
+      includes: ['/jwt/unprotected', '/jwt/token'],
+    }),
+    jwt({
+      secret: 'secret',
+      header: 'Authorization',
+      required: true,
+      includes: ['/jwt/protected'],
+      excludes: ['/jwt/unprotected', '/jwt/token'],
+    }),
+  );
+
+  // mount route lainnya di sini
+})
+```
+
+Kode di atas menghasilkan:
+
+* `/jwt/unprotected` dan `/jwt/token` **tidak dilindungi** (bebas diakses)
+* `/jwt/protected` **dilindungi** dan membutuhkan header `Authorization` berisi token yang valid
+
+---
+
+## Membuat Controller untuk Login
+
+Untuk membuat endpoint login dan testing JWT, Anda dapat membuat controller seperti berikut:
+
+```ts
+// JwtController.ts
+import { composeController, Res } from "@gaman/core"
+
+export default composeController(() => ({
+  // endpoint untuk generate token
+  Token: async (ctx) => {
+    const { username, password } = await ctx.req.json()
+
+    // validasi sederhana
+    if (username !== "admin" || password !== "123456") {
+      return Res.json({ message: "invalid credentials" }, { status: 401 })
+    }
+
+    const token = ctx.jwt.sign({ user: { username } }, { secret: "secret", expiresIn: "1h" })
+    return Res.json({ token })
+  },
+
+  // endpoint yang dilindungi
+  Protected: (ctx) => {
+    return Res.json({
+      message: "Access granted",
+      user: ctx.jwt?.user,
+    })
+  },
+
+  // endpoint bebas akses
+  Unprotected: () => {
+    return Res.json({ message: "Public route" })
+  },
+}))
+```
+
+---
+
+## Daftarkan Controller ke Router
+
+Tambahkan controller di dalam routing Anda:
+
+```ts
+// AppRoutes.ts
+import { autoComposeRoutes } from "@gaman/core"
+import { JwtController } from "../controllers/JwtController.ts"
+
+export default autoComposeRoutes((route) => {
+  route.group("/jwt", (route) => {
+    route.post("/token", [JwtController, "Token"])
+    route.get("/protected", [JwtController, "Protected"])
+    route.get("/unprotected", [JwtController, "Unprotected"])
+  })
+})
+```
+
+---
+
+## Uji Coba
+
+1. Kirim `POST /jwt/token` dengan body:
+
+   ```json
+   {
+     "username": "admin",
+     "password": "123456"
+   }
+   ```
+
+   akan mengembalikan token JWT.
+
+2. Gunakan token di header:
+   ```
+   Authorization: Bearer <token>
+   ```
+
+3. Akses `/jwt/protected` → akan menampilkan data user dari token.
+4. Akses `/jwt/unprotected` → bisa diakses tanpa token.

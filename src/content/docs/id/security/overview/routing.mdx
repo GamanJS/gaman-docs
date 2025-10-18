@@ -1,0 +1,190 @@
+---
+title: Routing
+---
+
+Normalnya **Routing Gaman** itu terletak di folder `src/routes/**` jadi semisal anda memakai `autoComposeRoutes((route) => {})` itu akan otomatis di register oleh sistem.
+contoh jelasnya sebagai berikut
+
+## Routes definition
+
+### `composeRoutes()`
+
+disini kita memakai `composeRoutes` yang berarti tidak akan otomatis di register ke data `routes`
+jadi anda harus manual meregister ke `index.ts`
+
+```ts
+// AppRoutes.ts
+import { composeRoutes } from "@gaman/core"
+
+export default composeRoutes((route) => {
+  route.get('/', (ctx) => {
+    return Res.json({ message: "OK!" })
+  })
+})
+```
+
+disini kamu perlu meregister manual routes tadi ke dalam file `src/index.ts`
+
+```ts
+// index.ts
+import { AppRoutes } from "./routes/AppRoutes.ts"
+
+defineBootstrap((app) => {
+  app.mount(AppRoutes)
+})
+```
+
+### `autoComposeRoutes()`
+disini kita memakai `autoComposeRoutes` yang berarti routes akan otomatis ke register ke data `routes`. dengan persyaratan harus berada di folder `src/routes/**`
+```ts
+// AppRoutes.ts
+import { autoComposeRoutes } from "@gaman/core"
+
+export default autoComposeRoutes((route) => {
+  route.get('/', (ctx) => {
+    return Res.json({ message: "OK!" })
+  })
+})
+```
+nah setelah itu routes akan otomatis keregister ke data `routes`
+
+## Routing
+disini kita akan masuk kedalam management routing di dalam compose tadi yang sudah kita buat
+
+### Basic Routing
+Routing paling dasar gamanjs, menerima path url dan membuat handler didalam route langsung
+
+```ts
+// AppRoutes.ts
+export default autoComposeRoutes((route) => {
+  route.get('/', (ctx) => {
+    return Res.json({ message: "OK!" })
+  })
+})
+```
+
+### Available Router Methods
+disini gaman sudah menyiapkan sortcut method yang common untuk kamu pakai
+
+```ts
+route.get('/', Handler)
+route.post('/', Handler)
+route.put('/', Handler)
+route.patch('/', Handler)
+route.delete('/', Handler)
+route.head('/', Handler)
+route.options('/', Handler)
+```
+
+suatu hari kamu akan membutuhkan pengaturan lebih terhadap router, disini saya sudah membuatkan utilities tambahan
+jika kamu ingin membuat routing untuk beberapa method tertentu kamu bisa pakai `match`. atau kamu ingin membuat routing untuk semua method kamu bisa pakai `all`.
+
+```ts
+route.match(['GET', 'POST'], '/', Handler)
+
+route.all('/', Handler)
+```
+
+### Parameter
+jika anda ingin membuat path dinamis mungkin `Parameter` ini sangat membantu untuk anda contoh nya seperti `/player/:name`
+
+```ts
+route.delete('/player/:id/delete', (ctx) => {
+  const { id } = ctx.params;
+  // TODO Delete player
+  return Res.json({message: `Player ${id} deleted.`})
+})
+```
+jika saat anda akses url `/player/155/delete` maka `{ id }` itu isinya `155`
+
+:::tip[Paramters?]
+Jika anda ingin tau lebih banyak tentang fungsi **Context Parameter** silakan buka link berikut ["Parameters"](/docs/technical/context/#params)
+:::
+
+### Parameter Opsional
+jika anda ingin membuat parameter opsional itu gampang banget contohnya `/player{/:id}/delete`
+
+```ts
+route.delete('/player{/:id}/delete', (ctx) => {
+  const id = ctx.param('id');
+  if(!id){
+    return Res.json({message: 'Id harus ada!'}, 400)
+  }
+
+  // TODO delete player
+  return Res.json({message: `Player ${id} deleted.`})
+})
+```
+jadi jika anda akses url `/player/delete` maka respon akan `status: 400`.
+Jika anda akses url `/player/155/delete` maka respon akan `status: 200`
+
+:::tip[path-to-regexp]
+Kami memakai library `path-to-regexp` untuk memanipulasi path url nya jadi jika anda ingin banyak informasi tentang path dan experiment lainnya bisa kunjungin repository berikut ["path-to-regexp"](https://github.com/pillarjs/path-to-regexp)
+:::
+
+## Route Handler
+untuk route handler ada 3 type di gaman ini, kamu bisa memakai salah satunya
+
+### Basic Handler
+handler ini cocok untuk project yang super simple dan minimalis, atau sedang kepepet deadline, kamu bisa pakai sementara handler seperti berikut.
+```ts
+route.get('/', (ctx) => {
+  return Res.text("OK!")
+})
+```
+
+### Request Handler
+handler ini juga cocok untuk project sekala kecil yang bisa kamu pakai, dan ini juga kami sarankan ini lebih enak di pakai dari pada yang `basic handler` tadi, berikut adalah contoh:
+```ts
+// AppHandler.ts
+import { RequestHandler } from "@gaman/common"
+
+export const CreateUser: RequestHandler = (ctx) => {
+  return Res.json(ctx.params)
+}
+```
+lalu di `AppRoutes.ts` kamu bisa pakai handler tadi.
+```ts
+// AppRoutes.ts
+import { CreateUser } from "AppHandler.ts"
+
+export default autoComposeRoutes((route) => {
+  route.post("/user/create", CreateUser)
+})
+```
+
+### Controller Handler
+berikut ini cocok untuk project sekala besar dan kecil, dan code akan tetap clean karna tidak banyak import handler.
+```ts
+// AppController.ts
+import { composeController } from "@gaman/core"
+
+export default composeController(() => ({
+  HelloWorld(ctx) {
+    return Res.text("❤️ Welcome to Gaman.js")
+  }
+}))
+```
+dan ini untuk routes nya
+```ts
+// AppRoutes.ts
+import AppController from "../controllers/AppController.ts"
+
+export default autoComposeRoutes((route) => {
+  route.get("/", [AppController, 'HelloWorld'])
+})
+```
+sedikit saya jelaskan ada array `[controller, functionName]`, jadi array di **index pertama** itu adalah container controller,  dan untuk array di **index kedua** itu adalah nama function di dalam container controller.
+
+## Route Groups
+route group disini untuk membungkus route route kedalam 1 path
+```ts
+route.group('/user', (route) => {
+
+  route.post('/create', Handler); // `/user/create` (POST)
+
+  route.get('/profile', Handler) // `/user/profile` (GET)
+})
+```
+
+

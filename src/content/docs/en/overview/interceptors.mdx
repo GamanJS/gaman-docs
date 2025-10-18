@@ -1,0 +1,283 @@
+---
+
+title: Interceptors
+
+---
+
+Normally, **Interceptor** is located in the `src/interceptors/**` folder. If you use `autoComposeInterceptor`, it will be automatically registered by the system.
+
+![workflow interceptor](/img/workflow/interceptor.png)
+
+**Interceptor** here will be executed after `middleware`, so the function of the interceptor is normally for specific routes only, but it can still be used for global.
+
+Here are the functions of the interceptor:
+
+- Handle Request Data or Response Data
+
+- Transform request data before reaching the request handler.
+
+- Transform response data before sending to the client.
+
+- Validate data like `ctx.json()`, `ctx.formData()`, etc.
+
+## Interceptor Definition
+
+### `composeInterceptor()`
+
+Here `interceptorCompose` will not be automatically registered by the system, so you have to register it manually to a specific route or as global.
+
+Example:
+
+ ```ts
+ // UserInterceptor.ts
+ import { composeInterceptor } from "@gaman/core"
+
+ export default composeInterceptor((ctx, next, error) => {
+   return next();
+ })
+ ```
+
+Now here you need to register manually, here is the example
+
+ ```ts
+ // index.ts
+ defineBootstrap((app) => {
+   app.mount(UserInterceptor)
+ })
+ ```
+
+Here is an example for a specific route
+
+ ```ts
+ // AppRoutes.ts
+ export default composeRoutes((route) => {
+   route.get('/', Handler).interceptor(UserInterceptor)
+
+   // if you want to register many
+   route.get('/user', Handler).interceptor([UserInterceptor, ValidationInterceptor])
+ })
+ ```
+
+### `autoComposeInterceptor()`
+
+Now `autoComposeInterceptor` here will be automatically registered to the system, with the requirement that it must be in the `src/interceptors/**` folder.
+
+Example:
+
+ ```ts
+ // UserInterceptor.ts
+ import { autoComposeInterceptor } from "@gaman/core"
+
+ export default autoComposeInterceptor((ctx, next, error) => {
+   return next();
+ })
+ ```
+
+This will be automatically registered into the system, so no need to bother with manual registration.
+
+## Parameters
+
+In composeInterceptor there are 3 parameters: `ctx`, `next`, and `error`, here is the explanation and use of each parameter.
+
+- `ctx` Interceptor Context, to take and manipulate request data before reaching the handler
+
+- `next` To trigger the next handler and can manipulate response data before sending to the client
+
+- `error` to throw if there is an error
+
+Example of real work as follows:
+
+ ```ts
+ export default composeInterceptor(await (ctx, next, error) => {
+   // PROCESS BEFORE HANDLER
+   // MANIPULATION OR VALIDATION OF REQUEST DATA IS DONE HERE
+   if(ctx.param('name') != 'Angga'){
+     throw error('Name must be "angga"', 400)
+     // here it will automatically respond with json
+     /**
+     * {
+     *   statusCode: 400,
+     *   message: 'Name must be "angga"'
+     * }
+     */
+   }
+   const response = await next(); // run the next handler
+   // PROCESS AFTER HANDLER FINISHED
+   // MANIPULATION OF RESPONSE DATA IS DONE HERE
+   const body = JSON.parse(response.body);
+   body['umur'] = 100;
+   response.body = JSON.stringify(body);
+   return response;
+ })
+ ```
+
+### Error Response
+
+The `error` function will automatically send a json response as follows
+
+ ```json
+ // HTTP STATUS 400
+ {
+   "statusCode": 400,  // default is 400 if changed error('msg', 404) will be 404
+   "message": "Name must be 'angga'" // depends on the message set
+ }
+ ```
+
+But if you want to change the error response, you can use `composeExceptionHandler`
+
+I'll give a little example :)
+
+ ```ts
+ // UserException.ts
+ export default composeExceptionHandler((err: Error) => {
+   if(err instanceof InterceptorException){
+     const ctx = err.context; // take request context
+     const status = err.statusCode; // take statusCode
+     const message = err.message; // take message;
+     // change interceptor error response
+     return Res.json({
+       msg: message, // return message
+       error: status > 299 // if status above 299 will be true then considered error
+     }, {
+       status: status,
+       statusText: message,
+     })
+   }
+ })
+ ```
+
+Then register the exception to the route you want, for example
+
+ ```ts
+ // single route
+ route.get('/user', Handler).exception(UserException);
+
+ // or directly group to avoid one by one
+ route.group('/user', (route) => {
+   // other routes
+ }).exception(UserException)
+
+ // or can register global
+ app.mountException(UserException)
+ ```
+
+For more details, you can read in [exception documentation](/docs/overview/exceptions)
+
+So when you call `throw error('not found', 404)` the response will be:
+
+ ```json
+ // HTTP STATUS CODE     404
+ // HTTP STATUS MESSAGE  not found
+ {
+   "msg": "not found",
+   "error": true
+ }
+ ```
+
+## Transformation Methods
+
+Here are utilities for you to use to make request data transformation easier, if not here you have to do it manually :)
+
+### `ctx.transformJson()`
+
+Transform json here is to change json data so you can use it in the next handler, example as follows:
+
+ ```ts
+ // UserInterceptor.ts
+ export default composeInterceptor(async (ctx, next, error) => {
+   const defaultJson = await ctx.json();
+
+   if(defaultJson.name == 'Angga'){
+     ctx.transformJson({
+       name: 'Angga Ganteng'
+     })
+   }
+
+   return next();
+ })
+ ```
+
+Then you use it in your request handler
+
+Example:
+
+ ```ts
+ route.get('/', async (ctx) => {
+   const json = await ctx.json()
+   return Res.text(json.name) // Angga Ganteng
+ }).interceptor(UserInterceptor)
+ ```
+
+### `ctx.transformParams()`
+
+This is for transforming URL parameters so in the next handler just use :)
+
+ ```ts
+ // UserInterceptor.ts
+ export default composeInterceptor((ctx, next, error) => {
+   // if age is not integer then parse integer directly
+   if(typeof ctx.params.umur == 'string') {
+     ctx.transformParams({
+       umur: parseInt(ctx.params.umur)
+     })
+   }
+   return next();
+ })
+ ```
+
+Then you use it in your request handler
+
+Example:
+
+ ```ts
+ route.get('/:umur', (ctx) => {
+   const umur = ctx.params.umur; // automatically integer
+   return Res.json({
+     message: "OK!"
+   })
+ })
+ ```
+
+### `ctx.transformQuery()`
+
+### `ctx.transformBody()`
+
+### `ctx.transformText()`
+
+All transformation methods are more or less the same usage, just to make it easier.
+
+### Experiments
+
+If you are very pro player :v actually you can change the ctx data directly like the `json` function, `formData` function, `header` function, etc.
+
+Here is a simple example of direct `context` manipulation.
+
+ ```ts
+ // UserInterceptor.ts
+ export default composeInterceptor((ctx, next, error) => {
+   ctx.json = async () => {
+     return {
+       name: ctx.query('name'), // name from query ?name='abogoboga'
+       umur: ctx.param('umur'), // age from param /:umur = /12
+       credit: 'GamanJS' // custom
+     }
+   }
+   return next();
+ })
+ ```
+
+Usage in handler as follows
+
+ ```ts
+ route.get('/:umur', async (ctx) => {
+   const json = await ctx.json()
+   return Res.json(json);
+   /**
+   * {
+   *    name: 'abogoboga',
+   *    umur: 12,
+   *    credit: 'GamanJS'
+   * }
+   */
+ })
+ ```
