@@ -149,23 +149,62 @@ import { features, plugins } from "../utils/content";
             {plugins.description}
           </p>
 
-          <!-- START: List Plugins -->
           <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mt-10">
             {
               plugins.items.map((item) => {
                 const Icon = item.icon;
 
                 return (
-                  <div class="card flex-col gap-4">
-                    <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-pink-400/40 to-purple-400/30">
-                      <Icon class=" text-purple-300" />
+                  <div class="group relative p-4 md:p-6 rounded-2xl bg-gradient-to-br from-pink-500/5 to-purple-500/5 border border-white/5 hover:border-pink-500/20 transition-all duration-500 hover:shadow-lg hover:shadow-pink-500/10 overflow-hidden">
+
+
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-3xl transform scale-150 group-hover:scale-100"></div>
+                    
+                    <div class="relative group/icon flex flex-col items-center justify-center w-full">
+                      <div class="flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-pink-400/40 to-purple-400/30 group-hover:scale-110 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-pink-500/20">
+                        <Icon class="w-8 h-8 text-purple-300 group-hover:text-pink-300 transition-colors duration-300" />
+                      </div>
+
+                      <!-- Mobile: show title under icon (visible on small screens) -->
+                      <div class="mt-3 text-center md:hidden w-full">
+                        <div class="text-sm font-semibold text-white/90">{item.title}</div>
+                      </div>
+
+                      <div class="mobile-popup md:hidden fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-[340px] opacity-0 scale-95 transition-all duration-300 z-[9999] pointer-events-none">
+
+                            <div class="bg-gradient-to-br from-pink-500/30 to-purple-500/30 p-6 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 backdrop-blur-2xl">
+                          
+                              <div class="flex items-center gap-4 mb-4">
+                                <div class="p-3 bg-gradient-to-br from-pink-400/30 to-purple-400/30 backdrop-blur-md rounded-lg">
+                                  <Icon class="text-white w-7 h-7" />
+                            </div>
+
+                                <div class="text-white text-lg font-semibold tracking-wide">{item.title}</div>
+                            <button class="ml-auto text-white/60 hover:text-white p-1" onclick="event.stopPropagation(); this.closest('.mobile-popup').classList.remove('active')">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                              </svg>
+                            </button>
+                          </div>
+                              <div class="text-white/95 text-lg leading-relaxed tracking-wide">
+                            {item.text}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 class="text-xl md:text-2xl font-semibold mb-4">
+
+                    {/* Bagian mobil phone */}
+                    <div class="hidden md:block relative mt-6 transform transition-all duration-500 group-hover:translate-y-[-4px]">
+                      <h3 class="text-xl md:text-2xl font-semibold mb-4 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
                         {item.title}
                       </h3>
-                      <p>{item.text}</p>
+                      <p class="text-gray-400 group-hover:text-pink-100 transition-colors duration-500">
+                        {item.text}
+                      </p>
                     </div>
+
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-500/10 to-purple-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   </div>
                 );
               })
@@ -189,4 +228,50 @@ import { features, plugins } from "../utils/content";
   </body>
 
   <Footer />
+
+  <!-- boleh di pindah ini buat matiin popup nya -->
+  <style>
+    .mobile-popup.active {
+      opacity: 1 !important;
+      transform: translateY(-50%) translateX(0) !important;
+      pointer-events: auto !important;
+    }
+  </style>
+
+  <script>
+
+    // mobile popup nya ehe :3
+    document.addEventListener('click', function (e) {
+      if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) return
+
+      const target = e.target instanceof Element ? e.target : null
+      if (!target) return
+
+      const iconWrap = target.closest('.group')
+      if (!iconWrap) return
+      const popup = iconWrap.querySelector('.mobile-popup')
+      if (!popup) return
+
+      if (target.closest('.mobile-popup')) return
+
+      const isActive = popup.classList.toggle('active')
+
+      //! tutup popup
+      document.querySelectorAll('.mobile-popup.active').forEach(p => {
+        if (p !== popup) p.classList.remove('active')
+      })
+
+      if (isActive) document.body.style.overflow = 'hidden'
+      else document.body.style.overflow = ''
+    })
+
+    // tutup klik di mana saja
+    document.addEventListener('touchstart', function (e) {
+      if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) return
+      const t = e.target instanceof Element ? e.target : null
+      if (t && (t.closest('.mobile-popup') || t.closest('.group'))) return
+      document.querySelectorAll('.mobile-popup.active').forEach(p => p.classList.remove('active'))
+      document.body.style.overflow = ''
+    })
+  </script>
 </html>
