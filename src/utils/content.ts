@@ -1,7 +1,6 @@
 import Box from "../icons/box.astro";
 import Broadcast from "../icons/broadcast.astro";
 import Code from "../icons/code.astro";
-import Code1 from "../icons/code1.astro";
 import Coludcross from "../icons/coludcross.astro";
 import Documentcode from "../icons/documentcode.astro";
 import Electric from "../icons/electric.astro";
@@ -109,23 +108,23 @@ export const footer = {
     links: [
       {
         label: "Getting Started",
-        url: "/docs/overview/first-steps",
+        url: "en/docs/overview/first-steps",
       },
       {
         label: "Routing",
-        url: "/docs/overview/routing",
+        url: "en/docs/overview/routing",
       },
       {
         label: "Controllers",
-        url: "/docs/overview/controllers",
+        url: "en/docs/overview/controllers",
       },
       {
         label: "Middlewares",
-        url: "/docs/overview/middlewares",
+        url: "en/docs/overview/middlewares",
       },
       {
         label: "Interceptors",
-        url: "/docs/overview/interceptors",
+        url: "en/docs/overview/interceptors",
       },
     ],
   },
