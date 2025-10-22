@@ -1,4 +1,7 @@
 ---
+import CodeTabs from "../components/CodeTabs.tsx";
+import Contributors from "../components/Contributors.tsx";
+import GamanLivePreview from "../components/GamanLivePreview.tsx";
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import "../styles/global.css";
@@ -13,71 +16,261 @@ import { features, plugins } from "../utils/content";
     <title>GamanJS - Backend Framework</title>
     <link rel="shortcut icon" href="/img/gaman-big.png" type="image/png" />
   </head>
-  <body class="bg-stone-950 text-pink-100 overflow-x-hidden">
+  <body class="bg-black text-pink-100 relative overflow-x-hidden">
     <Navbar />
 
-    <main>
-      <!-- START: Hero Content -->
-      <div class="h-screen flex items-center justify-center px-6 relative">
-        <!-- Background Glow -->
+    <main class="backdrop-blur-[2px]">
+      <section
+        class="relative flex flex-col items-center justify-center text-center px-6 h-[100dvh] overflow-hidden"
+      >
         <div
-          class="absolute -top-10 -left-10 w-72 h-72 bg-pink-500 rounded-full opacity-20 blur-3xl animate-pulse"
-        >
-        </div>
-        <div
-          class="absolute bottom-0 right-0 w-80 h-80 bg-purple-500 rounded-full opacity-20 blur-3xl animate-pulse"
-          style="animation-delay: 2s;"
+          class="absolute inset-0 bg-[url('/img/pattern.png')] bg-black/50 bg-blend-multiply
+    before:absolute before:inset-0 before:bg-gradient-to-t before:from-black before:via-black/60 before:to-transparent
+    after:absolute after:inset-0 after:bg-[radial-gradient(ellipse_at_center,_rgba(255,0,150,0.1),_transparent_70%)]"
         >
         </div>
 
         <div
-          class="container grid grid-cols-1 md:grid-cols-2 gap-10 items-center relative z-10"
+          class="absolute -top-20 -left-32 w-96 h-96 bg-pink-500/20 rounded-full blur-[160px] animate-pulse"
         >
-          <!-- Text -->
-          <div class="text-center md:text-left">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              Build <span
-                class="from-pink-400 to-purple-400 bg-gradient-to-r bg-clip-text text-transparent"
-                >Sweet Backends</span
-              > Fast
-            </h1>
-            <p class="description mb-8">
-              GamanJS is a modern backend framework built for resilience,
-              scalability, simplicity adn blazing performance for your backend
-              apps.
-            </p>
-            <div
-              class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center"
+        </div>
+        <div
+          class="absolute -top-20 right-0 w-[28rem] h-[28rem] bg-purple-600/20 rounded-full blur-[180px] animate-pulse delay-1000"
+        >
+        </div>
+        <div class="relative z-10 flex flex-col items-center">
+          <h1
+            class="text-5xl md:text-7xl font-extrabold leading-tight tracking-tight mb-6"
+          >
+            Build <span
+              class="bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+              >Sweet Backends</span
+            > Fast
+          </h1>
+
+          <p
+            class="text-lg md:text-xl md:max-w-3xl text-stone-300 leading-relaxed mb-10"
+          >
+            GamanJS is a modern backend framework built for resilience,
+            scalability, simplicity, and blazing performance — empowering
+            developers to build beautiful APIs faster than ever.
+          </p>
+
+          <div class="flex flex-col gap-4 justify-center items-center">
+            <a
+              href="/docs"
+              class="md:w-xs px-8 py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold shadow-lg shadow-pink-500/30 hover:shadow-pink-400/50 hover:scale-105 transition-all"
             >
-              <a
-                href="/docs/overview/first-steps"
-                class="bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-semibold text-white hover:shadow-xl hover:shadow-pink-500/50 transition-transform transform hover:scale-110"
+              Get Started
+            </a>
+            <div
+              class="md:w-xs relative inline-flex items-center justify-between gap-3 px-4 py-2 text-sm font-mono text-stone-200 bg-white/10 border border-white/10 rounded-md backdrop-blur-md hover:bg-white/15 transition shadow-lg shadow-white/10"
+            >
+              <span id="command-text" class="select-all"
+                >{"$"} npm create gaman@latest</span
               >
-                Get Started
-              </a>
-              <a
-                href="/docs"
-                class="border-2 border-pink-400 px-6 py-3 rounded-full font-semibold text-pink-200 hover:border-purple-400 hover:bg-pink-500/10 transition-all duration-300"
-              >
-                View Docs
-              </a>
-            </div>
-          </div>
 
-          <!-- Image -->
-          <div class="hidden md:flex justify-center">
-            <img
-              src="/img/gaman.png"
-              alt="GamanJS"
-              class="max-w-md md:max-w-lg drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]"
-            />
+              <button
+                id="copy-btn"
+                class="px-2 py-0.5 text-xs rounded-md border border-white/20 bg-white/10 hover:bg-white/20 transition"
+              >
+                Copy
+              </button>
+            </div>
+
+            <script>
+              const copyBtn = document.getElementById("copy-btn");
+              const cmd = document.getElementById("command-text");
+
+              copyBtn?.addEventListener("click", async () => {
+                try {
+                  const text = cmd?.innerText.replace("$", "").trim();
+                  await navigator.clipboard.writeText(text!);
+                  copyBtn.innerText = "Copied!";
+                  setTimeout(() => (copyBtn.innerText = "Copy"), 1500);
+                } catch (err) {
+                  console.error("Copy failed:", err);
+                }
+              });
+            </script>
+
+            <style>
+              .transition {
+                transition: all 0.2s ease-in-out;
+              }
+
+              .backdrop-blur-md {
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+              }
+
+              .select-all {
+                user-select: all;
+              }
+            </style>
           </div>
         </div>
-      </div>
+
+        <div
+          class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-px bg-gradient-to-r from-transparent via-pink-500/40 to-transparent"
+        >
+        </div>
+      </section>
+
       <!-- END: Hero Content -->
 
+      <!-- START: CODE TABS DEMO -->
+      <section class="relative py-10 px-4">
+        <div class="max-w-6xl mx-auto">
+          <h3
+            class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-pink-400 via-purple-400 to-white bg-clip-text text-transparent"
+          >
+            The GamanJS Structure
+          </h3>
+          <p class="w-[90%] text-stone-400 mb-10">
+            GamanJS adopts a <span class="text-pink-300">functional-first</span>
+            design. Instead of relying on heavy OOP patterns, everything — from routes
+            to controllers — is built through <span class="text-purple-300"
+              >composable functions</span
+            > like
+            <code class="bg-white/10 px-1.5 py-0.5 rounded-md text-pink-200"
+              >compose</code
+            >,
+            <code class="bg-white/10 px-1.5 py-0.5 rounded-md text-pink-200"
+              >define</code
+            >, and <code
+              class="bg-white/10 px-1.5 py-0.5 rounded-md text-pink-200"
+              >mount</code
+            >. This keeps your backend simple, declarative, and fun to extend.
+          </p>
+
+          <CodeTabs client:load />
+        </div>
+      </section>
+
+      <section class="relative py-16 px-4 bg-black/40 backdrop-blur-sm">
+        <div
+          class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-10 items-start"
+        >
+          <!-- Left: Section Title -->
+          <div class="space-y-4">
+            <h3
+              class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
+            >
+              Framework Performance Overview
+            </h3>
+            <p class="text-stone-400 leading-relaxed">
+              A quick look at how <span class="text-pink-300 font-semibold"
+                >GamanJS</span
+              >
+              compares to other leading backend frameworks in terms of efficiency,
+              speed, and design philosophy.
+            </p>
+
+            <p class="text-xs text-stone-500 italic mt-6">
+              *Based on internal benchmarks using identical test environments
+              and workloads.
+            </p>
+          </div>
+
+          <!-- Right: Comparison Bars -->
+          <div class="space-y-8">
+            <!-- GamanJS -->
+            <div class="relative group">
+              <div class="flex justify-between mb-2 text-sm font-mono">
+                <span class="text-pink-200 font-semibold">⚡ GamanJS</span>
+                <span class="text-pink-400 font-semibold">Fastest</span>
+              </div>
+              <div
+                class="w-full h-4 bg-white/10 rounded-full overflow-hidden relative"
+              >
+                <div
+                  class="h-full bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 rounded-full w-[85%] shadow-[0_0_15px_rgba(236,72,153,0.6)] animate-pulse"
+                >
+                </div>
+              </div>
+              <p class="text-stone-400 text-sm mt-2">
+                Lightweight, modular, and purely functional — crafted for
+                clarity and speed.
+              </p>
+            </div>
+
+            <!-- NestJS -->
+            <div class="relative">
+              <div class="flex justify-between mb-2 text-sm font-mono">
+                <span class="text-stone-300">NestJS</span>
+                <span class="text-stone-400">Balanced</span>
+              </div>
+              <div class="w-full h-4 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-gradient-to-r from-purple-600 to-purple-700 rounded-full w-[70%]"
+                >
+                </div>
+              </div>
+              <p class="text-stone-400 text-sm mt-2">
+                OOP-based and well-structured, but introduces runtime overhead.
+              </p>
+            </div>
+
+            <!-- AdonisJS -->
+            <div class="relative">
+              <div class="flex justify-between mb-2 text-sm font-mono">
+                <span class="text-stone-300">AdonisJS</span>
+                <span class="text-stone-400">Feature-rich</span>
+              </div>
+              <div class="w-full h-4 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-gradient-to-r from-pink-800 to-purple-900 rounded-full w-[50%]"
+                >
+                </div>
+              </div>
+              <p class="text-stone-400 text-sm mt-2">
+                Complete ecosystem and full-stack tools — trades off performance
+                for convenience.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soft Glow -->
+        <div
+          class="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-pink-500/10 to-transparent blur-3xl"
+        >
+        </div>
+        <div
+          class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-px bg-gradient-to-r from-transparent via-pink-500/40 to-transparent"
+        >
+        </div>
+      </section>
+      <section class="relative py-16 px-4 bg-black/40 backdrop-blur-sm">
+        <div class="max-w-6xl mx-auto">
+          <GamanLivePreview client:load />
+        </div>
+      </section>
+
+      <section
+        class="py-16 px-6 bg-gradient-to-b from-purple-500/10 to-transparent relative "
+      >
+        <div
+          class="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"
+        >
+        </div>
+        <div class="max-w-6xl mx-auto text-center">
+          <h3
+            class="text-3xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
+          >
+            Contributors
+          </h3>
+          <p class="text-stone-400 mb-10">
+            These amazing developers have helped shape GamanJS and its
+            documentation.
+          </p>
+          <Contributors client:load />
+        </div>
+      </section>
+
       <!-- START: Key Features -->
-      <section class="relative">
+      <!-- <section class="relative">
         <div class="container relative z-10">
           <h2 class="section-title max-w-2xl mx-auto text-center">
             Why <span
@@ -94,7 +287,6 @@ import { features, plugins } from "../utils/content";
             {features.description}
           </p>
 
-          <!-- START: List Features -->
           <div
             class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-10"
           >
@@ -116,23 +308,17 @@ import { features, plugins } from "../utils/content";
               })
             }
           </div>
-          <!-- END: List Features -->
         </div>
 
-        <!-- background glow -->
         <div
           class="absolute bottom-0 left-0 w-80 h-72 bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 blur-3xl animate-pulse"
         >
         </div>
-        <!-- <div
-        class="absolute -bottom-20 right-0 w-[25rem] h-[28rem] bg-pink-500 opacity-20 animate-pulse blur-3xl"
-        style="animation-delay: 2s;"
-      > -->
-      </section>
+      </section> -->
       <!-- END: Key Features -->
 
       <!-- START: Plugins -->
-      <section class="relative">
+      <!-- <section class="relative">
         <div class="container relative z-10">
           <h2 class="section-title text-center max-w-2xl mx-auto">
             Extend <span
@@ -156,69 +342,73 @@ import { features, plugins } from "../utils/content";
 
                 return (
                   <div class="group relative p-4 md:p-6 rounded-2xl bg-gradient-to-br from-pink-500/5 to-purple-500/5 border border-white/5 hover:border-pink-500/20 transition-all duration-500 hover:shadow-lg hover:shadow-pink-500/10 overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-3xl transform scale-150 group-hover:scale-100" />
 
-
-                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-3xl transform scale-150 group-hover:scale-100"></div>
-                    
                     <div class="relative group/icon w-full flex flex-col items-center md:flex-row md:items-center md:gap-6 mb-5">
                       <div class="flex items-center justify-center w-16 h-16 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-pink-400/40 to-purple-400/30 md:shrink-0 mx-auto md:mx-0 group-hover:scale-110 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-pink-500/20">
                         <Icon class="w-8 h-8 md:w-6 md:h-6 text-purple-300 group-hover:text-pink-300 transition-colors duration-300" />
                       </div>
-                      
+
                       <div class="mt-3 text-center md:mt-0 md:text-left w-full">
-                        <div class="text-sm md:text-base font-semibold text-white/90">{item.title}</div>
+                        <div class="text-sm md:text-base font-semibold text-white/90">
+                          {item.title}
+                        </div>
                       </div>
 
                       <div class="mobile-popup md:hidden fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-[340px] opacity-0 scale-95 transition-all duration-300 z-[9999] pointer-events-none">
-
-                            <div class="bg-gradient-to-br from-pink-500/30 to-purple-500/30 p-6 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 backdrop-blur-2xl">
-                          
-                              <div class="flex items-center gap-4 mb-4">
-                                <div class="p-3 bg-gradient-to-br from-pink-400/30 to-purple-400/30 backdrop-blur-md rounded-lg">
-                                  <Icon class="text-white w-7 h-7" />
+                        <div class="bg-gradient-to-br from-pink-500/30 to-purple-500/30 p-6 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/20 backdrop-blur-2xl">
+                          <div class="flex items-center gap-4 mb-4">
+                            <div class="p-3 bg-gradient-to-br from-pink-400/30 to-purple-400/30 backdrop-blur-md rounded-lg">
+                              <Icon class="text-white w-7 h-7" />
                             </div>
 
-                                <div class="text-white text-lg font-semibold tracking-wide">{item.title}</div>
-                            <button class="ml-auto text-white/60 hover:text-white p-1" onclick="event.stopPropagation(); this.closest('.mobile-popup').classList.remove('active'); document.body.style.overflow = ''">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            <div class="text-white text-lg font-semibold tracking-wide">
+                              {item.title}
+                            </div>
+                            <button
+                              class="ml-auto text-white/60 hover:text-white p-1"
+                              onclick="event.stopPropagation(); this.closest('.mobile-popup').classList.remove('active'); document.body.style.overflow = ''"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-5 h-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"
+                                />
                               </svg>
                             </button>
                           </div>
-                              <div class="text-white/95 text-lg leading-relaxed tracking-wide">
+                          <div class="text-white/95 text-lg leading-relaxed tracking-wide">
                             {item.text}
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* mobile layar */}
                     <div class="hidden md:block relative mt-0 md:mt-0 transition-all duration-500 group-hover:translate-y-[-4px]">
                       <p class="text-gray-400 group-hover:text-pink-100 transition-colors duration-500 md:pl-0">
                         {item.text}
                       </p>
                     </div>
 
-                    <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-500/10 to-purple-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-500/10 to-purple-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 );
               })
             }
           </div>
-          <!-- END: List Features -->
         </div>
-
-        <!-- background glow -->
         <div
           class="absolute bottom-0 right-0 w-80 h-72 bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 blur-3xl animate-pulse"
         >
         </div>
-        <!-- <div
-        class="absolute -bottom-20 right-0 w-[25rem] h-[28rem] bg-pink-500 opacity-20 animate-pulse blur-3xl"
-        style="animation-delay: 2s;"
-      > -->
-      </section>
+      </section> -->
       <!-- END: Plugins -->
     </main>
   </body>
@@ -235,39 +425,42 @@ import { features, plugins } from "../utils/content";
   </style>
 
   <script>
-
     // mobile popup nya ehe :3
-    document.addEventListener('click', function (e) {
-      if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) return
+    document.addEventListener("click", function (e) {
+      if (window.matchMedia && window.matchMedia("(min-width: 768px)").matches)
+        return;
 
-      const target = e.target instanceof Element ? e.target : null
-      if (!target) return
+      const target = e.target instanceof Element ? e.target : null;
+      if (!target) return;
 
-      const iconWrap = target.closest('.group')
-      if (!iconWrap) return
-      const popup = iconWrap.querySelector('.mobile-popup')
-      if (!popup) return
+      const iconWrap = target.closest(".group");
+      if (!iconWrap) return;
+      const popup = iconWrap.querySelector(".mobile-popup");
+      if (!popup) return;
 
-      if (target.closest('.mobile-popup')) return
+      if (target.closest(".mobile-popup")) return;
 
-      const isActive = popup.classList.toggle('active')
+      const isActive = popup.classList.toggle("active");
 
       //! tutup popup
-      document.querySelectorAll('.mobile-popup.active').forEach(p => {
-        if (p !== popup) p.classList.remove('active')
-      })
+      document.querySelectorAll(".mobile-popup.active").forEach((p) => {
+        if (p !== popup) p.classList.remove("active");
+      });
 
-      if (isActive) document.body.style.overflow = 'hidden'
-      else document.body.style.overflow = ''
-    })
+      if (isActive) document.body.style.overflow = "hidden";
+      else document.body.style.overflow = "";
+    });
 
     // tutup klik di mana saja
-    document.addEventListener('touchstart', function (e) {
-      if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) return
-      const t = e.target instanceof Element ? e.target : null
-      if (t && (t.closest('.mobile-popup') || t.closest('.group'))) return
-      document.querySelectorAll('.mobile-popup.active').forEach(p => p.classList.remove('active'))
-      document.body.style.overflow = ''
-    })
+    document.addEventListener("touchstart", function (e) {
+      if (window.matchMedia && window.matchMedia("(min-width: 768px)").matches)
+        return;
+      const t = e.target instanceof Element ? e.target : null;
+      if (t && (t.closest(".mobile-popup") || t.closest(".group"))) return;
+      document
+        .querySelectorAll(".mobile-popup.active")
+        .forEach((p) => p.classList.remove("active"));
+      document.body.style.overflow = "";
+    });
   </script>
 </html>

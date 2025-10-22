@@ -1,42 +1,88 @@
 ---
+// src/components/CodeBlock.astro
+import { codeToHtml } from "shiki";
+
 interface Props {
   code: string;
   lang?: string;
+  theme?: string;
+  filename?: string;
 }
 
-const { code, lang = "bash" } = Astro.props;
+const { code, lang = "bash", theme = "dracula", filename } = Astro.props;
+
+// generate syntax highlight pakai Shiki
+let html = await codeToHtml(code.trim(), {
+  lang,
+  theme,
+});
+
+// hapus background inline bawaan Shiki
+html = html.replace(/background-color:[^;"]+;?/g, "");
 ---
 
 <astro-codeblock>
-  <div class="relative w-full max-w-2xl">
-    <pre
-      class={`rounded-xl bg-stone-900 text-pink-100 p-4 m-0 overflow-x-auto font-mono text-sm`}>
-      <code class="language-{lang} p-0 m-0 flex items-center justify-center" lang={lang}>{code}</code>
-    </pre>
+  <div class="relative w-full max-w-3xl my-4 expressive-code">
+    <!-- 🌸 File name header -->
+    {filename && (
+      <div
+        class="flex items-center justify-between  text-xs font-mono text-stone-200 bg-stone-900 border-b border-stone-700/50 backdrop-blur-md"
+      >
+        <spa class="bg-gray-500 px-4 py-2 border-t border-white">{filename}</spa>
+      </div>
+    )}
+
+    <div
+      id="code-container"
+      class="overflow-x-auto font-mono text-sm"
+      set:html={html}
+    />
 
     <button
-      class="absolute top-2 right-2 px-3 py-1 text-xs rounded-md bg-stone-800 hover:bg-stone-700 border border-stone-600 transition text-stone-200"
+      class="absolute top-2 right-2 px-3 py-1 text-xs rounded-md bg-stone-800/70 hover:bg-stone-700/80 border border-stone-600/60 transition text-stone-200 backdrop-blur-md"
     >
       Copy
     </button>
   </div>
 </astro-codeblock>
 
+<style>
+  #code-container {
+    border-radius: 0 0 10px 10px; /* bawah doang, atasnya ketutup header filename */
+    background-color: rgba(143, 143, 143, 0.3);
+    backdrop-filter: blur(10px) saturate(100%);
+    -webkit-backdrop-filter: blur(10px) saturate(100%);
+    overflow: hidden;
+    box-shadow:
+      0 0 10px rgba(255, 158, 231, 0.3),
+      0 0 20px rgba(155, 100, 200, 0.15);
+  }
+
+  pre {
+    background: transparent !important;
+    margin: 0;
+    padding: 1rem;
+  }
+
+  .shiki code {
+    background: transparent !important;
+  }
+</style>
+
 <script>
   class AstroCodeblock extends HTMLElement {
     connectedCallback() {
-      const code = this.querySelector("code");
+      const pre = this.querySelector("pre");
       const copyBtn = this.querySelector("button");
+      if (!pre || !copyBtn) return;
 
-      copyBtn?.addEventListener("click", (event) => {
-        navigator.clipboard.writeText(code?.innerText || "");
-
+      copyBtn.addEventListener("click", async () => {
+        const text = pre.innerText.trim();
+        await navigator.clipboard.writeText(text);
         copyBtn.innerText = "Copied!";
         setTimeout(() => (copyBtn.innerText = "Copy"), 1500);
       });
     }
   }
-
-  // Tell the browser to use our AstroHeart class for <astro-heart> elements.
   customElements.define("astro-codeblock", AstroCodeblock);
 </script>
