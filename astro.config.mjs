@@ -24,10 +24,9 @@ export default defineConfig({
     starlight({
       title: "Gaman Docs",
       favicon: "/img/gaman-big.png",
-      defaultLocale: "en",
       locales: {
-        en: { label: "English", lang: "en", dir: "ltr" },
-        id: { label: "Indonesian", lang: "id", dir: "ltr" },
+        root: { label: "EN", lang: "en", dir: "ltr" },
+        id: { label: "ID", lang: "id", dir: "ltr" },
       },
       components: {
         PageSidebar: "./src/components/starlight/PageSidebar.astro",

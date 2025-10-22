@@ -108,23 +108,23 @@ export const footer = {
     links: [
       {
         label: "Getting Started",
-        url: "en/docs/overview/first-steps",
+        url: "docs/overview/first-steps",
       },
       {
         label: "Routing",
-        url: "en/docs/overview/routing",
+        url: "docs/overview/routing",
       },
       {
         label: "Controllers",
-        url: "en/docs/overview/controllers",
+        url: "docs/overview/controllers",
       },
       {
         label: "Middlewares",
-        url: "en/docs/overview/middlewares",
+        url: "docs/overview/middlewares",
       },
       {
         label: "Interceptors",
-        url: "en/docs/overview/interceptors",
+        url: "docs/overview/interceptors",
       },
     ],
   },
