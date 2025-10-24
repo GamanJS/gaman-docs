@@ -98,7 +98,7 @@ export default function CodeTabs() {
 
   useEffect(() => {
     const { code, lang } = FILES[active];
-    codeToHtml(code, { lang, theme: "github-dark" }).then((html) => {
+    codeToHtml(code, { lang, theme: "min-dark" }).then((html) => {
       const clean = html.replace(/background-color:[^;"]+;?/g, "");
       setHighlighted(clean);
     });
