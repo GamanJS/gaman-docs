@@ -3,10 +3,6 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
-import node from "@astrojs/node";
-
-import mdx from "@astrojs/mdx";
-
 import react from "@astrojs/react";
 
 // https://astro.build/config
@@ -17,14 +13,13 @@ export default defineConfig({
     },
     plugins: [tailwindcss()],
   },
-  base: "/gaman-docs/",
   site: "https://gaman.7togk.id",
   server: {
     port: 3521,
     host: "0.0.0.0",
   },
   output: "static",
-
+  base: "/",
   integrations: [starlight({
     title: "Gaman Docs",
     favicon: "/img/gaman-big.png",
@@ -58,7 +53,7 @@ export default defineConfig({
       },
     ],
     logo: {
-      src: "/public/img/gaman-big.png",
+      src: "/img/gaman-big.png",
     },
     customCss: ["./src/styles/custom.css"],
     sidebar: [
