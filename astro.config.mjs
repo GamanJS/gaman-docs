@@ -53,7 +53,7 @@ export default defineConfig({
       },
     ],
     logo: {
-      src: "/img/gaman-big.png",
+      src: "/public/img/gaman-big.png",
     },
     customCss: ["./src/styles/custom.css"],
     sidebar: [
