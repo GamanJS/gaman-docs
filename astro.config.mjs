@@ -17,7 +17,7 @@ export default defineConfig({
     },
     plugins: [tailwindcss()],
   },
-
+  base: "/gaman-docs/",
   site: "https://gaman.7togk.id",
   server: {
     port: 3521,
