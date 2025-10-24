@@ -4,6 +4,7 @@ import Contributors from "../components/Contributors.tsx";
 import GamanLivePreview from "../components/GamanLivePreview.tsx";
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
+import HeroSection from "../components/sections/HeroSection.tsx";
 import "../styles/global.css";
 import { features, plugins } from "../utils/content";
 ---
@@ -14,108 +15,13 @@ import { features, plugins } from "../utils/content";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GamanJS - Backend Framework</title>
-    <link rel="shortcut icon" href="/img/gaman-big.png" type="image/png" />
+    <link rel="shortcut icon" href="/img/new/1.png" type="image/png" />
   </head>
   <body class="bg-black text-pink-100 relative overflow-x-hidden">
     <Navbar />
 
     <main class="backdrop-blur-[2px]">
-      <section
-        class="relative flex flex-col items-center justify-center text-center px-6 h-[100dvh] overflow-hidden"
-      >
-        <div
-          class="absolute inset-0 bg-[url('/img/pattern.png')] bg-black/50 bg-blend-multiply
-    before:absolute before:inset-0 before:bg-gradient-to-t before:from-black before:via-black/60 before:to-transparent
-    after:absolute after:inset-0 after:bg-[radial-gradient(ellipse_at_center,_rgba(255,0,150,0.1),_transparent_70%)]"
-        >
-        </div>
-
-        <div
-          class="absolute -top-20 -left-32 w-96 h-96 bg-pink-500/20 rounded-full blur-[160px] animate-pulse"
-        >
-        </div>
-        <div
-          class="absolute -top-20 right-0 w-[28rem] h-[28rem] bg-purple-600/20 rounded-full blur-[180px] animate-pulse delay-1000"
-        >
-        </div>
-        <div class="relative z-10 flex flex-col items-center">
-          <h1
-            class="text-5xl md:text-7xl font-extrabold leading-tight tracking-tight mb-6"
-          >
-            Build <span
-              class="bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >Sweet Backends</span
-            > Fast
-          </h1>
-
-          <p
-            class="text-lg md:text-xl md:max-w-3xl text-stone-300 leading-relaxed mb-10"
-          >
-            GamanJS is a modern backend framework built for resilience,
-            scalability, simplicity, and blazing performance — empowering
-            developers to build beautiful APIs faster than ever.
-          </p>
-
-          <div class="flex flex-col gap-4 justify-center items-center">
-            <a
-              href="/docs"
-              class="md:w-xs px-8 py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold shadow-lg shadow-pink-500/30 hover:shadow-pink-400/50 hover:scale-105 transition-all"
-            >
-              Get Started
-            </a>
-            <div
-              class="md:w-xs relative inline-flex items-center justify-between gap-3 px-4 py-2 text-sm font-mono text-stone-200 bg-white/10 border border-white/10 rounded-md backdrop-blur-md hover:bg-white/15 transition shadow-lg shadow-white/10"
-            >
-              <span id="command-text" class="select-all"
-                >{"$"} npm create gaman@latest</span
-              >
-
-              <button
-                id="copy-btn"
-                class="px-2 py-0.5 text-xs rounded-md border border-white/20 bg-white/10 hover:bg-white/20 transition"
-              >
-                Copy
-              </button>
-            </div>
-
-            <script>
-              const copyBtn = document.getElementById("copy-btn");
-              const cmd = document.getElementById("command-text");
-
-              copyBtn?.addEventListener("click", async () => {
-                try {
-                  const text = cmd?.innerText.replace("$", "").trim();
-                  await navigator.clipboard.writeText(text!);
-                  copyBtn.innerText = "Copied!";
-                  setTimeout(() => (copyBtn.innerText = "Copy"), 1500);
-                } catch (err) {
-                  console.error("Copy failed:", err);
-                }
-              });
-            </script>
-
-            <style>
-              .transition {
-                transition: all 0.2s ease-in-out;
-              }
-
-              .backdrop-blur-md {
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-              }
-
-              .select-all {
-                user-select: all;
-              }
-            </style>
-          </div>
-        </div>
-
-        <div
-          class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-px bg-gradient-to-r from-transparent via-pink-500/40 to-transparent"
-        >
-        </div>
-      </section>
+      <HeroSection client:load/>
 
       <!-- END: Hero Content -->
 
