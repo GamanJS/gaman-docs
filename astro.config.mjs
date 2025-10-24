@@ -23,6 +23,7 @@ export default defineConfig({
     port: 3521,
     host: "0.0.0.0",
   },
+  output: "static",
 
   integrations: [starlight({
     title: "Gaman Docs",
