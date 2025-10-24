@@ -13,7 +13,7 @@ import react from "@astrojs/react";
 export default defineConfig({
   vite: {
     server: {
-      allowedHosts: ["gaman.7togk.id", "gaman-docs.vercel.app"],
+      allowedHosts: ["gaman.7togk.id", "gaman-docs.vercel.app", "gamanjs.github.io"],
     },
     plugins: [tailwindcss()],
   },
