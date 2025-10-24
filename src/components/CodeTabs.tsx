@@ -98,9 +98,21 @@ export default function CodeTabs() {
 
   useEffect(() => {
     const { code, lang } = FILES[active];
-    codeToHtml(code, { lang, theme: "min-dark" }).then((html) => {
+    // @ts-ignore
+    import("https://unpkg.com/shiki@1.22.0/dist/index.mjs")
+    .then(async (shiki) => {
+      // pastikan pakai CDN untuk themes
+      if (shiki.setCDN) shiki.setCDN("https://unpkg.com/shiki/");
+      const html = await shiki.codeToHtml(code, {
+        lang,
+        theme: "github-dark", // atau 'dracula', bebas
+      });
       const clean = html.replace(/background-color:[^;"]+;?/g, "");
       setHighlighted(clean);
+    })
+    .catch((err) => {
+      console.error("Shiki load error:", err);
+      setHighlighted(`<pre>${code}</pre>`);
     });
   }, [active]);
 
