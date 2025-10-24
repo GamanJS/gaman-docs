@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { codeToHtml, } from "shiki";
 import { Home, Route, Code2, Cog, Shield } from "lucide-react";
 
 type Section = "Entry" | "Router" | "Controller" | "Service" | "Middleware";
@@ -98,14 +97,12 @@ export default function CodeTabs() {
 
   useEffect(() => {
     const { code, lang } = FILES[active];
-    // @ts-ignore
-    import("https://unpkg.com/shiki@1.22.0/dist/index.mjs")
+     // @ts-ignore
+    import("https://cdn.jsdelivr.net/npm/shiki@3.13.0/+esm")
     .then(async (shiki) => {
-      // pastikan pakai CDN untuk themes
-      if (shiki.setCDN) shiki.setCDN("https://unpkg.com/shiki/");
       const html = await shiki.codeToHtml(code, {
         lang,
-        theme: "github-dark", // atau 'dracula', bebas
+        theme: "dracula", 
       });
       const clean = html.replace(/background-color:[^;"]+;?/g, "");
       setHighlighted(clean);
@@ -128,10 +125,7 @@ export default function CodeTabs() {
           {(Object.keys(FILES) as Section[]).map((key) => {
             const TabIcon = ICONS[key];
             return (
-              <div
-                key={key}
-                className="relative"
-              >
+              <div key={key} className="relative">
                 <button
                   onClick={() => setActive(key)}
                   className={`flex items-center gap-1 px-4 py-2 text-sm rounded-lg transition-colors font-semibold ${
@@ -143,7 +137,6 @@ export default function CodeTabs() {
                   <TabIcon size={16} />
                   <span>{key}</span>
                 </button>
-
               </div>
             );
           })}
