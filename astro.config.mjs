@@ -162,8 +162,4 @@ export default defineConfig({
       },
     ],
   }), sitemap(), react()],
-
-  adapter: node({
-    mode: "standalone",
-  }),
 });
