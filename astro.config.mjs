@@ -22,7 +22,7 @@ export default defineConfig({
   base: "/",
   integrations: [starlight({
     title: "Gaman Docs",
-    favicon: "/img/gaman-big.png",
+    favicon: "/public/img/gaman-big.png",
     locales: {
       root: { label: "EN", lang: "en", dir: "ltr" },
       id: { label: "ID", lang: "id", dir: "ltr" },
