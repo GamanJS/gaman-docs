@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { codeToHtml } from "shiki";
+import { codeToHtml, } from "shiki";
 import { Home, Route, Code2, Cog, Shield } from "lucide-react";
 
 type Section = "Entry" | "Router" | "Controller" | "Service" | "Middleware";
@@ -98,7 +98,7 @@ export default function CodeTabs() {
 
   useEffect(() => {
     const { code, lang } = FILES[active];
-    codeToHtml(code, { lang, theme: "nord" }).then((html) => {
+    codeToHtml(code, { lang, theme: "github-dark" }).then((html) => {
       const clean = html.replace(/background-color:[^;"]+;?/g, "");
       setHighlighted(clean);
     });
