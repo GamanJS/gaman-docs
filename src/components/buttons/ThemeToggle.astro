@@ -1,0 +1,39 @@
+<button
+  id="theme-toggle"
+  class="p-2 transition-all flex items-center justify-center hover:scale-110 duration-300 text-gray-300 hover:text-white"
+  aria-label="Toggle theme"
+>
+  <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 " viewBox="0 0 24 24" fill="currentColor">
+    <path d="M21.64 13.64A9 9 0 0110.36 2.36 7 7 0 0012 22a9 9 0 009.64-8.36z"/>
+  </svg>
+</button>
+
+<script is:inline>
+  const root = document.documentElement;
+  const btn = document.getElementById("theme-toggle");
+  const icon = document.getElementById("theme-icon");
+
+  // ⛅️ Ambil tema dari localStorage atau sistem
+  const saved = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const current = saved || (prefersDark ? "dark" : "light");
+
+  // Terapkan langsung sebelum render
+  root.setAttribute("data-theme", current);
+  updateIcon(current);
+
+  btn.addEventListener("click", () => {
+    const newTheme = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+    root.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    updateIcon(newTheme);
+  });
+
+  function updateIcon(theme) {
+    if (theme === "light") {
+      icon.innerHTML = '<path d="M21.64 13.64A9 9 0 0110.36 2.36 7 7 0 0012 22a9 9 0 009.64-8.36z"/>';
+    } else {
+      icon.innerHTML = '<path d="M12 4.354a1 1 0 011 1V7a1 1 0 11-2 0V5.354a1 1 0 011-1zm5.657 1.989a1 1 0 010 1.414L16.414 9a1 1 0 11-1.414-1.414l1.243-1.243a1 1 0 011.414 0zM18.646 11a1 1 0 010 2h-1.646a1 1 0 110-2h1.646zM6.343 6.343a1 1 0 010 1.414L5.1 9a1 1 0 01-1.414-1.414l1.243-1.243a1 1 0 011.414 0zM12 17a5 5 0 110-10 5 5 0 010 10zM4.354 11a1 1 0 010 2H2.708a1 1 0 110-2h1.646zM6.343 17.657a1 1 0 010-1.414L7.586 15a1 1 0 011.414 1.414l-1.243 1.243a1 1 0 01-1.414 0zM12 18.646a1 1 0 011-1H13a1 1 0 010 2h-.354a1 1 0 01-1-1z"/>';
+    }
+  }
+</script>

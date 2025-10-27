@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Home, Route, Code2, Cog, Shield } from "lucide-react";
+import { Home, Route, Code2, Cog, Shield, Bug } from "lucide-react";
 
-type Section = "Entry" | "Router" | "Controller" | "Service" | "Middleware";
+type Section = "Entry" | "Router" | "Controller" | "Service" | "Middleware" | "ExceptionHandler";
 
 interface FileMap {
   file: string;
@@ -81,6 +81,22 @@ export default autoComposeMiddleware(async (ctx, next) => {
   return await next();
 });`,
   },
+  ExceptionHandler: {
+    file: "AppException.ts",
+    lang: "ts",
+    title: "Exception Handler",
+    desc: "Gaman has an exceptions handler, which can be called error handling, so it controls the existing error system. Its usage is quite simple",
+    code: `import { autoComposeExceptionHandler } from "@gaman/core";
+import { HttpException } from "@gaman/common";
+
+export default autoComposeExceptionHandler((err) => {
+    if(err instanceof HttpException){
+      return Res.json({
+        message: err.message
+      }, err.statusCode);
+    }
+});    `,
+  }
 };
 
 const ICONS: Record<Section, any> = {
@@ -89,6 +105,7 @@ const ICONS: Record<Section, any> = {
   Controller: Code2,
   Service: Cog,
   Middleware: Shield,
+  ExceptionHandler: Bug
 };
 
 export default function CodeTabs() {

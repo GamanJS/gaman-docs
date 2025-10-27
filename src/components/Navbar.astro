@@ -1,79 +1,42 @@
 ---
-import Github from "../icons/github.astro";
-import { navbar } from "../utils/content";
+import { FaDiscord, FaGithub } from "react-icons/fa";
+// import ThemeToggle from "../components/buttons/ThemeToggle.astro";
 ---
 
-<nav
-  class="bg-[#1f1111]/40 backdrop-blur-sm md:bg-black/40 md:backdrop-blur-sm border-b border-gray-600/40 fixed inset-x-0 top-0 z-50"
->
+<nav class="fixed inset-x-0 top-0 z-50">
   <input type="checkbox" id="menu-toggle" class="peer hidden" />
 
   <div
-    class="max-w-[95rem] mx-auto flex items-center justify-between px-4 py-3"
+    class="px-4 md:px-0 md:max-w-7xl mx-auto flex items-center justify-between w-full py-3"
   >
     <!-- Logo -->
-    <a href="/" class="text-xl font-bold flex items-center gap-x-2">
-      <img class="h-14" src="/img/new/2.png" alt="GamanJS" />
-      <h1 class="text-3xl bg-gradient-to-r from-white to-pink-400 bg-clip-text text-transparent">GamanJS</h1>
+    <a href="/" class="text-xl font-bold flex items-center gap-x-1">
+      <img class="h-14" src="/img/new/2.png" alt="GamanJS" title="GamanJS" />
+      <h1 class="text-xl text-white hidden md:block">GamanJS</h1>
     </a>
 
-    <!-- Hamburger -->
-    <label
-      for="menu-toggle"
-      class="md:hidden flex flex-col space-y-2 cursor-pointer p-3 card bg-white/10"
-    >
-      <span
-        class="block w-6 h-0.5 bg-gray-300 transition-all duration-200 peer-checked:rotate-45 peer-checked:translate-y-1.5"
-      ></span>
-      <span
-        class="block w-6 h-0.5 bg-gray-300 transition-all duration-200 peer-checked:opacity-0"
-      ></span>
-      <span
-        class="block w-6 h-0.5 bg-gray-300 transition-all duration-500 peer-checked:-rotate-45 peer-checked:-translate-y-1.5"
-      ></span>
-    </label>
-
     <!-- Desktop Menu -->
-    <div class="hidden md:flex items-center gap-6">
-      <ul class="flex space-x-6 text-gray-400 font-medium">
-        {
-          navbar.links.map((item) => (
-            <li>
-              <a href={item.url} class="hover:text-pink-400 transition">
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <div class="w-[2px] h-8 bg-gray-600 hidden md:block"></div>
-      <a
-        href="https://github.com/7TogkID/gaman"
-        target="_blank"
-        class="hidden md:inline-flex items-center gap-1 bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-semibold text-white hover:shadow-lg hover:shadow-pink-500/40 transition-transform transform hover:scale-110"
-      >
-        <Github />
-        Give it Star
-      </a>
-    </div>
-  </div>
+    <div class="flex items-center gap-5 text-gray-300 font-medium bg-gray-500/50 border border-gray-800 shadow-lg shadow-gray-500/30 py-2 px-4 rounded-full">
+      <a href="/docs" class="hover:text-pink-400 transition">Docs</a>
 
-  <!-- Mobile Menu -->
-  <div
-    class="max-h-0 overflow-hidden peer-checked:max-h-96 transition-all duration-500 ease-in-out md:hidden border-b border-gray-600/40"
-  >
-    <div class="flex flex-col space-y-4 px-4 py-6">
-      <a href="/" class="block hover:text-pink-400 transition-all">Home</a>
-      <a href="/docs" class="block hover:text-pink-400 transition-all">Docs</a>
-      <a href="/about" class="block hover:text-pink-400 transition-all">About</a
-      >
+      <div class="w-px h-6 bg-gray-600/80"></div>
+      <!-- <ThemeToggle client:load /> -->
       <a
         href="https://github.com/7TogkID/gaman"
         target="_blank"
-        class="inline-flex md:hidden justify-center items-center gap-1 bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-semibold text-white hover:shadow-lg hover:shadow-pink-500/40"
+        class="hover:text-white hover:scale-110 transition-transform"
+        title="GitHub"
       >
-        <Github />
-        Give it Star
+        <FaGithub className="w-5 h-5" />
+      </a>
+
+      <a
+        href="https://discord.gg/"
+        target="_blank"
+        class="hover:text-white hover:scale-110 transition-transform"
+        title="Discord"
+      >
+        <FaDiscord className="w-5 h-5" />
       </a>
     </div>
   </div>

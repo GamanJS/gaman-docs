@@ -49,7 +49,7 @@ export default function HeroSection() {
   return (
     <section className="relative flex flex-col items-center justify-center text-center px-6 h-[100dvh] overflow-hidden">
 
-      <div className="absolute inset-0 bg-[url('/img/pattern.png')] bg-black/50 bg-blend-multiply before:absolute before:inset-0 before:bg-gradient-to-t before:from-black before:via-black/60 before:to-transparent after:absolute after:inset-0 after:bg-[radial-gradient(ellipse_at_center,_rgba(255,0,150,0.1),_transparent_70%)]" />
+      <div className="absolute inset-0 bg-[url('/img/bg-turtle-pink.png')] bg-cover bg-bg-primary/50 bg-blend-multiply before:absolute before:inset-0 before:bg-gradient-to-t before:from-bg-primary before:via-bg-primary/60 before:to-transparent after:absolute after:inset-0 after:bg-[radial-gradient(ellipse_at_center,_rgba(255,0,150,0.1),_transparent_70%)]" />
 
       <div className="absolute -top-20 -left-32 w-96 h-96 bg-pink-500/20 rounded-full blur-[160px] animate-pulse" />
       <div className="absolute -top-20 right-0 w-[28rem] h-[28rem] bg-purple-600/20 rounded-full blur-[180px] animate-pulse delay-1000" />
@@ -63,7 +63,7 @@ export default function HeroSection() {
           Fast
         </h1>
 
-        <p className="text-lg md:text-xl md:max-w-3xl text-stone-300 leading-relaxed mb-10">
+        <p className="text-lg md:text-xl md:max-w-3xl text-text-primary leading-relaxed mb-10">
           GamanJS is a modern backend framework built for resilience,
           scalability, simplicity, and blazing performance — empowering
           developers to build beautiful APIs faster than ever.

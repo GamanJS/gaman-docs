@@ -12,16 +12,8 @@ import Securityuser from "../icons/securityuser.astro";
 export const navbar = {
   links: [
     {
-      label: "Documentations",
+      label: "Docs",
       url: "/docs",
-    },
-    {
-      label: "About",
-      url: "/#",
-    },
-    {
-      label: "Blog",
-      url: "/#",
     },
   ],
 };
