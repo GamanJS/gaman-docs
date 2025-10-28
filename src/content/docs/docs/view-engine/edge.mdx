@@ -2,7 +2,7 @@
 title: Edge
 ---
 
-`@gaman/edge` is the **official middleware** for integrating [Edge Engine](http://edgejs.dev) as a **view engine** in the **GamanJS** framework.  
+`@gaman/edge` is the **official middleware** for integrating [Edge Engine](https://edgejs.dev) as a **view engine** in the **GamanJS** framework.
 With this, you can render `.edge` template files (or other extensions) directly from controllers/handlers using GamanJS's built-in view system.
 
 ## Installation
@@ -10,7 +10,7 @@ With this, you can render `.edge` template files (or other extensions) directly 
 import { PackageManagers } from "starlight-package-managers";
 
 <PackageManagers
-  pkg="@gaman/edge edge"
+  pkg="@gaman/edge edge.js"
   pkgManagers={["npm", "pnpm", "yarn", "bun"]}
   type="install"
 />
@@ -28,7 +28,7 @@ import { edge } from "@gaman/edge";
 defineBootstrap((app) => {
   app.mount(
     edge({
-      viewPath: "src/views", 
+      viewPath: "src/views",
     })
   );
 });
